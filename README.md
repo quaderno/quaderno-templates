@@ -12,7 +12,7 @@ Here is an example you can use to start with:
 </head>
 <body>
   {% if account.logo_url != "" %}
-    <img src="{{account.logo_url}}" width="150" /></td>    
+    <img src="{{account.logo_url}}" width="150" />
   {% endif %}
   <h1>{{title}}</h1>
   <table>
