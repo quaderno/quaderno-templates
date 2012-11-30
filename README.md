@@ -34,10 +34,13 @@ You can download a complete and functional example [here] (https://raw.github.co
 <sub>Please note that you should have knowledge of the (very) basics of HTML and CSS.</sub>
 * First of all, you should take a look at [how Liquid works] (https://github.com/recrea/quaderno-templates/wiki/Liquid-syntax) and understand the basics of the engine.
  
-* Afterwards, you should check the [Quaderno-Templates reference] (https://github.com/recrea/quaderno-templates/wiki/Reference) as you will need to use it in order to show document-specific data.
+* Afterwards, we encourage you to follow our [Getting Started] (https://github.com/recrea/quaderno-templates/wiki/Getting-started) tutorial to learn how to build a template from scratch.
 
-* And that is pretty much all! You may now start creating your own documents in Quaderno!
+* Finally, ou should check the [Quaderno-Templates reference] (https://github.com/recrea/quaderno-templates/wiki/Reference) as you will need to use it in order to show document-specific data.
+
+And that is pretty much all! You may now start creating your own documents in Quaderno!
 
 ## More information
+* [Getting started] (https://github.com/recrea/quaderno-templates/wiki/Getting-started)
 * [Liquid syntax] (https://github.com/recrea/quaderno-templates/wiki/Liquid-syntax)
 * [Quaderno-Templates reference] (https://github.com/recrea/quaderno-templates/wiki/Reference)
