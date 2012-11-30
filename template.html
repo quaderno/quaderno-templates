@@ -75,7 +75,7 @@
         <td>
           <strong>{{labels.number}}: </strong>{{document.number}}
           <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date: "%d/%m/%Y"}}
-          {% if document.po_number != "" %}<br /><strong>PO Number: </strong>{{document.po_number}}{% endif %}
+          {% if document.po_number != "" %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
         </td>
         <td>&nbsp;</td>
       </tr>
