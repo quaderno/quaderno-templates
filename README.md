@@ -1,6 +1,6 @@
 # Quaderno-Templates
 ## What is it
-Using Quaderno-Templates, you can turn any HTML page into your documents template with only a few simple tags!
+Using Quaderno-Templates, you can turn any HTML page into your documents template with just a few simple tags!
 
 Quaderno-Templates is based on [Liquid] (http://liquidmarkup.org/), a template engine widely used and created by [Shopify] (http://www.shopify.com).
 
