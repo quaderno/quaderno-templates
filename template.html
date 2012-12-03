@@ -73,9 +73,9 @@
       </tr>
       <tr>
         <td>
-          <strong>{{labels.number}}: </strong>{{document.number}}
-          <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date: "%d/%m/%Y"}}
-          {% if document.po_number != "" %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
+          <p><strong>{{labels.number}}: </strong>{{document.number}}</p>
+          <p><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date: "%d/%m/%Y"}}</p>
+          {% if document.po_number != "" %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
         </td>
         <td>&nbsp;</td>
       </tr>
@@ -93,15 +93,15 @@
             <tfoot>
               <tr>
                 <td colspan="4">
-                  {{labels.subtotal}}: {{document.subtotal}}<br />
+                  <p>{{labels.subtotal}}: {{document.subtotal}}</p>
                   {% if document.discount != 0 %}
-                  {{labels.discount}}: {{document.discount}}<br />
+                  <p>{{labels.discount}}: {{document.discount}}</p>
                   {% endif %}
                   {% for tax in document.taxes %}
-                    {{tax.label}}: {{tax.amount}}<br />
+                  <p>{{tax.label}}: {{tax.amount}}</p>
                   {% endfor %}
-                  {{labels.total}}: {{document.total}}<br />
-                  {% if document.exchange != document.total %}{{labels.exchange}}: {{document.exchange}}{% endif %}
+                  <p>{{labels.total}}: {{document.total}}</p>
+                  {% if document.exchange != document.total %}<p>{{labels.exchange}}: {{document.exchange}}</p>{% endif %}
                 </td>
               </tr>
             </tfoot>
@@ -122,13 +122,13 @@
         <td colspan="2">
           <p>
             {% if document.due_date > 0 %}
-            <strong>{{labels.due_date}}: </strong>{{document.due_date}}<br/>
+            <p><strong>{{labels.due_date}}: </strong>{{document.due_date}}</p>
             {% endif %}
             {% if document.payment_details != "" %}
-            <strong>{{labels.payment_details}}: </strong>{{document.payment_details | textilize}}<br/>
+            <p><strong>{{labels.payment_details}}: </strong>{{document.payment_details | textilize}}</p>
             {% endif %}
             {% if document.notes != "" %}
-            <strong>{{labels.notes}}: </strong>{{document.notes | textilize}}
+            <p><strong>{{labels.notes}}: </strong>{{document.notes | textilize}}</p>
             {% endif %}
           </p>
         </td>
