@@ -93,15 +93,14 @@
             <tfoot>
               <tr>
                 <td colspan="4">
-                  <p>{{labels.subtotal}}: {{document.subtotal}}</p>
-                  {% if document.discount != 0 %}
-                  <p>{{labels.discount}}: {{document.discount}}</p>
+                  <p>{{labels.subtotal}}: {{document.subtotal | money}}</p>
+                  {% if document.discount > 0 %}
+                  <p>{{labels.discount}}: {{document.discount | money}}</p>
                   {% endif %}
                   {% for tax in document.taxes %}
-                  <p>{{tax.label}}: {{tax.amount}}</p>
+                  <p>{{tax.label}}: {{tax.amount | money}}</p>
                   {% endfor %}
-                  <p>{{labels.total}}: {{document.total}}</p>
-                  {% if document.exchange != document.total %}<p>{{labels.exchange}}: {{document.exchange}}</p>{% endif %}
+                  <p>{{labels.total}}: {{document.total | money}}</p>
                 </td>
               </tr>
             </tfoot>
@@ -111,7 +110,7 @@
                 <td>{{item.description}}</td>
                 <td>{{item.quantity}}</td>
                 <td class="right">{{item.unit_price}}</td>
-                <td class="right">{{item.subtotal}}</td>
+                <td class="right">{{item.subtotal | money}}</td>
               </tr>
               {% endfor %} 
             </tbody>
@@ -121,7 +120,7 @@
       <tr>
         <td colspan="2">
           <p>
-            {% if document.due_date > 0 %}
+            {% if document.due_date != "" %}
             <p><strong>{{labels.due_date}}: </strong>{{document.due_date}}</p>
             {% endif %}
             {% if document.payment_details != "" %}
