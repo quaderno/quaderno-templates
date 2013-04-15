@@ -108,8 +108,8 @@
               {% for item in document.items %}
               <tr>
                 <td>{{item.description}}</td>
-                <td>{{item.quantity}}</td>
-                <td class="right">{{item.unit_price}}</td>
+                <td>{{item.quantity | precision}}</td>
+                <td class="right">{{item.unit_price | precision}}</td>
                 <td class="right">{{item.subtotal | money}}</td>
               </tr>
               {% endfor %} 
