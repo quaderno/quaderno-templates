@@ -3,143 +3,129 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>{{document.number}}</title>
   <style>
-    body {
-      color: #000;
-      font: normal 10pt Arial, Helvetica, sans-serif;
-    }
-    #content { 
-      height: 810px; 
-      padding: 50px 25px; 
-    }
-    h1 {
-      font-size: 48px; 
-      color: #99cc33; 
-      text-transform: lowercase;
-    }
-    table {
-      width: 100%;
-      border: none;
-    }
-    table#items {
-      margin: 25px 0;
-      border-collapse:collapse;
-    }
-    table#items thead tr th {
-      padding: 5px; 
-      background-color: #99cc33; 
-      color: #FFF;
-    }
-    table#items tbody tr td {
-      padding:5px; 
-      border-bottom:1px solid #99cc33;
-    }
-    table#items tfoot tr td {
-      padding: 0 5px; 
-      border-bottom: 2px solid #99cc33; 
-      text-align:right
-    }
-    #footer { 
-      text-align:center; 
-      color:#666; 
-      font-size:80%;
-    }
+    body { color: #000; font: normal 10pt "Arial", "Helvetica", "sans-serif"; }
+    #content { min-height: 850px; padding: 50px 25px; }
+    h1 { font-size: 48px; text-transform: lowercase; color: {{account.color_scheme}}; }
+    p { margin:2px 0; }
+    address { font-style: normal; }
+    table { width: 100%; border: none; font-size: 100%; }
+    table#items { margin: 25px 0; border-collapse:collapse; }
+    table#items thead tr th { padding: 5px; color: #FFF; background-color: {{account.color_scheme}}; }
+    table#items tbody tr td { padding:5px; border-bottom:1px solid {{account.color_scheme}}; }
+    table#items tfoot tr td { padding: 0 5px; border-bottom: 2px solid {{account.color_scheme}}; text-align: right; }
+    #footer { text-align:center; color:#666; font-size:80%; }
     .right { text-align: right; }
     .center { text-align: center; }
+    /* css rules for printing */
+    @media print {
+      body { -webkit-print-color-adjust:exact; }
+    }
   </style>
 </head>
 <body>
   <div id="content">
     <table>
       {% if account.logo_url != "" %}
-      <tr>
-        <td colspan="2"><img src="{{account.logo_url}}" width="150" /></td>
-      </tr>
+      <thead>
+        <tr>        
+          <!-- logo -->
+          <td colspan="2"><img src="{{account.logo_url}}" width="200" /></td>
+        </tr>
+      </thead>
       {% endif %}
-      <tr>
-        <td colspan="2" class="right">
-          <p>
-            <strong>{{contact.full_name}}</strong><br />
-            <optional>{{contact.tax_id}}<br /></optional>
-            {{contact.street_line_1}}<br />
-            {{contact.city}} {{contact.region}} {{contact.postal_code}}<br />
-            {{contact.country}}
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" class="center">
-          <h1>{{title}}</h1>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <p><strong>{{labels.number}}: </strong>{{document.number}}</p>
-          <p><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date: "%d/%m/%Y"}}</p>
-          {% if document.po_number != "" %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
-        </td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <table id="items">
-            <thead>
-              <tr>
-                <th>{{labels.description}}</th>
-                <th>{{labels.quantity}}</th>
-                <th class="right">{{labels.unit_price}}</th>
-                <th class="right">{{labels.amount}}</th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <td colspan="4">
-                  <p>{{labels.subtotal}}: {{document.subtotal | money}}</p>
-                  {% if document.discount > 0 %}
-                  <p>{{labels.discount}}: {{document.discount | money}}</p>
-                  {% endif %}
-                  {% for tax in document.taxes %}
-                  <p>{{tax.label}}: {{tax.amount | money}}</p>
-                  {% endfor %}
-                  <p>{{labels.total}}: {{document.total | money}}</p>
-                </td>
-              </tr>
-            </tfoot>
-            <tbody>
-              {% for item in document.items %}
-              <tr>
-                <td>{{item.description}}</td>
-                <td>{{item.quantity | precision}}</td>
-                <td class="right">{{item.unit_price | precision}}</td>
-                <td class="right">{{item.subtotal | money}}</td>
-              </tr>
-              {% endfor %} 
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <p>
-            {% if document.due_date != "" %}
-            <p><strong>{{labels.due_date}}: </strong>{{document.due_date}}</p>
-            {% endif %}
-            {% if document.payment_details != "" %}
-            <p><strong>{{labels.payment_details}}: </strong>{{document.payment_details | textilize}}</p>
-            {% endif %}
-            {% if document.notes != "" %}
-            <p><strong>{{labels.notes}}: </strong>{{document.notes | textilize}}</p>
-            {% endif %}
-          </p>
-        </td>
-      </tr>
+      <tbody>
+        <!-- contact's data -->
+        <tr>
+          <td colspan="2" class="right">
+            <address>
+              <p><strong>{{contact.full_name}}</strong></p>
+              {% if contact.tax_id != "" %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+              <p>{{contact.street_line_1}}</p>
+              <p>{{contact.street_line_2}}</p>
+              {% if contact.city != "" or contact.postal_code != "" %}<p>{{contact.city}} {{contact.postal_code}}</p>{% endif %}
+              <p>{% if contact.region != "" %}{{contact.region}},{% endif %} {{contact.country_name}}</p>
+            </address>
+          </td>
+        </tr>
+        <tr>
+          <!-- document type -->
+          <td colspan="2" class="center">
+            <h1>{{title}}</h1>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <!-- basic data -->
+            <strong>{{labels.number}}: </strong>{{document.number}}
+            <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date: "%d/%m/%Y"}}
+            {% if document.po_number != "" %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <!-- items table -->
+            <table id="items">
+              <thead> 
+                <tr>
+                  <th width="60%">{{labels.description}}</th>
+                  <th class="right">{{labels.quantity}}</th>
+                  <th class="right">{{labels.unit_price}}</th>
+                  <th class="right">{{labels.amount}}</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td colspan="4">
+                    <p>{{labels.subtotal}}: {{document.subtotal | money}}</p>
+                    {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount | money}}</p>{% endif %}
+                    {% for tax in document.taxes %}
+                      <p>{{tax.label}}: {{tax.amount | money}}</p>
+                    {% endfor %}
+                    <p>{{labels.total}}: {{document.total | money}}</p>
+                  </td>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for item in document.items %}
+                <tr>
+                  <td>{{item.description}}</td>
+                  <td class="right">{{item.quantity | precision}}</td>
+                  <td class="right">{{item.unit_price | precision}}</td>
+                  <td class="right">{{item.subtotal | money}}</td>
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <!-- other data -->
+            <p>
+              {% if document.due_date %}
+              <strong>{{labels.due_date}}: </strong>{{document.due_date | date: "%d/%m/%Y"}}<br/>
+              {% endif %}
+              {% if document.valid_until %}
+              <strong>{{labels.valid_until}}: </strong>{{document.valid_until | date: "%d/%m/%Y"}}<br/>
+              {% endif %}
+              {% if document.payment_details != "" and document.payment_details != null %}
+              <strong>{{labels.payment_details}}: </strong>{{document.payment_details | textilize}}<br/>
+              {% endif %}
+              {% if document.notes != "" and document.notes != null %}
+              <strong>{{labels.notes}}: </strong>{{document.notes | textilize}}
+              {% endif %}
+            </p>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
   <div id="footer">
+    <!-- account's data -->
     <p>
-      <strong>
-        {{account.full_name}} - {{labels.tax_id}}: {{account.tax_id}}
-      </strong> <br />
-      {{account.street_line_1}} - {{account.city}} {{account.region}} {{account.postal_code}} - {{account.country}}.<br />
+      <strong>{{account.full_name}} - {{labels.tax_id}}: {{account.tax_id}}</strong>
+      <address>{{account.street_line_1}} - {{account.city}} {{account.postal_code}} - {% if account.region != "" %}{{account.region}} -{% endif %} {{account.country_name}}</address>
       {{labels.phone}}: {{account.phone_1}} - {{labels.email}}: {{account.email}}
     </p>
   </div>
