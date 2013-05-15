@@ -29,7 +29,7 @@
       <thead>
         <tr>        
           <!-- logo -->
-          <td colspan="2"><img src="{{account.logo_url}}" width="200" /></td>
+          <td colspan="2"><img src="{{ account.logo_url | resize: '227x91>' }}" /></td>
         </tr>
       </thead>
       {% endif %}
