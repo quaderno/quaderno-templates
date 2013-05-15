@@ -43,4 +43,6 @@ And that is pretty much all! You may now start creating your own documents in Qu
 ## More information
 * [Getting started] (https://github.com/recrea/quaderno-templates/wiki/Getting-started)
 * [Liquid syntax] (https://github.com/recrea/quaderno-templates/wiki/Liquid-syntax)
-* [Quaderno-Templates reference] (https://github.com/recrea/quaderno-templates/wiki/Reference)
+* [Template variables] (https://github.com/recrea/quaderno-templates/wiki/Variables)
+* [Template labels] (https://github.com/recrea/quaderno-templates/wiki/Labels)
+* [Template filters] (https://github.com/recrea/quaderno-templates/wiki/Filters)
