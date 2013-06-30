@@ -43,7 +43,7 @@
               <p>{{contact.street_line_1}}</p>
               <p>{{contact.street_line_2}}</p>
               {% if contact.city != "" or contact.postal_code != "" %}<p>{{contact.city}} {{contact.postal_code}}</p>{% endif %}
-              <p>{% if contact.region != "" %}{{contact.region}},{% endif %} {{contact.country_name}}</p>
+              <p>{% if contact.region != "" %}{{contact.region}},{% endif %} {{contact.country | country_name}}</p>
             </address>
           </td>
         </tr>
@@ -125,7 +125,7 @@
     <!-- account's data -->
     <p>
       <strong>{{account.full_name}} - {{labels.tax_id}}: {{account.tax_id}}</strong>
-      <address>{{account.street_line_1}} - {{account.city}} {{account.postal_code}} - {% if account.region != "" %}{{account.region}} -{% endif %} {{account.country_name}}</address>
+      <address>{{account.street_line_1}} - {{account.city}} {{account.postal_code}} - {% if account.region != "" %}{{account.region}} -{% endif %} {{account.country | country_name}}</address>
       {{labels.phone}}: {{account.phone_1}} - {{labels.email}}: {{account.email}}
     </p>
   </div>
