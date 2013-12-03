@@ -29,7 +29,7 @@
       <thead>
         <tr>        
           <!-- logo -->
-          <td colspan="2"><img src="{{ account.logo_url | resize: '227x91>' }}" /></td>
+          <td colspan="2"><img src="{{ account.logo_url }}" width="200" /></td>
         </tr>
       </thead>
       {% endif %}
@@ -57,7 +57,7 @@
           <td>
             <!-- basic data -->
             <strong>{{labels.number}}: </strong>{{document.number}}
-            <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date}}
+            <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date:'long'}}
             {% if document.po_number != "" %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
           </td>
           <td>&nbsp;</td>
@@ -104,10 +104,10 @@
             <!-- other data -->
             <p>
               {% if document.due_date %}
-              <strong>{{labels.due_date}}: </strong>{{document.due_date | date}}<br/>
+              <strong>{{labels.due_date}}: </strong>{{document.due_date | date:'long'}}<br/>
               {% endif %}
               {% if document.valid_until %}
-              <strong>{{labels.valid_until}}: </strong>{{document.valid_until | date}}<br/>
+              <strong>{{labels.valid_until}}: </strong>{{document.valid_until | date:'long'}}<br/>
               {% endif %}
               {% if document.payment_details != "" and document.payment_details != null %}
               <strong>{{labels.payment_details}}: </strong>{{document.payment_details | textilize}}<br/>
