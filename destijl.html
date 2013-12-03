@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>{{document.number}}</title>
+    <style type="text/css">
+      body { color: #000; font: normal 100% Helvetica, Arial, sans-serif; }
+      #content { padding: 30px 30px; min-height: 810px; }
+      h1 { font-size: 32px; margin:0 0 20px 0; line-height:1.1; color:{{account.color_scheme}}; }
+      h2 { font-size: 16px; font-weight: bold; margin: 0; }
+      h3 { margin:2px 0; }
+      p { font-size: 12px; margin: 0; }
+      address { font-style: normal; }
+      a:link, a:visited { color: #000; text-decoration: none; }
+      a:hover { color: #000; text-decoration: none; }
+      abbr { border:none; }
+      .label, .currency { font-size: 11px; text-transform: uppercase; font-weight: normal; }
+      .total-currency { font-size: 16px; }
+      .smalltxt { font-size: 14px; cursor:help; }
+      .txt { font-size: 16px; font-weight: bold; }
+      #items th {font-size: 13px; }
+      table { width: 100%; border: none; border-collapse: collapse; }
+      table td { padding: 5px 0; font-size: 13px; line-height: 16px; }
+      #items { margin: 30px 0 30px 0; }
+      #items thead tr th { padding: 8px 0 6px 0; }
+      #items tbody { border-top: 2px solid #000; border-bottom: 2px solid #000; }
+      #items tbody tr { border-bottom: 1px solid #000; }
+      #items tfoot .label, #items tfoot .right { border-bottom: 1px solid #000; }
+      #items tfoot .txt { border-bottom: 1px solid {{account.color_scheme}}; }
+      #items td { padding: 8px 0; }
+      .border-first { border-top: 4px solid {{account.color_scheme}}; margin-top: 0; padding-top: 5px; }
+      .border-end { border-bottom:2px solid {{account.color_scheme}}; }
+      .border2 { border-top:2px solid {{account.color_scheme}}; }
+      .border1 { border-top:1px solid #000; margin-top: 30px; padding-top: 5px; }
+      .space30 { padding-right: 30px; }
+      .space12 { padding-right: 12px; }
+      .left { text-align: left; }
+      .right { text-align: right; }
+      .center { text-align: center; }
+      /* css rules for printing */
+      @media print {
+        body { -webkit-print-color-adjust:exact; }
+      }
+    </style>
+  </head>
+  <body>
+  <div id="content">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <!-- // Begin Template Header \\ -->
+      <tr>
+        <td colspan="2">
+        {% if account.logo_url != "" %}
+          <img src="{{ account.logo_url }}" width="200" />
+        {% endif %}
+        </td>
+        <td valign="bottom"><h1>{{title}}</h1></td>
+      </tr>
+      <!-- // End Template Header \\ -->
+      <!-- // Begin Template Body \\ -->
+      <tr>
+        <!-- // Begin Left Column \\ -->
+        <td width="20%" rowspan="2" valign="top" class="space12">
+          <h2 class="label border-first">{{labels.number}}</h2>
+          <p class="txt">{{ document.number }}</p>
+          <h2 class="label border1">{{labels.issue_date}}</h2>
+          <p class="txt">{{document.issue_date | date}}</p>
+          {% if document.po_number != "" and document.po_number != null %}
+          <h2 class="label border1">{{labels.po_number}}</h2>
+          <p class="txt">{{ document.po_number }}</p>
+          {% endif %}
+          {% if document.due_date > 0 %}
+          <h2 class="label border1">{{labels.due_date}}</h2>
+          <p class="txt">{{document.due_date | date}}</p>
+          {% endif %}
+        </td>
+        <!-- // End Left Column \\ -->
+        <!-- // Begin              \\ -->
+        <td width="38%" valign="top" class="space12">
+          <h2 class="label border-first">{{labels.from}}</h2>
+          <h3 class="txt">{{ account.full_name }}</h3>
+          <p>{% if account.tax_id != "" %} {{labels.tax_id}}: {{account.tax_id}} {% endif %}</p>
+          <address>
+            <p>{{ account.street_line_1 }}</p>
+            <p>{{ account.street_line_2 }}</p>
+            <p>{{ account.city }} {{ account.postal_code }}</p>
+            <p>{{ account.region }}{% if account.region != "" %},{% endif %} {{ account.country | country_name }}</p>
+          </address>
+          <p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>
+          <p><a href="{{account.web}}">{{ account.web }}</a></p>
+        </td>
+        <td width="42%" valign="top">
+          <h2 class="label border-first">{{labels.to}}</h2>
+          <h3 class="txt">{{ contact.full_name }}</h3>
+          <p>{% if contact.tax_id != "" %} {{labels.tax_id}}: {{contact.tax_id}} {% endif %}</p>
+          <p>{{ contact.contact_name }}</p>
+          <address>
+            <p>{{ contact.street_line_1 }}</p>
+            <p>{{ contact.street_line_2 }}</p>
+            <p>{{ contact.city }} {{ contact.postal_code }}</p>
+            <p>{{ contact.region }}{% if contact.region != "" %},{% endif %} {{ contact.country | country_name }}</p>
+          </address>
+        </td>
+        <!-- // End              \\ -->
+      </tr>
+      <tr>
+        <td colspan="2" valign="top">
+        <table id="items" width="100%" border="0" cellspacing="0" cellpadding="0">
+          <thead>
+            <tr class="border-first">
+              <th scope="col" class="left">{{labels.description}}</th>
+              <th width="18%" class="right">{{labels.quantity}}</th>
+              <th width="23%" class="right">{{labels.unit_price}}</th>
+              <th width="23%" class="right">{{labels.amount}}</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td colspan="2">&nbsp;</td>
+              <td class="label">{{labels.subtotal}}</td>
+              <td class="right"><strong>{{ document.subtotal | money}}</strong></td>
+            </tr>
+            {% if document.discount > 0 %}
+            <tr>
+              <td colspan="2">&nbsp;</td>
+              <td class="label">{{labels.discount}}</td>
+              <td class="right"><strong>{{ document.discount | money}}</strong></td>
+            </tr>
+            {% endif %}
+            {% for tax in document.taxes %}
+            <tr>
+              <td colspan="2">&nbsp;</td>
+              <td class="label">{{tax.label}}</td>
+              <td class="right"><strong>{{tax.amount | money}}</strong></td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td colspan="2">&nbsp;</td>
+              <td class="border2 txt">{{labels.total}}</td>
+              <td class="border2 right txt"><strong>{{document.total | money}}</strong></td>
+            </tr>
+          </tfoot>
+          <tbody>
+            {% for item in document.items %}
+            <tr>
+              <td>{{item.description}}</td>
+              <td width="18%" class="right">{{item.quantity | precision}}</td>
+              <td width="23%" class="right">{{item.unit_price | precision}}</td>
+              <td width="23%" class="right"><strong>{{item.subtotal | money}}</strong></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </td>
+      </tr>
+      <!-- // End Template Body \\ -->
+      <!-- // Begin Template Footer \\ -->
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="2" valign="top">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              {% if document.notes != "" and document.notes != null %}
+              <td width="47%" valign="top" {% if document.payment_details != "" and document.payment_details != null %} class="space12" {% endif %}>
+                <h2 class="label border-first">{{labels.notes}}</h2>
+                <p class="smalltxt">{{document.notes | textilize}}</p>
+              </td>
+              {% endif %}
+              {% if document.payment_details != "" and document.payment_details != null %}
+              <td width="53%" valign="top">
+                <h2 class="label border-first">{{labels.payment_details}}</h2>
+                <p class="smalltxt">{{document.payment_details | textilize}}</p>
+              </td>
+              {% endif %}
+            </tr>
+          </table>  
+        </td>
+      </tr>
+      <!-- // End Template Footer \\ -->
+    </table>
+  </div>
+</body>
+</html>
