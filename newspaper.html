@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>{{document.number}}</title>
+<style type="text/css">
+	body {
+		color:#000;
+		font:normal 100% Georgia, "Times New Roman", Times, serif;
+	}
+	#header, #items, #footer { padding:40px 39px 0; }
+	#header table, #items table, #footer table { margin:0 auto; }
+	h1, h2 {
+		text-transform:uppercase;
+		color:#4d4d4d;
+		font-weight:normal;
+		margin:0;
+	}
+	h1 {
+		font-size:32px;
+		border-bottom:1px solid #ccc;
+	}
+	h2 { font-size:11px; }
+	h3 {
+		margin:5px 0 0;
+		font: 24px Impact, Charcoal, sans-serif;
+		line-height:1;
+		color: {{account.color_scheme}};
+	}
+	p { margin:0; }
+	address {
+		color:#4d4d4d;
+		font-style:italic;
+		font-size:14px;
+	}
+	.line { border-top:1px solid #ccc; }
+	
+	.document-data, .contact-data { padding-top:10px; }
+	.document-data h2.line, .contact-data address { padding-top:10px; }
+	.document-data p {
+		margin-bottom:10px;
+		font-size:14px;
+		color:#4d4d4d;
+	}
+	.contact-data p {
+		margin:6px 0 0;
+		font-size:14px;
+		color:#4d4d4d;
+	}
+	#items {
+		min-height:450px;
+	}
+	#items table thead tr th, #items table tfoot tr td, #items table tbody tr td {
+		padding:6px 0;
+		font:11px Georgia, "Times New Roman", Times, serif;
+		color:#4d4d4d;
+		line-height:1.4;
+	}
+	#items table thead tr th {
+    background-color: {{account.color_scheme}};
+		color:#fff;
+		font:normal 11px Georgia, "Times New Roman", Times, serif;
+		text-transform:uppercase;
+	}
+	#items table tfoot tr td.label, #items table tfoot tr td.label-total {
+		text-transform:uppercase;
+	}
+	.border {
+		border-bottom:1px solid #ccc;
+	}
+	#items table tfoot tr td.label-total, #items table tfoot tr td.value-total {
+		border-top:1px solid #4d4d4d;
+		border-bottom:1px solid #4d4d4d;
+		font:19px Impact, Charcoal, sans-serif;
+		color: {{account.color_scheme}};
+	}
+	#items table tfoot tr td.label-total {
+		text-transform:none;
+	}
+	#items table tfoot tr td.value-total abbr {
+		font-size:16px;
+	}
+	#items table tbody tr td {
+		border-bottom:1px solid #ccc;
+	}
+	#items table thead tr th.description, #items table tbody tr td.description {
+		padding-left:6px;
+		padding-right:14px;
+		text-align:left;
+	}
+	#items table tbody tr td.description { font-style:italic; }
+	#items table thead tr th.quantity, #items table tbody tr td.quantity {
+		padding-right:14px;
+		text-align:right;	
+	}
+	#items table thead tr th.price, #items table tbody tr td.price {
+		padding-right:14px;
+		text-align:right;
+	}
+	#items table thead tr th.amount, #items table tfoot tr td.value, #items table tfoot tr td.value-total, #items table tbody tr td.amount {
+		padding-right:6px;
+		text-align:right;
+	}
+	#footer .user, #footer .notes, #footer .payment {
+		padding-top:10px;
+		border-top: 1px solid #ccc;
+	}
+	#footer h3 {
+		font:normal 16px Georgia, "Times New Roman", Times, serif;
+		text-transform:uppercase;
+		color:#4d4d4d;
+	}
+	#footer p {
+		margin-top:6px;
+		font:italic 11px Georgia, "Times New Roman", Times, serif;
+		line-height:1.4;
+		color:#4d4d4d;
+	}
+	#footer p a { color:#4d4d4d; text-decoration: none;}
+	/* css rules for printing */
+	@media print {
+		body { -webkit-print-color-adjust:exact; }
+	}
+</style>
+</head>
+<body>
+<div id="header">
+  <table width="722" border="0" cellspacing="0" cellpadding="0" style="font-size:100%">
+    <tr>
+      <td width="308" rowspan="2" valign="top">
+      	 <!-- logo -->
+      	 {% if account.logo_url != "" %}
+      	  <img src="{{ account.logo_url}}" width="200" />
+         {% endif %}
+      </td>
+      <td width="14" rowspan="2">&nbsp;</td>
+      <td colspan="3"><h1>{{title}}</h1></td>
+    </tr>
+    <tr>
+      <td width="124" valign="top" class="document-data">
+      	<!-- document data -->
+      	<h2>{{labels.number}}</h2>
+        <p>{{document.number}}</p>
+        <h2 class="line">{{labels.issue_date}}</h2>
+        <p>{{document.issue_date | date:'long'}}</p>
+        {% if document.po_number != "" %}
+        <h2 class="line">{{labels.po_number}}:</h2>
+        <p>{{document.po_number}}</p>
+        {% endif %}
+        {% if document.due_date %}
+        <h2 class="line">{{labels.due_date}}</h2>
+        <p>{{document.due_date | date:'long'}}</p>
+        {% endif %}
+        {% if document.valid_until %}
+        <h2 class="line">{{labels.valid_until}}</h2>
+        <p>{{document.valid_until | date:'long'}}</p>
+        {% endif %}
+      </td>
+      <td width="14">&nbsp;</td>
+      <td width="262" valign="top" class="contact-data">
+      	<!-- contact's data -->
+      	<h2>{{labels.to}}</h2>
+        <h3>{{contact.full_name}}</h3>
+        {% if contact.tax_id != "" %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+        <address>
+        <p>{{contact.street_line_1}}<br />
+          {{contact.street_line_2}}<br />
+          {% if contact.city != "" or contact.postal_code != "" %}{{contact.city}} {{contact.postal_code}}<br />{% endif %}
+          {% if contact.region != "" %}{{contact.region}},{% endif %} {{contact.country_name}}</p>
+        </address></td>
+    </tr>
+  </table>
+</div>
+<div id="items">
+<!-- items -->
+  <table width="722" border="0" cellspacing="0" cellpadding="0" style="font-size:100%">
+  <thead>
+    <tr>
+      <th width="322" class="description" scope="col">{{labels.description}}</th>
+      <th width="92" class="quantity">{{labels.quantity}}</th>
+      <th width="138" class="price">{{labels.unit_price}}</th>
+      <th width="170" class="amount">{{labels.amount}}</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <td width="322">&nbsp;</td>
+      <td width="92">&nbsp;</td>
+      <td width="138" valign="top" class="label border">{{labels.subtotal}}</td>
+      <td width="170" valign="top" class="value border"><strong>{{document.subtotal | money}}</strong></td>
+    </tr>
+    {% if document.discount > 0 %}
+    <tr>
+      <td width="322">&nbsp;</td>
+      <td width="92">&nbsp;</td>
+      <td width="138" valign="top" class="label border">{{labels.discount}}</td>
+      <td width="170" valign="top" class="value border"><strong>{{document.discount | money}}</strong></td>
+    </tr>
+    {% endif %}
+    {% for tax in document.taxes %}
+    <tr>
+      <td width="322">&nbsp;</td>
+      <td width="92">&nbsp;</td>
+      <td width="138" valign="top" class="label">{{tax.label}}</td>
+      <td width="170" valign="top" class="value"><strong>{{tax.amount | money}}</strong></td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td width="322">&nbsp;</td>
+      <td width="92">&nbsp;</td>
+      <td width="138" valign="top" class="label-total">{{labels.total}}</td>
+      <td width="170" valign="top" class="value-total"><strong>{{document.total | money}}</strong></td>
+    </tr>
+  </tfoot>
+  <tbody>
+    {% for item in document.items %}
+    <tr>
+      <td width="322" valign="top" class="description">{{item.description}}</td>
+      <td width="92" valign="top" class="quantity">{{item.quantity | precision}}</td>
+      <td width="138" valign="top" class="price">{{item.unit_price | precision}}</td>
+      <td width="170" valign="top" class="amount"><strong>{{item.subtotal | money}}</strong></td>
+    </tr>
+    {% endfor %} 
+  </tbody>
+</table>
+</div>
+<div id="footer">
+<!-- footer -->
+<table width="722" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="216" valign="top" class="user">
+      <!-- user data -->
+      <h2>{{labels.from}}</h2>
+      <h3>{{account.full_name}}</h3>
+      {% if account.tax_id %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+      {% if account.street_line_1 %}
+      <address>
+      <p>{{account.street_line_1}}<br />
+        {{account.city}} {{account.postal_code}}<br />
+        {% if account.region %}{{account.region}}, {% endif %} {{account.country_name}}</p>
+      </address>
+      {% endif %}
+      {% if account.phone_1 %}<p>{{labels.phone}}: {{account.phone_1}}</p>{% endif %}
+      <p>{{labels.email}}: {{account.email}}</p>
+      {% if account.web %}<p>{{labels.web}}: {{account.web}}</p>{% endif %}
+    </td>
+    <td width="14">&nbsp;</td>
+    <td width="216" valign="top" class="notes">
+      {% if document.notes != "" and document.notes != null %}
+      <!-- notes -->
+      <h2>{{labels.notes}}</h2>
+      <p>{{document.notes | textilize}}</p>
+      {% endif %}
+    </td>
+    <td width="14">&nbsp;</td>
+    <td width="216" valign="top" class="payment">
+      {% if document.payment_details != "" and document.payment_details != null %}
+      <!-- payment details -->
+      <h2>{{labels.payment_details}}</h2>
+      <p>{{document.payment_details | textilize}}</p>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+</div>
+</body>
+</html>
