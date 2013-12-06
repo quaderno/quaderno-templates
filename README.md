@@ -28,7 +28,7 @@ Here is an example you can use to start with:
 </body>
 </html>
 ```
-You can download a complete and functional example [here] (https://raw.github.com/recrea/quaderno-templates/master/template.html).
+You can download a complete and functional example [here] (https://raw.github.com/recrea/quaderno-templates/master/professional.html).
 
 ## Usage
 <sub>Please note that you should have knowledge of the (very) basics of HTML and CSS.</sub>
