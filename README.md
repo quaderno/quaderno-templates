@@ -36,7 +36,7 @@ You can download a complete and functional example [here] (https://raw.github.co
  
 * Afterwards, we encourage you to follow our [Getting Started] (https://github.com/recrea/quaderno-templates/wiki/Getting-started) tutorial to learn how to build a template from scratch.
 
-* Finally, ou should check the [Quaderno-Templates reference] (https://github.com/recrea/quaderno-templates/wiki/Reference) as you will need to use it in order to show document-specific data.
+* Finally, you should check the [Quaderno-Templates reference] (https://github.com/recrea/quaderno-templates/wiki/Reference) as you will need to use it in order to show document-specific data.
 
 And that is pretty much all! You may now start creating your own documents in Quaderno!
 
