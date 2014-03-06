@@ -116,6 +116,7 @@
 		line-height:1.4;
 		color:#4d4d4d;
 	}
+	#footer address p { line-height:1; }
 	#footer p a { color:#4d4d4d; text-decoration: none;}
 	/* css rules for printing */
 	@media print {
@@ -163,10 +164,10 @@
         <h3>{{contact.full_name}}</h3>
         {% if contact.tax_id != "" %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
         <address>
-        <p>{{contact.street_line_1}}<br />
-          {{contact.street_line_2}}<br />
-          {% if contact.city != "" or contact.postal_code != "" %}{{contact.city}} {{contact.postal_code}}<br />{% endif %}
-          {% if contact.region != "" %}{{contact.region}},{% endif %} {{contact.country_name}}</p>
+          <p>{{contact.street_line_1}}</p>
+          <p>{{contact.street_line_2}}</p>
+          {% if contact.city != contact.region %}<p>{{contact.city}}</p>{% endif %}
+          <p>{{contact.region}} {{contact.postal_code}}</p>
         </address></td>
     </tr>
   </table>
@@ -232,17 +233,18 @@
       <!-- user data -->
       <h2>{{labels.from}}</h2>
       <h3>{{account.full_name}}</h3>
-      {% if account.tax_id %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+      {% if account.tax_id != '' %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
       {% if account.street_line_1 %}
       <address>
-      <p>{{account.street_line_1}}<br />
-        {{account.city}} {{account.postal_code}}<br />
-        {% if account.region %}{{account.region}}, {% endif %} {{account.country_name}}</p>
+        <p>{{account.street_line_1}}</p>
+        <p>{{account.street_line_2}}</p>
+        {% if account.city != account.region %}<p>{{account.city}}</p>{% endif %}
+        <p>{{account.region}} {{account.postal_code}}, {{account.country | country_name}}</p>
       </address>
       {% endif %}
       {% if account.phone_1 %}<p>{{labels.phone}}: {{account.phone_1}}</p>{% endif %}
       <p>{{labels.email}}: {{account.email}}</p>
-      {% if account.web %}<p>{{labels.web}}: {{account.web}}</p>{% endif %}
+      {% if account.web != '' %}<p>Web: {{account.web}}</p>{% endif %}
     </td>
     <td width="14">&nbsp;</td>
     <td width="216" valign="top" class="notes">
