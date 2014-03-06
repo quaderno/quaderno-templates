@@ -39,8 +39,8 @@
   					{% if account.tax_id != "" %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
   					<p>{{account.street_line_1}}</p>
   					<p>{{account.street_line_2}}</p>
-  					<p>{{account.city}} {{account.postal_code}}</p>
-            <p>{{account.region}}, {{account.country | country_name}}</p>
+            {% if account.city != account.region %}<p>{{ account.city }}</p>{% endif %}
+            <p>{{account.region}} {{account.postal_code}}, {{account.country | country_name}}</p>
   				</address>
   			</td>
   		</tr>
@@ -52,8 +52,8 @@
             {% if contact.tax_id != "" %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
             <p>{{contact.street_line_1}}</p>
             <p>{{contact.street_line_2}}</p>
-            <p>{{contact.city}} {{contact.postal_code}}</p>
-            {% if contact.region != "" %}<p>{{contact.region}},{% endif %} {{contact.country | country_name}}</p>
+            {% if contact.city != contact.region %}<p>{{ contact.city }}</p>{% endif %}
+            <p>{{contact.region}} {{contact.postal_code}}, {{contact.country | country_name}}</p>
           </address>
   			</td>
   		</tr>
