@@ -82,8 +82,8 @@
           <address>
             <p>{{ account.street_line_1 }}</p>
             <p>{{ account.street_line_2 }}</p>
-            <p>{{ account.city }} {{ account.postal_code }}</p>
-            <p>{{ account.region }}{% if account.region != "" %},{% endif %} {{ account.country | country_name }}</p>
+            {% if account.city != account.region %}<p>{{ account.city }}</p>{% endif %}
+            <p>{{ account.region }} {{ account.postal_code }}, {{ account.country | country_name }}</p>
           </address>
           <p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>
           <p><a href="{{account.web}}">{{ account.web }}</a></p>
@@ -96,8 +96,8 @@
           <address>
             <p>{{ contact.street_line_1 }}</p>
             <p>{{ contact.street_line_2 }}</p>
-            <p>{{ contact.city }} {{ contact.postal_code }}</p>
-            <p>{{ contact.region }}{% if contact.region != "" %},{% endif %} {{ contact.country | country_name }}</p>
+            {% if contact.city != contact.region %}<p>{{ contact.city }}</p>{% endif %}
+            <p>{{ contact.region }} {{ contact.postal_code }}, {{ contact.country | country_name }}</p>
           </address>
         </td>
         <!-- // End              \\ -->
