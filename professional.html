@@ -29,14 +29,15 @@
   <div id="content">
   	<table style="font-size:100%">
   		<tr>
-  			<td>{% if account.logo_url != "" %}<img src="{{ account.logo_url }}" width="200" />{% endif %}</td>
+  			<td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" width="200" />{% endif %}</td>
   			<td class="right" style="font-size:150%;">{{document.issue_date | date}}</td>
   		</tr>
   		<tr>
   			<td colspan="2">
   				<address>
   					<h3 class="txt">{{account.full_name}}</h3>
-  					{% if account.tax_id != "" %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+  					{% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+            {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
   					<p>{{account.street_line_1}}</p>
   					<p>{{account.street_line_2}}</p>
             {% if account.city != account.region %}<p>{{ account.city }}</p>{% endif %}
@@ -49,7 +50,7 @@
   			  <address>
             <h3 class="txt">{{contact.full_name}}</h3>
   			    {% if contact.contact_name != "" %}<p><strong>{{contact.contact_name}}</strong></p>{% endif %}
-            {% if contact.tax_id != "" %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+            {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
             <p>{{contact.street_line_1}}</p>
             <p>{{contact.street_line_2}}</p>
             {% if contact.city != contact.region %}<p>{{ contact.city }}</p>{% endif %}
@@ -60,7 +61,7 @@
   		<tr>
   			<td colspan="2">
   				<h1>{{title}} {{{document.number}}</h1>
-  				{% if document.po_number != "" %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
+  				{% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
   			</td>
   		</tr>
   		<tr>
@@ -101,22 +102,22 @@
   	  </tr>
   	  <tr>
         <td colspan="2" id="details">
-          {% if document.due_date %}
+          {% if document.due_date != blank %}
           <h4>{{labels.due_date}}</h4>
           <p>{{document.due_date | date}}<p>
           {% endif %}
       
-          {% if document.valid_until %}
+          {% if document.valid_until != blank %}
           <h4>{{labels.valid_until}}</h4>
           <p>{{document.valid_until | date}}<p>
           {% endif %}
 
-          {% if document.payment_details != "" and document.payment_details != null %}
+          {% if document.payment_details != blank %}
           <h4>{{labels.payment_details}}</h4>
           <p>{{document.payment_details | textilize}}</p>
           {% endif %}
       
-          {% if document.notes != "" and document.notes != null %}
+          {% if document.notes != blank %}
           <h4>{{labels.notes}}</h4>
           <p>{{document.notes | textilize}}</p>
           {% endif %}
