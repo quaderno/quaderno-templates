@@ -49,7 +49,7 @@
       <!-- // Begin Template Header \\ -->
       <tr>
         <td colspan="2">
-        {% if account.logo_url != "" %}
+        {% if account.logo_url != blank %}
           <img src="{{ account.logo_url }}" width="300" />
         {% endif %}
         </td>
@@ -64,7 +64,7 @@
           <p class="txt">{{ document.number }}</p>
           <h2 class="label border1">{{labels.issue_date}}</h2>
           <p class="txt">{{document.issue_date | date}}</p>
-          {% if document.po_number != "" and document.po_number != null %}
+          {% if document.po_number != blank %}
           <h2 class="label border1">{{labels.po_number}}</h2>
           <p class="txt">{{ document.po_number }}</p>
           {% endif %}
@@ -74,11 +74,12 @@
           {% endif %}
         </td>
         <!-- // End Left Column \\ -->
-        <!-- // Begin              \\ -->
+        <!-- // Begin           \\ -->
         <td width="38%" valign="top" class="space12">
           <h2 class="label border-first">{{labels.from}}</h2>
           <h3 class="txt">{{ account.full_name }}</h3>
-          <p>{% if account.tax_id != "" %} {{labels.tax_id}}: {{account.tax_id}} {% endif %}</p>
+          <p>{% if account.tax_id != blank %} {{labels.tax_id}}: {{account.tax_id}} {% endif %}</p>
+          <p>{% if account.company_number != blank %} {{labels.company_number}}: {{account.company_number}} {% endif %}</p>
           <address>
             <p>{{ account.street_line_1 }}</p>
             <p>{{ account.street_line_2 }}</p>
@@ -91,7 +92,7 @@
         <td width="42%" valign="top">
           <h2 class="label border-first">{{labels.to}}</h2>
           <h3 class="txt">{{ contact.full_name }}</h3>
-          <p>{% if contact.tax_id != "" %} {{labels.tax_id}}: {{contact.tax_id}} {% endif %}</p>
+          <p>{% if contact.tax_id != blank %} {{labels.tax_id}}: {{contact.tax_id}} {% endif %}</p>
           <p>{{ contact.contact_name }}</p>
           <address>
             <p>{{ contact.street_line_1 }}</p>
@@ -100,7 +101,7 @@
             <p>{{ contact.region }} {{ contact.postal_code }}, {{ contact.country | country_name }}</p>
           </address>
         </td>
-        <!-- // End              \\ -->
+        <!-- // End           \\ -->
       </tr>
       <tr>
         <td colspan="2" valign="top">
@@ -159,13 +160,13 @@
         <td colspan="2" valign="top">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
-              {% if document.notes != "" and document.notes != null %}
-              <td width="47%" valign="top" {% if document.payment_details != "" and document.payment_details != null %} class="space12" {% endif %}>
+              {% if document.notes != blank %}
+              <td width="47%" valign="top" {% if document.payment_details != blank %} class="space12" {% endif %}>
                 <h2 class="label border-first">{{labels.notes}}</h2>
                 <p class="smalltxt">{{document.notes | textilize}}</p>
               </td>
               {% endif %}
-              {% if document.payment_details != "" and document.payment_details != null %}
+              {% if document.payment_details != blank %}
               <td width="53%" valign="top">
                 <h2 class="label border-first">{{labels.payment_details}}</h2>
                 <p class="smalltxt">{{document.payment_details | textilize}}</p>
