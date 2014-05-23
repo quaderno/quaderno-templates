@@ -130,7 +130,7 @@
     <tr>
       <td width="308" rowspan="2" valign="top">
       	 <!-- logo -->
-      	 {% if account.logo_url != "" %}
+      	 {% if account.logo_url != blank %}
       	  <img src="{{ account.logo_url}}" width="300" />
          {% endif %}
       </td>
@@ -144,15 +144,15 @@
         <p>{{document.number}}</p>
         <h2 class="line">{{labels.issue_date}}</h2>
         <p>{{document.issue_date | date:'long'}}</p>
-        {% if document.po_number != "" %}
+        {% if document.po_number != blank %}
         <h2 class="line">{{labels.po_number}}:</h2>
         <p>{{document.po_number}}</p>
         {% endif %}
-        {% if document.due_date %}
+        {% if document.due_date != blank %}
         <h2 class="line">{{labels.due_date}}</h2>
         <p>{{document.due_date | date:'long'}}</p>
         {% endif %}
-        {% if document.valid_until %}
+        {% if document.valid_until != blank %}
         <h2 class="line">{{labels.valid_until}}</h2>
         <p>{{document.valid_until | date:'long'}}</p>
         {% endif %}
@@ -162,7 +162,7 @@
       	<!-- contact's data -->
       	<h2>{{labels.to}}</h2>
         <h3>{{contact.full_name}}</h3>
-        {% if contact.tax_id != "" %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+        {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
         <address>
           <p>{{contact.street_line_1}}</p>
           <p>{{contact.street_line_2}}</p>
@@ -233,7 +233,8 @@
       <!-- user data -->
       <h2>{{labels.from}}</h2>
       <h3>{{account.full_name}}</h3>
-      {% if account.tax_id != '' %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+      {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+      {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
       {% if account.street_line_1 %}
       <address>
         <p>{{account.street_line_1}}</p>
@@ -248,7 +249,7 @@
     </td>
     <td width="14">&nbsp;</td>
     <td width="216" valign="top" class="notes">
-      {% if document.notes != "" and document.notes != null %}
+      {% if document.notes != blank %}
       <!-- notes -->
       <h2>{{labels.notes}}</h2>
       <p>{{document.notes | textilize}}</p>
@@ -256,7 +257,7 @@
     </td>
     <td width="14">&nbsp;</td>
     <td width="216" valign="top" class="payment">
-      {% if document.payment_details != "" and document.payment_details != null %}
+      {% if document.payment_details != blank %}
       <!-- payment details -->
       <h2>{{labels.payment_details}}</h2>
       <p>{{document.payment_details | textilize}}</p>
