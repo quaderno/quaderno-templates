@@ -170,6 +170,16 @@
           <p>{{contact.region}} {{contact.postal_code}}</p>
         </address></td>
     </tr>
+    {% if document.subject != blank %}
+    <tr>
+      <td valign="top">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td colspan="3" valign="top" class="document-data">
+        <h2 class="line">{{labels.subject}}</h2>
+        <p>{{ document.subject }}</p>             
+      </td>
+    </tr>
+    {% endif %}
   </table>
 </div>
 <div id="items">
