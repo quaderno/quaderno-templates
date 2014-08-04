@@ -15,7 +15,7 @@
     table#items thead tr th { color: {{account.color_scheme}}; font-weight: normal; padding: 5px; border-bottom: 2px solid #666; }
     table#items tbody tr td { border-bottom: 2px solid #666; }
     table#items tfoot tr td { text-align: right; }
-    #details h4 { font-size: 100%; font-weight: bold; color: {{account.color_scheme}}; text-transform: uppercase; margin-bottom: 0; }
+    #details h4, h4.subject { font-size: 100%; font-weight: bold; color: {{account.color_scheme}}; text-transform: uppercase; margin-bottom: 0; }
     #details p { margin: 0; }
     .right { text-align: right; }
     .center { text-align: center; }
@@ -64,6 +64,14 @@
   				{% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
   			</td>
   		</tr>
+      {% if document.subject != blank %}
+  		<tr>
+  			<td colspan="2">
+          <h4 class="subject">{{labels.subject}}</h4>
+          <p>{{ document.subject }}</p>  
+  			</td>
+  		</tr>
+      {% endif %} 
   		<tr>
   			<td colspan="2">
   			  <table id="items" style="font-size:100%">
