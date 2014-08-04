@@ -6,7 +6,7 @@
     <style type="text/css">
       body { color: #000; font: normal 100% Helvetica, Arial, sans-serif; }
       #content { padding: 30px 30px; min-height: 810px; }
-      h1 { font-size: 32px; margin:0 0 20px 0; line-height:1.1; color:{{account.color_scheme}}; }
+      h1 { font-size: 32px; margin:0; line-height:1; color:{{account.color_scheme}}; }
       h2 { font-size: 16px; font-weight: bold; margin: 0; }
       h3 { margin:2px 0; }
       p { font-size: 12px; margin: 0; }
@@ -32,6 +32,7 @@
       .border-end { border-bottom:2px solid {{account.color_scheme}}; }
       .border2 { border-top:2px solid {{account.color_scheme}}; }
       .border1 { border-top:1px solid #000; margin-top: 30px; padding-top: 5px; }
+			.subject { border-top:1px solid #000; margin-top: 10px; padding-top: 5px; }
       .space30 { padding-right: 30px; }
       .space12 { padding-right: 12px; }
       .left { text-align: left; }
@@ -53,7 +54,15 @@
           <img src="{{ account.logo_url }}" width="300" />
         {% endif %}
         </td>
-        <td valign="bottom"><h1>{{title}}</h1></td>
+        <td valign="bottom">
+        	<h1 class="border-first">{{title}}</h1>
+          {% if document.subject != blank %}
+            <p class="subject">{{ document.subject }}</p>
+          {% endif %}          
+        </td>
+      </tr>
+      <tr>
+      	<td height="20" colspan="3">&nbsp;</td>
       </tr>
       <!-- // End Template Header \\ -->
       <!-- // Begin Template Body \\ -->
