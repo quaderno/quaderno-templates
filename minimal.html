@@ -40,6 +40,7 @@
             <address>
               <p><strong>{{contact.full_name}}</strong></p>
               {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+              {% if contact.contact_name != blank %}<p>{{contact.contact_name}}</p>{% endif %}
               <p>{{contact.street_line_1}}</p>
               <p>{{contact.street_line_2}}</p>
               {% if contact.city != contact.region %}<p>{{contact.city}}</p>{% endif %}
