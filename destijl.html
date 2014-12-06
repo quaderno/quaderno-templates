@@ -6,7 +6,7 @@
     <style type="text/css">
       body { color: #000; font: normal 100% Helvetica, Arial, sans-serif; }
       #content { padding: 30px 30px; min-height: 810px; }
-      h1 { font-size: 32px; margin:0; line-height:1; color:{{account.color_scheme}}; }
+      h1 { font-size: 32px; margin:0 0 20px 0; line-height:1.1; color:{{account.color_scheme}}; }
       h2 { font-size: 16px; font-weight: bold; margin: 0; }
       h3 { margin:2px 0; }
       p { font-size: 12px; margin: 0; }
@@ -32,7 +32,6 @@
       .border-end { border-bottom:2px solid {{account.color_scheme}}; }
       .border2 { border-top:2px solid {{account.color_scheme}}; }
       .border1 { border-top:1px solid #000; margin-top: 30px; padding-top: 5px; }
-			.subject { border-top:1px solid #000; margin-top: 10px; padding-top: 5px; }
       .space30 { padding-right: 30px; }
       .space12 { padding-right: 12px; }
       .left { text-align: left; }
@@ -54,15 +53,7 @@
           <img src="{{ account.logo_url }}" width="300" />
         {% endif %}
         </td>
-        <td valign="bottom">
-        	<h1 class="border-first">{{title}}</h1>
-          {% if document.subject != blank %}
-            <p class="subject">{{ document.subject }}</p>
-          {% endif %}          
-        </td>
-      </tr>
-      <tr>
-      	<td height="20" colspan="3">&nbsp;</td>
+        <td valign="bottom"><h1>{{title}}</h1></td>
       </tr>
       <!-- // End Template Header \\ -->
       <!-- // Begin Template Body \\ -->
@@ -88,6 +79,7 @@
           <h2 class="label border-first">{{labels.from}}</h2>
           <h3 class="txt">{{ account.full_name }}</h3>
           <p>{% if account.tax_id != blank %} {{labels.tax_id}}: {{account.tax_id}} {% endif %}</p>
+          <p>{% if account.vat_number != blank %} {{labels.vat_number}}: {{account.vat_number}} {% endif %}</p>
           <p>{% if account.company_number != blank %} {{labels.company_number}}: {{account.company_number}} {% endif %}</p>
           <address>
             <p>{{ account.street_line_1 }}</p>
@@ -102,6 +94,7 @@
           <h2 class="label border-first">{{labels.to}}</h2>
           <h3 class="txt">{{ contact.full_name }}</h3>
           <p>{% if contact.tax_id != blank %} {{labels.tax_id}}: {{contact.tax_id}} {% endif %}</p>
+          <p>{% if contact.vat_number != blank %} {{labels.vat_number}}: {{contact.vat_number}} {% endif %}</p>
           <p>{{ contact.contact_name }}</p>
           <address>
             <p>{{ contact.street_line_1 }}</p>
