@@ -40,7 +40,7 @@
             <address>
               <p><strong>{{contact.full_name}}</strong></p>
               {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
-              {% if contact.contact_name != blank %}<p>{{contact.contact_name}}</p>{% endif %}
+              {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
               <p>{{contact.street_line_1}}</p>
               <p>{{contact.street_line_2}}</p>
               {% if contact.city != contact.region %}<p>{{contact.city}}</p>{% endif %}
@@ -58,10 +58,9 @@
         <tr>
           <td>
             <!-- basic data -->
-            <strong>{{labels.number}}:</strong> {{document.number}}
-            <br /><strong>{{labels.issue_date}}:</strong> {{document.issue_date | date:'long'}}
-            {% if document.po_number != blank %}<br /><strong>{{labels.po_number}}:</strong> {{document.po_number}}{% endif %}
-          	{% if document.subject != blank %}<br /><strong>{{labels.subject}}:</strong> {{ document.subject }}{% endif %}               
+            <strong>{{labels.number}}: </strong>{{document.number}}
+            <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date:'long'}}
+            {% if document.po_number != blank %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -127,7 +126,7 @@
   <div id="footer">
     <!-- account's data -->
     <p>
-      <strong>{{account.full_name}} {% if account.tax_id != blank %}- {{labels.tax_id}}: {{account.tax_id}}{% endif %} {% if account.company_number != blank %}- {{labels.company_number}}: {{account.company_number}}{% endif %}</strong>
+      <strong>{{account.full_name}} {% if account.tax_id != blank %}- {{labels.tax_id}}: {{account.tax_id}}{% endif %} {% if account.vat_number != blank %}- {{labels.vat_number}}: {{account.vat_number}}{% endif %} {% if account.company_number != blank %}- {{labels.company_number}}: {{account.company_number}}{% endif %}</strong>
       <address>{{account.street_line_1}} - {% if account.city != account.region %}{{account.city}} -{% endif %} {{account.region}} {{account.postal_code}} - {{account.country | country_name}}</address>
       {{labels.phone}}: {{account.phone_1}} - {{labels.email}}: {{account.email}}
     </p>
