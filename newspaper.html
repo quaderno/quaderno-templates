@@ -163,6 +163,7 @@
       	<h2>{{labels.to}}</h2>
         <h3>{{contact.full_name}}</h3>
         {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+        {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
         <address>
           <p>{{contact.street_line_1}}</p>
           <p>{{contact.street_line_2}}</p>
@@ -170,16 +171,6 @@
           <p>{{contact.region}} {{contact.postal_code}}</p>
         </address></td>
     </tr>
-    {% if document.subject != blank %}
-    <tr>
-      <td valign="top">&nbsp;</td>
-      <td>&nbsp;</td>
-      <td colspan="3" valign="top" class="document-data">
-        <h2 class="line">{{labels.subject}}</h2>
-        <p>{{ document.subject }}</p>             
-      </td>
-    </tr>
-    {% endif %}
   </table>
 </div>
 <div id="items">
@@ -244,6 +235,7 @@
       <h2>{{labels.from}}</h2>
       <h3>{{account.full_name}}</h3>
       {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+      {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
       {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
       {% if account.street_line_1 %}
       <address>
