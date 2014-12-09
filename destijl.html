@@ -50,10 +50,15 @@
       <tr>
         <td colspan="2">
         {% if account.logo_url != blank %}
-          <img src="{{ account.logo_url }}" width="300" />
+          <img src="{{ account.logo_url }}" width="200" />
         {% endif %}
         </td>
-        <td valign="bottom"><h1>{{title}}</h1></td>
+        <td valign="bottom">
+          <h1>{{title}}</h1>
+          {% if document.subject != blank %}
+            <p class="subject">{{ document.subject }}</p>
+          {% endif %}
+        </td>
       </tr>
       <!-- // End Template Header \\ -->
       <!-- // Begin Template Body \\ -->
