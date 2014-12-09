@@ -64,6 +64,7 @@
   			<td colspan="2">
   				<h1>{{title}} {{{document.number}}</h1>
   				{% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
+          {% if document.subject != blank %}<p><strong>{{labels.subject}}: </strong>{{ document.subject }}</p>{% endif %}
   			</td>
   		</tr>
   		<tr>
