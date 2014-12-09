@@ -61,6 +61,7 @@
             <strong>{{labels.number}}: </strong>{{document.number}}
             <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date:'long'}}
             {% if document.po_number != blank %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
+            {% if document.subject != blank %}<br /><strong>{{labels.subject}}: </strong>{{ document.subject }}{% endif %}
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -132,4 +133,4 @@
     </p>
   </div>
 </body>
-</html>
+</html> 
