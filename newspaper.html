@@ -131,11 +131,16 @@
       <td width="308" rowspan="2" valign="top">
       	 <!-- logo -->
       	 {% if account.logo_url != blank %}
-      	  <img src="{{ account.logo_url}}" width="300" />
+      	  <img src="{{ account.logo_url}}" width="200" />
          {% endif %}
       </td>
       <td width="14" rowspan="2">&nbsp;</td>
-      <td colspan="3"><h1>{{title}}</h1></td>
+      <td colspan="3">
+        <h1>{{title}}</h1>
+        {% if document.subject != blank %}
+          <p class="subject">{{ document.subject }}</p>
+        {% endif %}
+      </td>
     </tr>
     <tr>
       <td width="124" valign="top" class="document-data">
