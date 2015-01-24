@@ -83,7 +83,10 @@
                     <p>{{labels.subtotal}}: {{document.subtotal | money}}</p>
                     {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount | money}}</p>{% endif %}
                     {% for tax in document.taxes %}
-                      <p>{{tax.label}}: {{tax.amount | money}}</p>
+                      <p>
+                        {{tax.label}}: {{tax.amount | money}}
+                        {% if contact.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
+                      </p>
                     {% endfor %}
                     <p>{{labels.total}}: {{document.total | money}}</p>
                   </td>
