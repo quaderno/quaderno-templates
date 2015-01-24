@@ -209,7 +209,10 @@
       <td width="322">&nbsp;</td>
       <td width="92">&nbsp;</td>
       <td width="138" valign="top" class="label">{{tax.label}}</td>
-      <td width="170" valign="top" class="value"><strong>{{tax.amount | money}}</strong></td>
+      <td width="170" valign="top" class="value">
+      	<strong>{{tax.amount | money}}</strong>
+      	{% if contact.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}	
+      </td>
     </tr>
     {% endfor %}
     <tr>
