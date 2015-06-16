@@ -4,124 +4,125 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>{{document.number}}</title>
 <style type="text/css">
-	body {
-		color:#000;
-		font:normal 100% Georgia, "Times New Roman", Times, serif;
-	}
-	#header, #items, #footer { padding:40px 39px 0; }
-	#header table, #items table, #footer table { margin:0 auto; }
-	h1, h2 {
-		text-transform:uppercase;
-		color:#4d4d4d;
-		font-weight:normal;
-		margin:0;
-	}
-	h1 {
-		font-size:32px;
-		border-bottom:1px solid #ccc;
-	}
-	h2 { font-size:11px; }
-	h3 {
-		margin:5px 0 0;
-		font: 24px Impact, Charcoal, sans-serif;
-		line-height:1;
-		color: {{account.color_scheme}};
-	}
-	p { margin:0; }
-	address {
-		color:#4d4d4d;
-		font-style:italic;
-		font-size:14px;
-	}
-	.line { border-top:1px solid #ccc; }
-	
-	.document-data, .contact-data { padding-top:10px; }
-	.document-data h2.line, .contact-data address { padding-top:10px; }
-	.document-data p {
-		margin-bottom:10px;
-		font-size:14px;
-		color:#4d4d4d;
-	}
-	.contact-data p {
-		margin:6px 0 0;
-		font-size:14px;
-		color:#4d4d4d;
-	}
-	#items {
-		min-height:450px;
-	}
-	#items table thead tr th, #items table tfoot tr td, #items table tbody tr td {
-		padding:6px 0;
-		font:11px Georgia, "Times New Roman", Times, serif;
-		color:#4d4d4d;
-		line-height:1.4;
-	}
-	#items table thead tr th {
+  body {
+    color:#000;
+    font:normal 100% Georgia, "Times New Roman", Times, serif;
+  }
+  #header, #items, #footer { padding:40px 39px 0; }
+  #header table, #items table, #footer table { margin:0 auto; }
+  h1, h2 {
+    text-transform:uppercase;
+    color:#4d4d4d;
+    font-weight:normal;
+    margin:0;
+  }
+  h1 {
+    font-size:32px;
+    border-bottom:1px solid #ccc;
+  }
+  h2 { font-size:11px; }
+  h3 {
+    margin:5px 0 0;
+    font: 24px Impact, Charcoal, sans-serif;
+    line-height:1;
+    color: {{account.color_scheme}};
+  }
+  p { margin:0; }
+  address {
+    color:#4d4d4d;
+    font-style:italic;
+    font-size:14px;
+  }
+  .line { border-top:1px solid #ccc; }
+  
+  .document-data, .contact-data { padding-top:10px; }
+  .document-data h2.line, .contact-data address { padding-top:10px; }
+  .document-data p {
+    margin-bottom:10px;
+    font-size:14px;
+    color:#4d4d4d;
+  }
+  .contact-data p {
+    margin:6px 0 0;
+    font-size:14px;
+    color:#4d4d4d;
+  }
+  #items {
+    min-height:450px;
+  }
+  #items table thead tr th, #items table tfoot tr td, #items table tbody tr td {
+    padding:6px 0;
+    font:11px Georgia, "Times New Roman", Times, serif;
+    color:#4d4d4d;
+    line-height:1.4;
+  }
+  #items table thead tr th {
     background-color: {{account.color_scheme}};
-		color:#fff;
-		font:normal 11px Georgia, "Times New Roman", Times, serif;
-		text-transform:uppercase;
-	}
-	#items table tfoot tr td.label, #items table tfoot tr td.label-total {
-		text-transform:uppercase;
-	}
-	.border {
-		border-bottom:1px solid #ccc;
-	}
-	#items table tfoot tr td.label-total, #items table tfoot tr td.value-total {
-		border-top:1px solid #4d4d4d;
-		border-bottom:1px solid #4d4d4d;
-		font:19px Impact, Charcoal, sans-serif;
-		color: {{account.color_scheme}};
-	}
-	#items table tfoot tr td.label-total {
-		text-transform:none;
-	}
-	#items table tfoot tr td.value-total abbr {
-		font-size:16px;
-	}
-	#items table tbody tr td {
-		border-bottom:1px solid #ccc;
-	}
-	#items table thead tr th.description, #items table tbody tr td.description {
-		padding-left:6px;
-		padding-right:14px;
-		text-align:left;
-	}
-	#items table tbody tr td.description { font-style:italic; }
-	#items table thead tr th.quantity, #items table tbody tr td.quantity {
-		padding-right:14px;
-		text-align:right;	
-	}
-	#items table thead tr th.price, #items table tbody tr td.price {
-		padding-right:14px;
-		text-align:right;
-	}
-	#items table thead tr th.amount, #items table tfoot tr td.value, #items table tfoot tr td.value-total, #items table tbody tr td.amount {
-		padding-right:6px;
-		text-align:right;
-	}
-	#footer .user, #footer .notes, #footer .payment {
-		padding-top:10px;
-		border-top: 1px solid #ccc;
-	}
-	#footer h3 {
-		font:normal 16px Georgia, "Times New Roman", Times, serif;
-		text-transform:uppercase;
-		color:#4d4d4d;
-	}
-	#footer p {
-		margin-top:6px;
-		font:italic 11px Georgia, "Times New Roman", Times, serif;
-		line-height:1.4;
-		color:#4d4d4d;
-	}
-	#footer address p { line-height:1; }
-	#footer p a { color:#4d4d4d; text-decoration: none;}
-	/* css rules for printing */
-	@media print {
-		body { -webkit-print-color-adjust:exact; }
-	}
+    color:#fff;
+    font:normal 11px Georgia, "Times New Roman", Times, serif;
+    text-transform:uppercase;
+  }
+  #items table tfoot tr td.label, #items table tfoot tr td.label-total {
+    text-transform:uppercase;
+  }
+  .border {
+    border-bottom:1px solid #ccc;
+  }
+  #items table tfoot tr td.label-total, #items table tfoot tr td.value-total {
+    border-top:1px solid #4d4d4d;
+    border-bottom:1px solid #4d4d4d;
+    font:19px Impact, Charcoal, sans-serif;
+    color: {{account.color_scheme}};
+  }
+  #items table tfoot tr td.label-total {
+    text-transform:none;
+  }
+  #items table tfoot tr td.value-total abbr {
+    font-size:16px;
+  }
+  #items table tbody tr td {
+    border-bottom:1px solid #ccc;
+  }
+  #items table thead tr th.description, #items table tbody tr td.description {
+    padding-left:6px;
+    padding-right:14px;
+    text-align:left;
+  }
+  #items table tbody tr td.description { font-style:italic; }
+  #items table thead tr th.quantity, #items table tbody tr td.quantity {
+    padding-right:14px;
+    text-align:right; 
+  }
+  #items table thead tr th.price, #items table tbody tr td.price {
+    padding-right:14px;
+    text-align:right;
+  }
+  #items table thead tr th.amount, #items table tfoot tr td.value, #items table tfoot tr td.value-total, #items table tbody tr td.amount {
+    padding-right:6px;
+    text-align:right;
+  }
+  #footer .user, #footer .notes, #footer .payment {
+    padding-top:10px;
+    border-top: 1px solid #ccc;
+  }
+  #footer h3 {
+    font:normal 16px Georgia, "Times New Roman", Times, serif;
+    text-transform:uppercase;
+    color:#4d4d4d;
+  }
+  #footer p {
+    margin-top:6px;
+    font:italic 11px Georgia, "Times New Roman", Times, serif;
+    line-height:1.4;
+    color:#4d4d4d;
+  }
+  #footer address p { line-height:1; }
+  #footer p a { color:#4d4d4d; text-decoration: none;}
+  /* css rules for printing */
+  @media print {
+    body { -webkit-print-color-adjust:exact; }
+    thead, tfoot { display: table-row-group; }
+  }
 </style>
 </head>
 <body>
@@ -129,9 +130,9 @@
   <table width="722" border="0" cellspacing="0" cellpadding="0" style="font-size:100%">
     <tr>
       <td width="308" rowspan="2" valign="top">
-      	 <!-- logo -->
-      	 {% if account.logo_url != blank %}
-      	  <img src="{{ account.logo_url}}" width="300" />
+         <!-- logo -->
+         {% if account.logo_url != blank %}
+          <img src="{{ account.logo_url}}" width="300" />
          {% endif %}
       </td>
       <td width="14" rowspan="2">&nbsp;</td>
@@ -144,8 +145,8 @@
     </tr>
     <tr>
       <td width="124" valign="top" class="document-data">
-      	<!-- document data -->
-      	<h2>{{labels.number}}</h2>
+        <!-- document data -->
+        <h2>{{labels.number}}</h2>
         <p>{{document.number}}</p>
         <h2 class="line">{{labels.issue_date}}</h2>
         <p>{{document.issue_date | date:'long'}}</p>
@@ -164,8 +165,8 @@
       </td>
       <td width="14">&nbsp;</td>
       <td width="262" valign="top" class="contact-data">
-      	<!-- contact's data -->
-      	<h2>{{labels.to}}</h2>
+        <!-- contact's data -->
+        <h2>{{labels.to}}</h2>
         <h3>{{contact.full_name}}</h3>
         {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
         {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
@@ -189,6 +190,16 @@
       <th width="170" class="amount">{{labels.amount}}</th>
     </tr>
   </thead>
+  <tbody>
+    {% for item in document.items %}
+    <tr>
+      <td width="322" valign="top" class="description">{{item.description}}</td>
+      <td width="92" valign="top" class="quantity">{{item.quantity | precision}}</td>
+      <td width="138" valign="top" class="price">{{item.unit_price | precision}}</td>
+      <td width="170" valign="top" class="amount"><strong>{{item.subtotal | money}}</strong></td>
+    </tr>
+    {% endfor %} 
+  </tbody>
   <tfoot>
     <tr>
       <td width="322">&nbsp;</td>
@@ -210,8 +221,8 @@
       <td width="92">&nbsp;</td>
       <td width="138" valign="top" class="label">{{tax.label}}</td>
       <td width="170" valign="top" class="value">
-      	<strong>{{tax.amount | money}}</strong>
-      	{% if contact.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}	
+        <strong>{{tax.amount | money}}</strong>
+        {% if contact.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}  
       </td>
     </tr>
     {% endfor %}
@@ -222,16 +233,6 @@
       <td width="170" valign="top" class="value-total"><strong>{{document.total | money}}</strong></td>
     </tr>
   </tfoot>
-  <tbody>
-    {% for item in document.items %}
-    <tr>
-      <td width="322" valign="top" class="description">{{item.description}}</td>
-      <td width="92" valign="top" class="quantity">{{item.quantity | precision}}</td>
-      <td width="138" valign="top" class="price">{{item.unit_price | precision}}</td>
-      <td width="170" valign="top" class="amount"><strong>{{item.subtotal | money}}</strong></td>
-    </tr>
-    {% endfor %} 
-  </tbody>
 </table>
 </div>
 <div id="footer">

@@ -1,7 +1,7 @@
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>{{document.number}}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>{{document.number}}</title>
   <style>
     body { color: #000; font: normal 10pt Tahoma, Geneva, sans-serif; }
     #content { min-height: 810px; padding: 50px 25px; }
@@ -22,35 +22,36 @@
     /* css rules for printing */
     @media print {
       body { -webkit-print-color-adjust:exact; }
+      thead, tfoot { display: table-row-group; }
     }
   </style>
 </head>
 <body>
   <div id="content">
-  	<table style="font-size:100%">
-  		<tr>
-  			<td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" width="200" />{% endif %}</td>
-  			<td class="right" style="font-size:150%;">{{document.issue_date | date}}</td>
-  		</tr>
-  		<tr>
-  			<td colspan="2">
-  				<address>
-  					<h3 class="txt">{{account.full_name}}</h3>
-  					{% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
-  					{% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
+    <table style="font-size:100%">
+      <tr>
+        <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" width="200" />{% endif %}</td>
+        <td class="right" style="font-size:150%;">{{document.issue_date | date}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <address>
+            <h3 class="txt">{{account.full_name}}</h3>
+            {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+            {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
             {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
-  					<p>{{account.street_line_1}}</p>
-  					<p>{{account.street_line_2}}</p>
+            <p>{{account.street_line_1}}</p>
+            <p>{{account.street_line_2}}</p>
             {% if account.city != account.region %}<p>{{ account.city }}</p>{% endif %}
             <p>{{account.region}} {{account.postal_code}}, {{account.country | country_name}}</p>
-  				</address>
-  			</td>
-  		</tr>
-  		<tr>
-  			<td colspan="2">
-  			  <address>
+          </address>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <address>
             <h3 class="txt">{{contact.full_name}}</h3>
-  			    {% if contact.contact_name != "" %}<p><strong>{{contact.contact_name}}</strong></p>{% endif %}
+            {% if contact.contact_name != "" %}<p><strong>{{contact.contact_name}}</strong></p>{% endif %}
             {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
             {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
             <p>{{contact.street_line_1}}</p>
@@ -58,55 +59,55 @@
             {% if contact.city != contact.region %}<p>{{ contact.city }}</p>{% endif %}
             <p>{{contact.region}} {{contact.postal_code}}, {{contact.country | country_name}}</p>
           </address>
-  			</td>
-  		</tr>
-  		<tr>
-  			<td colspan="2">
-  				<h1>{{title}} {{{document.number}}</h1>
-  				{% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <h1>{{title}} {{{document.number}}</h1>
+          {% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
           {% if document.subject != blank %}<p><strong>{{labels.subject}}: </strong>{{ document.subject }}</p>{% endif %}
-  			</td>
-  		</tr>
-  		<tr>
-  			<td colspan="2">
-  			  <table id="items" style="font-size:100%">
-  			    <thead>
-      				<tr>
-      					<th scope="col">{{labels.description}}</th>
-      					<th width="10%">{{labels.quantity}}</th>
-      					<th width="15%" class="right">{{labels.unit_price}}</th>
-      					<th width="15%" class="right">{{labels.amount}}</th>
-      				</tr>
-      			</thead>
-            <tfoot>
-            <tr>
-              <td colspan="4">
-                <p>{{labels.subtotal}}: {{document.subtotal | money}}</p>
-                {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount | money}}</p>{% endif %}
-                {% for tax in document.taxes %}
-                  <p>
-                  	{{tax.label}}: {{tax.amount | money}}
-                  	{% if contact.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
-                  </p>
-                {% endfor %}
-                <p>{{labels.total}}: {{document.total | money}}</p>
-              </td>
-            </tr>
-          </tfoot>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table id="items" style="font-size:100%">
+            <thead>
+              <tr>
+                <th scope="col">{{labels.description}}</th>
+                <th width="10%">{{labels.quantity}}</th>
+                <th width="15%" class="right">{{labels.unit_price}}</th>
+                <th width="15%" class="right">{{labels.amount}}</th>
+              </tr>
+            </thead>
             <tbody>
-    				{% for item in document.items %}
-    				<tr>
-    					<td>{{item.description}}</td>
-    					<td width="10%" class="center">{{item.quantity | precision}}</td>
-    					<td width="15%" class="right">{{item.unit_price | precision}}</td>
-    					<td class="right">{{item.subtotal | money}}</td>
-    				</tr>
-    				{% endfor %}
-  				</tbody>
-  			  </table>
-  			</td>
-  	  </tr>
-  	  <tr>
+              {% for item in document.items %}
+              <tr>
+                <td>{{item.description}}</td>
+                <td width="10%" class="center">{{item.quantity | precision}}</td>
+                <td width="15%" class="right">{{item.unit_price | precision}}</td>
+                <td class="right">{{item.subtotal | money}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">
+                  <p>{{labels.subtotal}}: {{document.subtotal | money}}</p>
+                  {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount | money}}</p>{% endif %}
+                  {% for tax in document.taxes %}
+                    <p>
+                      {{tax.label}}: {{tax.amount | money}}
+                      {% if contact.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
+                    </p>
+                  {% endfor %}
+                  <p>{{labels.total}}: {{document.total | money}}</p>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </td>
+      </tr>
+      <tr>
         <td colspan="2" id="details">
           {% if document.due_date != blank %}
           <h4>{{labels.due_date}}</h4>

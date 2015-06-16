@@ -19,6 +19,7 @@
     /* css rules for printing */
     @media print {
       body { -webkit-print-color-adjust:exact; }
+      thead, tfoot { display: table-row-group; }
     }
   </style>
 </head>
@@ -77,6 +78,16 @@
                   <th class="right">{{labels.amount}}</th>
                 </tr>
               </thead>
+              <tbody>
+                {% for item in document.items %}
+                <tr>
+                  <td>{{item.description}}</td>
+                  <td class="right">{{item.quantity | precision}}</td>
+                  <td class="right">{{item.unit_price | precision}}</td>
+                  <td class="right">{{item.subtotal | money}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
               <tfoot>
                 <tr>
                   <td colspan="4">
@@ -92,16 +103,6 @@
                   </td>
                 </tr>
               </tfoot>
-              <tbody>
-                {% for item in document.items %}
-                <tr>
-                  <td>{{item.description}}</td>
-                  <td class="right">{{item.quantity | precision}}</td>
-                  <td class="right">{{item.unit_price | precision}}</td>
-                  <td class="right">{{item.subtotal | money}}</td>
-                </tr>
-                {% endfor %} 
-              </tbody>
             </table>
           </td>
         </tr>
