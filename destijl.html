@@ -74,9 +74,13 @@
           <h2 class="label border1">{{labels.po_number}}</h2>
           <p class="txt">{{ document.po_number }}</p>
           {% endif %}
-          {% if document.due_date > 0 %}
+          {% if document.due_date != blank %}
           <h2 class="label border1">{{labels.due_date}}</h2>
           <p class="txt">{{document.due_date | date}}</p>
+          {% endif %}
+          {% if document.valid_until != blank %}
+          <h2 class="label border1">{{labels.valid_until}}</h2>
+          <p class="txt">{{document.valid_until | date}}</p>
           {% endif %}
         </td>
         <!-- // End Left Column \\ -->
