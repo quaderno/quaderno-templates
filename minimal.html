@@ -1,10 +1,15 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="pdfkit-page_size" content="A4"/>
+  <meta name="pdfkit-margin_top" content="13mm"/>
+  <meta name="pdfkit-margin_right" content="13mm"/>
+  <meta name="pdfkit-margin_bottom" content="13mm"/>
+  <meta name="pdfkit-margin_left" content="13mm"/>
   <title>{{document.number}}</title>
   <style>
-    body { color: #000; font: normal 10pt "Arial", "Helvetica", "sans-serif"; }
-    #content { min-height: 850px; padding: 50px 25px; }
+    body { color: #000; font: normal 10pt Arial, Helvetica, sans-serif; }
+    #content { min-height: 850px; }
     h1 { font-size: 48px; text-transform: lowercase; color: {{account.color_scheme}}; }
     p { margin:2px 0; }
     address { font-style: normal; }
@@ -19,7 +24,8 @@
     /* css rules for printing */
     @media print {
       body { -webkit-print-color-adjust:exact; }
-      thead, tfoot { display: table-row-group; }
+      #items tr { page-break-inside: avoid; }
+      #items tfoot { display: table-row-group; }
     }
   </style>
 </head>
@@ -137,4 +143,4 @@
     </p>
   </div>
 </body>
-</html> 
+</html>
