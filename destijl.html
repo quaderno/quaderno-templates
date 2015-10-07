@@ -2,10 +2,14 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="pdfkit-page_size" content="A4"/>
+    <meta name="pdfkit-margin_top" content="13mm"/>
+    <meta name="pdfkit-margin_right" content="13mm"/>
+    <meta name="pdfkit-margin_bottom" content="13mm"/>
+    <meta name="pdfkit-margin_left" content="13mm"/>
     <title>{{document.number}}</title>
     <style type="text/css">
       body { color: #000; font: normal 100% Helvetica, Arial, sans-serif; }
-      #content { padding: 30px 30px; min-height: 810px; }
       h1 { font-size: 32px; margin:0 0 20px 0; line-height:1.1; color:{{account.color_scheme}}; }
       h2 { font-size: 16px; font-weight: bold; margin: 0; }
       h3 { margin:2px 0; }
@@ -40,12 +44,12 @@
       /* css rules for printing */
       @media print {
         body { -webkit-print-color-adjust:exact; }
-        thead, tfoot { display: table-row-group; }
+        #items tr { page-break-inside: avoid; }
+        #items tfoot { display: table-row-group; }
       }
     </style>
   </head>
   <body>
-  <div id="content">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <!-- // Begin Template Header \\ -->
       <tr>
@@ -64,7 +68,6 @@
       <!-- // End Template Header \\ -->
       <!-- // Begin Template Body \\ -->
       <tr>
-        <!-- // Begin Left Column \\ -->
         <td width="20%" rowspan="2" valign="top" class="space12">
           <h2 class="label border-first">{{labels.number}}</h2>
           <p class="txt">{{ document.number }}</p>
@@ -83,8 +86,6 @@
           <p class="txt">{{document.valid_until | date}}</p>
           {% endif %}
         </td>
-        <!-- // End Left Column \\ -->
-        <!-- // Begin           \\ -->
         <td width="38%" valign="top" class="space12">
           <h2 class="label border-first">{{labels.from}}</h2>
           <h3 class="txt">{{ account.full_name }}</h3>
@@ -113,7 +114,6 @@
             <p>{{ contact.region }} {{ contact.postal_code }}, {{ contact.country | country_name }}</p>
           </address>
         </td>
-        <!-- // End           \\ -->
       </tr>
       <tr>
         <td colspan="2" valign="top">
@@ -122,17 +122,17 @@
             <tr class="border-first">
               <th scope="col" class="left">{{labels.description}}</th>
               <th width="18%" class="right">{{labels.quantity}}</th>
-              <th width="23%" class="right">{{labels.unit_price}}</th>
-              <th width="23%" class="right">{{labels.amount}}</th>
+              <th width="20%" class="right">{{labels.unit_price}}</th>
+              <th width="20%" class="right">{{labels.amount}}</th>
             </tr>
           </thead>
           <tbody>
             {% for item in document.items %}
             <tr>
               <td>{{item.description}}</td>
-              <td width="18%" class="right">{{item.quantity | precision}}</td>
-              <td width="23%" class="right">{{item.unit_price | precision}}</td>
-              <td width="23%" class="right"><strong>{{item.subtotal | money}}</strong></td>
+              <td class="right">{{item.quantity | precision}}</td>
+              <td class="right">{{item.unit_price | precision}}</td>
+              <td class="right"><strong>{{item.subtotal | money}}</strong></td>
             </tr>
             {% endfor %}
           </tbody>
@@ -193,6 +193,5 @@
       </tr>
       <!-- // End Template Footer \\ -->
     </table>
-  </div>
 </body>
 </html>
