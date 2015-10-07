@@ -2,13 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="pdfkit-page_size" content="A4"/>
+<meta name="pdfkit-margin_top" content="13mm"/>
+<meta name="pdfkit-margin_right" content="13mm"/>
+<meta name="pdfkit-margin_bottom" content="13mm"/>
+<meta name="pdfkit-margin_left" content="13mm"/>
 <title>{{document.number}}</title>
 <style type="text/css">
   body {
     color:#000;
     font:normal 100% Georgia, "Times New Roman", Times, serif;
   }
-  #header, #items, #footer { padding:40px 39px 0; }
+  #header, #items, #footer { padding:40px 0 0; }
   #header table, #items table, #footer table { margin:0 auto; }
   h1, h2 {
     text-transform:uppercase;
@@ -121,7 +126,8 @@
   /* css rules for printing */
   @media print {
     body { -webkit-print-color-adjust:exact; }
-    thead, tfoot { display: table-row-group; }
+    #items tr { page-break-inside: avoid; }
+    #items tfoot { display: table-row-group; }
   }
 </style>
 </head>
