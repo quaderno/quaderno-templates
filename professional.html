@@ -39,30 +39,20 @@
     </tr>
     <tr>
       <td colspan="2">
-        <address>
-          <h3 class="txt">{{account.full_name}}</h3>
-          {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
-          {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
-          {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
-          <p>{{account.street_line_1}}</p>
-          <p>{{account.street_line_2}}</p>
-          {% if account.city != account.region %}<p>{{ account.city }}</p>{% endif %}
-          <p>{{account.region}} {{account.postal_code}}, {{account.country | country_name}}</p>
-        </address>
+        <h3 class="txt">{{account.full_name}}</h3>
+        {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+        {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
+        {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
+        <address>{{ account.formatted_address | newline_to_br }}</address>
       </td>
     </tr>
     <tr>
       <td colspan="2">
-        <address>
-          <h3 class="txt">{{contact.full_name}}</h3>
-          {% if contact.contact_name != "" %}<p><strong>{{contact.contact_name}}</strong></p>{% endif %}
-          {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
-          {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
-          <p>{{contact.street_line_1}}</p>
-          <p>{{contact.street_line_2}}</p>
-          {% if contact.city != contact.region %}<p>{{ contact.city }}</p>{% endif %}
-          <p>{{contact.region}} {{contact.postal_code}}, {{contact.country | country_name}}</p>
-        </address>
+        <h3 class="txt">{{contact.full_name}}</h3>
+        {% if contact.contact_name != "" %}<p><strong>{{contact.contact_name}}</strong></p>{% endif %}
+        {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+        {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
+        <address>{{ contact.formatted_address | newline_to_br }}</address>
       </td>
     </tr>
     <tr>
