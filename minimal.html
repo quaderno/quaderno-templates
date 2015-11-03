@@ -44,16 +44,10 @@
         <!-- contact's data -->
         <tr>
           <td colspan="2" class="right">
-            <address>
-              <p><strong>{{contact.full_name}}</strong></p>
-              {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
-              {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
-              <p>{{contact.street_line_1}}</p>
-              <p>{{contact.street_line_2}}</p>
-              {% if contact.city != contact.region %}<p>{{contact.city}}</p>{% endif %}
-              <p>{{contact.region}} {{contact.postal_code}}</p>
-              <p>{{contact.country | country_name}}</p>
-            </address>
+            <p><strong>{{contact.full_name}}</strong></p>
+            {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+            {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
+            <address>{{ contact.formatted_address | newline_to_br }}</address>
           </td>
         </tr>
         <tr>
