@@ -92,12 +92,7 @@
           <p>{% if account.tax_id != blank %} {{labels.tax_id}}: {{account.tax_id}} {% endif %}</p>
           <p>{% if account.vat_number != blank %} {{labels.vat_number}}: {{account.vat_number}} {% endif %}</p>
           <p>{% if account.company_number != blank %} {{labels.company_number}}: {{account.company_number}} {% endif %}</p>
-          <address>
-            <p>{{ account.street_line_1 }}</p>
-            <p>{{ account.street_line_2 }}</p>
-            {% if account.city != account.region %}<p>{{ account.city }}</p>{% endif %}
-            <p>{{ account.region }} {{ account.postal_code }}, {{ account.country | country_name }}</p>
-          </address>
+          <address>{{ account.formatted_address | newline_to_br }}</address>
           <p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>
           <p><a href="{{account.web}}">{{ account.web }}</a></p>
         </td>
@@ -107,12 +102,7 @@
           <p>{% if contact.tax_id != blank %} {{labels.tax_id}}: {{contact.tax_id}} {% endif %}</p>
           <p>{% if contact.vat_number != blank %} {{labels.vat_number}}: {{contact.vat_number}} {% endif %}</p>
           <p>{{ contact.contact_name }}</p>
-          <address>
-            <p>{{ contact.street_line_1 }}</p>
-            <p>{{ contact.street_line_2 }}</p>
-            {% if contact.city != contact.region %}<p>{{ contact.city }}</p>{% endif %}
-            <p>{{ contact.region }} {{ contact.postal_code }}, {{ contact.country | country_name }}</p>
-          </address>
+          <address>{{ contact.formatted_address | newline_to_br }}</address>
         </td>
       </tr>
       <tr>
