@@ -176,12 +176,8 @@
         <h3>{{contact.full_name}}</h3>
         {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
         {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
-        <address>
-          <p>{{contact.street_line_1}}</p>
-          <p>{{contact.street_line_2}}</p>
-          {% if contact.city != contact.region %}<p>{{contact.city}}</p>{% endif %}
-          <p>{{contact.region}} {{contact.postal_code}}</p>
-        </address></td>
+        <address>{{ contact.formatted_address | newline_to_br }}</address>
+      </td>
     </tr>
   </table>
 </div>
@@ -252,14 +248,7 @@
       {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
       {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
       {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
-      {% if account.street_line_1 %}
-      <address>
-        <p>{{account.street_line_1}}</p>
-        <p>{{account.street_line_2}}</p>
-        {% if account.city != account.region %}<p>{{account.city}}</p>{% endif %}
-        <p>{{account.region}} {{account.postal_code}}, {{account.country | country_name}}</p>
-      </address>
-      {% endif %}
+      <address>{{ account.formatted_address | newline_to_br }}</address>
       {% if account.phone_1 %}<p>{{labels.phone}}: {{account.phone_1}}</p>{% endif %}
       <p>{{labels.email}}: {{account.email}}</p>
       {% if account.web != '' %}<p>Web: {{account.web}}</p>{% endif %}
