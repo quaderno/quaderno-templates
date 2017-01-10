@@ -21,8 +21,10 @@
     table#items tfoot tr td { text-align: right; }
     #details h4 { font-size: 100%; font-weight: bold; color: {{account.color_scheme}}; text-transform: uppercase; margin-bottom: 0; }
     #details p { margin: 0; }
+    #paid-stamp { margin: 0 0 18px; }
     .right { text-align: right; }
     .center { text-align: center; }
+    .paid { padding: 5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font-size: 18px; font-weight: bold; text-transform: uppercase; }
     /* css rules for printing */
     @media print {
       body { -webkit-print-color-adjust:exact; }
@@ -35,7 +37,15 @@
   <table style="font-size:100%">
     <tr>
       <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" width="200" />{% endif %}</td>
-      <td class="right" style="font-size:150%;">{{document.issue_date | date}}</td>
+      <td class="right" style="font-size:150%;">
+        {% if document.state == "paid" %}
+        <!-- paid state -->
+        <p id="paid-stamp">
+          <span class="paid">{{paid_stamp}}<span>
+        </p>
+        {% endif %}
+        {{document.issue_date | date}}
+      </td>
     </tr>
     <tr>
       <td colspan="2">
