@@ -33,13 +33,13 @@
     color: {{account.color_scheme}};
   }
   p { margin:0; }
+  .subject { padding: 5px 0; }
   address {
     color:#4d4d4d;
     font-style:italic;
     font-size:14px;
   }
   .line { border-top:1px solid #ccc; }
-  
   .document-data, .contact-data { padding-top:10px; }
   .document-data h2.line, .contact-data address { padding-top:10px; }
   .document-data p {
@@ -70,9 +70,11 @@
   #items table tfoot tr td.label, #items table tfoot tr td.label-total {
     text-transform:uppercase;
   }
+  #items table tfoot tr td.right { text-align: right; }
   .border {
     border-bottom:1px solid #ccc;
   }
+  .paid { padding: 5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font: bold 18px Impact, Charcoal, sans-serif;; text-transform: uppercase; }
   #items table tfoot tr td.label-total, #items table tfoot tr td.value-total {
     border-top:1px solid #4d4d4d;
     border-bottom:1px solid #4d4d4d;
@@ -85,6 +87,7 @@
   #items table tfoot tr td.value-total abbr {
     font-size:16px;
   }
+  #items table tfoot tr td.topspace14 { padding-top: 14px; }
   #items table tbody tr td {
     border-bottom:1px solid #ccc;
   }
@@ -234,6 +237,19 @@
       <td width="138" valign="top" class="label-total">{{labels.total}}</td>
       <td width="170" valign="top" class="value-total"><strong>{{document.total | money}}</strong></td>
     </tr>
+    {% if document.state == "paid" %}
+    <!-- paid state -->
+    <tr>
+      <td colspan="4" class="topspace14">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="322">&nbsp;</td>
+      <td width="92">&nbsp;</td>
+      <td width="138">&nbsp;</td>
+      <td width="170" valign="top" class="right"><span class="paid">{{paid_stamp}}<span></td>
+      </td>
+    </tr>
+    {% endif %}
   </tfoot>
 </table>
 </div>

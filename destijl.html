@@ -157,12 +157,13 @@
               <td class="border2 right txt"><strong>{{document.total | money}}</strong></td>
             </tr>
             {% if document.state == "paid" %}
+            <!-- paid state -->
             <tr>
               <td colspan="3" class="topspace14">&nbsp;</td>
             </tr>
             <tr>
               <td colspan="2">&nbsp;</td>
-              <td><span class="paid">{{document.state}}<span></td>
+              <td><span class="paid">{{paid_stamp}}<span></td>
             </tr>
             {% endif %}
           </tfoot>
