@@ -21,6 +21,8 @@
     #footer { text-align:center; color:#666; font-size:80%; }
     .right { text-align: right; }
     .center { text-align: center; }
+    .topspace10 { padding-top: 10px; }
+    .paid { padding: 5px 0; border-top:2px solid {{account.color_scheme}}; border-bottom:2px solid {{account.color_scheme}}; font-size: 18px; font-weight: bold; text-transform: uppercase; }
     /* css rules for printing */
     @media print {
       body { -webkit-print-color-adjust:exact; }
@@ -33,7 +35,7 @@
   <div id="content">
     <table>
       {% if account.logo_url != blank %}
-      <tr>        
+      <tr>
         <!-- logo -->
         <td colspan="2"><img src="{{ account.logo_url }}" width="200" /></td>
       </tr>
@@ -47,6 +49,14 @@
           <address>{{ contact.formatted_address | newline_to_br }}</address>
         </td>
       </tr>
+      {% if document.state == "paid" %}
+      <tr>
+        <!-- paid state -->
+        <td colspan="2" class="right topspace10">
+          <span class="paid">{{document.state}}<span>
+        </td>
+      </tr>
+      {% endif %}
       <tr>
         <!-- document type -->
         <td colspan="2" class="center">
