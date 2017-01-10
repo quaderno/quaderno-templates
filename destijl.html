@@ -32,6 +32,8 @@
       #items tfoot .label, #items tfoot .right { border-bottom: 1px solid #000; }
       #items tfoot .txt { border-bottom: 1px solid {{account.color_scheme}}; }
       #items td { padding: 8px 0; }
+      #items td.topspace38 { padding-top: 38px; }
+      #items td.paid { border-top:2px solid {{account.color_scheme}}; border-bottom:2px solid {{account.color_scheme}}; font-size: 18px; font-weight: bold; text-transform: uppercase; }
       .border-first { border-top: 4px solid {{account.color_scheme}}; margin-top: 0; padding-top: 5px; }
       .border-end { border-bottom:2px solid {{account.color_scheme}}; }
       .border2 { border-top:2px solid {{account.color_scheme}}; }
@@ -154,6 +156,15 @@
               <td class="border2 txt">{{labels.total}}</td>
               <td class="border2 right txt"><strong>{{document.total | money}}</strong></td>
             </tr>
+            {% if document.state != blank %}
+            <tr>
+              <td colspan="3" class="topspace38">&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">&nbsp;</td>
+              <td class="paid">{{document.state}}</td>
+            </tr>
+            {% endif %}
           </tfoot>
         </table>
         </td>
