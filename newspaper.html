@@ -285,6 +285,9 @@
       <!-- payment details -->
       <h2>{{labels.payment_details}}</h2>
       <p>{{document.payment_details | textilize}}</p>
+      {% elsif document.state == "paid" %}
+      <h2>{{labels.payment_details}}</h2>
+      <p>{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}</p>
       {% endif %}
     </td>
   </tr>

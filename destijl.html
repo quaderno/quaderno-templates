@@ -188,6 +188,11 @@
                 <h2 class="label border-first">{{labels.payment_details}}</h2>
                 <p class="smalltxt">{{document.payment_details | textilize}}</p>
               </td>
+              {% elsif document.state == "paid" %}
+              <td width="53%" valign="top">
+                <h2 class="label border-first">{{labels.payment_details}}</h2>
+                <p class="smalltxt">{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}</p>
+              </td>
               {% endif %}
             </tr>
           </table>  

@@ -125,6 +125,8 @@
             {% endif %}
             {% if document.payment_details != blank %}
             <strong>{{labels.payment_details}}: </strong>{{document.payment_details | textilize}}<br/>
+            {% elsif document.state == "paid" %}
+            <strong>{{labels.payment_details}}: </strong>{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}<br/>
             {% endif %}
             {% if document.notes != blank %}
             <strong>{{labels.notes}}: </strong>{{document.notes | textilize}}

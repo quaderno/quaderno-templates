@@ -117,7 +117,7 @@
         <h4>{{labels.due_date}}</h4>
         <p>{{document.due_date | date}}<p>
         {% endif %}
-    
+
         {% if document.valid_until != blank %}
         <h4>{{labels.valid_until}}</h4>
         <p>{{document.valid_until | date}}<p>
@@ -126,8 +126,11 @@
         {% if document.payment_details != blank %}
         <h4>{{labels.payment_details}}</h4>
         <p>{{document.payment_details | textilize}}</p>
+        {% elsif document.state == "paid" %}
+        <h4>{{labels.payment_details}}</h4>
+        <p>{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}</p>
         {% endif %}
-    
+
         {% if document.notes != blank %}
         <h4>{{labels.notes}}</h4>
         <p>{{document.notes | textilize}}</p>
