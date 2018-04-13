@@ -1,33 +1,39 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="pdfkit-page_size" content="A4"/>
-  <meta name="pdfkit-margin_top" content="13mm"/>
-  <meta name="pdfkit-margin_right" content="13mm"/>
-  <meta name="pdfkit-margin_bottom" content="13mm"/>
-  <meta name="pdfkit-margin_left" content="13mm"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="pdfkit-page_size" content="A4">
+  <meta name="pdfkit-margin_top" content="13mm">
+  <meta name="pdfkit-margin_right" content="13mm">
+  <meta name="pdfkit-margin_bottom" content="13mm">
+  <meta name="pdfkit-margin_left" content="13mm">
   <title>{{document.number}}</title>
   <style>
-    body { padding: 20px; background: #fff; color: #000; font: normal 10pt Arial, Helvetica, sans-serif; }
-    #content { min-height: 850px; }
-    h1 { font-size: 48px; text-transform: lowercase; color: {{account.color_scheme}}; }
-    p { margin:2px 0; }
-    address { font-style: normal; }
-    table { width: 100%; border: none; font-size: 100%; }
-    table#items { margin: 25px 0; border-collapse:collapse; }
-    table#items thead tr th { padding: 5px; color: #fff; background-color: {{account.color_scheme}}; }
-    table#items tbody tr td { padding:5px; border-bottom:1px solid {{account.color_scheme}}; }
-    table#items tfoot tr td { padding: 0 5px; border-bottom: 2px solid {{account.color_scheme}}; text-align: right; }
-    #footer { text-align:center; color:#666; font-size:80%; }
-    .right { text-align: right; }
-    .center { text-align: center; }
-    .topspace10 { padding-top: 10px; }
-    .paid { padding: 5px 0; border-top:2px solid {{account.color_scheme}}; border-bottom:2px solid {{account.color_scheme}}; font-size: 18px; font-weight: bold; text-transform: uppercase; }
+    body {padding:20px; background:#fff; color:#000; font:normal 10pt Arial, Helvetica, sans-serif}
+    #content {min-height:850px}
+    h1 {font-size:48px; text-transform:lowercase; color:{{account.color_scheme}}}
+    p {margin:2px 0}
+    a:link, a:visited {color:#000; text-decoration:none}
+    a:hover {color:#000; text-decoration:none}
+    address {font-style:normal}
+    table {width:100%; border:none; font-size:100%}
+    table#items {margin:25px 0; border-collapse:collapse}
+    table#items thead tr th {padding:5px; color:#fff; background-color:{{account.color_scheme}}}
+    table#items tbody tr td {padding:5px; border-bottom:1px solid {{account.color_scheme}}}
+    table#items tfoot tr td {padding:0 5px; border-bottom: 2px solid {{account.color_scheme}}; text-align:right}
+    #footer {text-align:center; color:#666; font-size:80%}
+    #footer a {color:#666;}
+    .w200 {width:200px}
+    .w60per {width:60%}
+    .right {text-align:right}
+    .center {text-align:center}
+    .topspace10 {padding-top:10px}
+    .paid {padding:5px 0; border-top:2px solid {{account.color_scheme}}; border-bottom:2px solid {{account.color_scheme}}; font-size: 18px; font-weight: bold; text-transform: uppercase}
     /* css rules for printing */
     @media print {
-      body { -webkit-print-color-adjust:exact; }
-      #items tr { page-break-inside: avoid; }
-      #items tfoot { display: table-row-group; }
+      body {-webkit-print-color-adjust:exact}
+      #items tr {page-break-inside: avoid}
+      #items tfoot {display: table-row-group}
     }
   </style>
 </head>
@@ -37,7 +43,7 @@
       {% if account.logo_url != blank %}
       <tr>
         <!-- logo -->
-        <td colspan="2"><img src="{{ account.logo_url }}" width="200" /></td>
+        <td colspan="2"><img src="{{ account.logo_url }}" class="w200" align="Logo"></td>
       </tr>
       {% endif %}
       <tr>
@@ -68,6 +74,11 @@
           <!-- basic data -->
           <strong>{{labels.number}}: </strong>{{document.number}}
           <br /><strong>{{labels.issue_date}}: </strong>{{document.issue_date | date:'long'}}
+          {% if document.related_document_type != blank %}
+          <br /><strong>{{labels.related_document}}:</strong>
+          <a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</a>
+          ({{document.related_document_date | date}})
+          {% endif %}
           {% if document.po_number != blank %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
           {% if document.subject != blank %}<br /><strong>{{labels.subject}}: </strong>{{ document.subject }}{% endif %}
         </td>
@@ -79,7 +90,7 @@
           <table id="items">
             <thead> 
               <tr>
-                <th width="60%">{{labels.description}}</th>
+                <th class="w60per">{{labels.description}}</th>
                 <th class="right">{{labels.quantity}}</th>
                 <th class="right">{{labels.unit_price}}</th>
                 <th class="right">{{labels.amount}}</th>
@@ -141,7 +152,9 @@
     <p>
       <strong>{{account.full_name}} {% if account.tax_id != blank %}- {{labels.tax_id}}: {{account.tax_id}}{% endif %} {% if account.vat_number != blank %}- {{labels.vat_number}}: {{account.vat_number}}{% endif %} {% if account.company_number != blank %}- {{labels.company_number}}: {{account.company_number}}{% endif %}</strong>
       <address>{{account.street_line_1}} - {% if account.city != account.region %}{{account.city}} -{% endif %} {{account.region}} {{account.postal_code}} - {{account.country | country_name}}</address>
-      {{labels.phone}}: {{account.phone_1}} - {{labels.email}}: {{account.email}}
+      {% if document.account.phone_1 != blank %}{{labels.phone}}: {{account.phone_1}} {% endif %}
+      {% if document.account.email != blank %} {{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a> {% endif %}
+      {% if document.account.web != blank %} <a href="{{account.web}}">{{ account.web }}</a>{% endif %}
     </p>
   </div>
 </body>

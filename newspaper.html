@@ -1,152 +1,86 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="pdfkit-page_size" content="A4"/>
-<meta name="pdfkit-margin_top" content="13mm"/>
-<meta name="pdfkit-margin_right" content="13mm"/>
-<meta name="pdfkit-margin_bottom" content="13mm"/>
-<meta name="pdfkit-margin_left" content="13mm"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="pdfkit-page_size" content="A4">
+<meta name="pdfkit-margin_top" content="13mm">
+<meta name="pdfkit-margin_right" content="13mm">
+<meta name="pdfkit-margin_bottom" content="13mm">
+<meta name="pdfkit-margin_left" content="13mm">
 <title>{{document.number}}</title>
-<style type="text/css">
-  body {
-    padding: 20px;
-    background: #fff;
-    color:#000;
-    font:normal 100% Georgia, "Times New Roman", Times, serif;
-  }
-  #header, #items, #footer { padding:40px 0 0; }
-  #header table, #items table, #footer table { margin:0 auto; }
-  h1, h2 {
-    text-transform:uppercase;
-    color:#4d4d4d;
-    font-weight:normal;
-    margin:0;
-  }
-  h1 {
-    font-size:32px;
-    border-bottom:1px solid #ccc;
-  }
-  h2 { font-size:11px; }
-  h3 {
-    margin:5px 0 0;
-    font: 24px Impact, Charcoal, sans-serif;
-    line-height:1;
-    color: {{account.color_scheme}};
-  }
-  p { margin:0; }
-  .subject { padding: 5px 0; }
-  address {
-    color:#4d4d4d;
-    font-style:italic;
-    font-size:14px;
-  }
-  .line { border-top:1px solid #ccc; }
-  .document-data, .contact-data { padding-top:10px; }
-  .document-data h2.line, .contact-data address { padding-top:10px; }
-  .document-data p {
-    margin-bottom:10px;
-    font-size:14px;
-    color:#4d4d4d;
-  }
-  .contact-data p {
-    margin:6px 0 0;
-    font-size:14px;
-    color:#4d4d4d;
-  }
-  #items {
-    min-height:450px;
-  }
-  #items table thead tr th, #items table tfoot tr td, #items table tbody tr td {
-    padding:6px 0;
-    font:11px Georgia, "Times New Roman", Times, serif;
-    color:#4d4d4d;
-    line-height:1.4;
-  }
-  #items table thead tr th {
-    background-color: {{account.color_scheme}};
-    color:#fff;
-    font:normal 11px Georgia, "Times New Roman", Times, serif;
-    text-transform:uppercase;
-  }
-  #items table tfoot tr td.label, #items table tfoot tr td.label-total {
-    text-transform:uppercase;
-  }
-  #items table tfoot tr td.right { text-align: right; }
-  .border {
-    border-bottom:1px solid #ccc;
-  }
-  .paid { padding: 5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font: bold 18px Impact, Charcoal, sans-serif;; text-transform: uppercase; }
-  #items table tfoot tr td.label-total, #items table tfoot tr td.value-total {
-    border-top:1px solid #4d4d4d;
-    border-bottom:1px solid #4d4d4d;
-    font:19px Impact, Charcoal, sans-serif;
-    color: {{account.color_scheme}};
-  }
-  #items table tfoot tr td.label-total {
-    text-transform:none;
-  }
-  #items table tfoot tr td.value-total abbr {
-    font-size:16px;
-  }
-  #items table tfoot tr td.topspace14 { padding-top: 14px; }
-  #items table tbody tr td {
-    border-bottom:1px solid #ccc;
-  }
-  #items table thead tr th.description, #items table tbody tr td.description {
-    padding-left:6px;
-    padding-right:14px;
-    text-align:left;
-  }
-  #items table tbody tr td.description { font-style:italic; }
-  #items table thead tr th.quantity, #items table tbody tr td.quantity {
-    padding-right:14px;
-    text-align:right; 
-  }
-  #items table thead tr th.price, #items table tbody tr td.price {
-    padding-right:14px;
-    text-align:right;
-  }
-  #items table thead tr th.amount, #items table tfoot tr td.value, #items table tfoot tr td.value-total, #items table tbody tr td.amount {
-    padding-right:6px;
-    text-align:right;
-  }
-  #footer .user, #footer .notes, #footer .payment {
-    padding-top:10px;
-    border-top: 1px solid #ccc;
-  }
-  #footer h3 {
-    font:normal 16px Georgia, "Times New Roman", Times, serif;
-    text-transform:uppercase;
-    color:#4d4d4d;
-  }
-  #footer p {
-    margin-top:6px;
-    font:italic 11px Georgia, "Times New Roman", Times, serif;
-    line-height:1.4;
-    color:#4d4d4d;
-  }
-  #footer address p { line-height:1; }
-  #footer p a { color:#4d4d4d; text-decoration: none;}
+<style>
+  body {padding: 20px; background: #fff; color:#000; font:normal 100% Georgia, "Times New Roman", Times, serif}
+  #header, #items, #footer {padding:40px 0 0}
+  #header table, #items table, #footer table {margin:0 auto}
+  .table-block {width:720px; border:none; border-collapse:collapse}
+  h1, h2 {text-transform:uppercase; color:#4d4d4d; font-weight:normal; margin:0}
+  h1 {font-size:32px; border-bottom:1px solid #ccc}
+  h2 {font-size:11px}
+  h3 {margin:5px 0 0; font:24px Impact, Charcoal, sans-serif; line-height:1; color: {{account.color_scheme}};}
+  p {margin:0}
+  a:link, a:visited {color:#000; text-decoration:none}
+  a:hover {color:#000; text-decoration:none}
+  .w14 {width:14px}
+  .w92 {width:92px}
+  .w124 {width:124px}
+  .w138 {width:138px}
+  .w170 {width:170px}
+  .w216 {width:216px}
+  .w262 {width:262px}
+  .w300 {width:300px}
+  .w308 {width:308px}
+  .w322 {width:322px}
+  .valign-bottom {vertical-align:bottom}
+  .valign-top {vertical-align:top}
+  .subject {padding:5px 0}
+  address {color:#4d4d4d; font-style:italic; font-size:14px}
+  .line {border-top:1px solid #ccc}
+  .document-data, .contact-data {padding-top:10px}
+  .document-data h2.line, .contact-data address {padding-top:10px}
+  .document-data p {margin-bottom:10px; font-size:14px; color:#4d4d4d}
+  .document-data p.small {font-size:11px}
+  .contact-data p {margin:6px 0 0; font-size:14px; color:#4d4d4d}
+  #items {min-height:450px}
+  #items table thead tr th, #items table tfoot tr td, #items table tbody tr td {padding:6px 0; font:11px Georgia, "Times New Roman", Times, serif; color:#4d4d4d; line-height:1.4}
+  #items table thead tr th {background-color: {{account.color_scheme}}; color:#fff; font:normal 11px Georgia, "Times New Roman", Times, serif; text-transform:uppercase}
+  #items table tfoot tr td.label, #items table tfoot tr td.label-total {text-transform:uppercase}
+  #items table tfoot tr td.right {text-align:right}
+  .border {border-bottom:1px solid #ccc}
+  .paid {padding:5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font:bold 18px Impact, Charcoal, sans-serif; text-transform: uppercase}
+  #items table tfoot tr td.label-total, #items table tfoot tr td.value-total {border-top:1px solid #4d4d4d; border-bottom:1px solid #4d4d4d; font:19px Impact, Charcoal, sans-serif; color: {{account.color_scheme}};}
+  #items table tfoot tr td.label-total {text-transform:none}
+  #items table tfoot tr td.value-total abbr {font-size:16px}
+  #items table tfoot tr td.topspace14 {padding-top:14px}
+  #items table tbody tr td {border-bottom:1px solid #ccc}
+  #items table thead tr th.description, #items table tbody tr td.description {padding-left:6px; padding-right:14px; text-align:left}
+  #items table tbody tr td.description {font-style:italic}
+  #items table thead tr th.quantity, #items table tbody tr td.quantity {padding-right:14px; text-align:right}
+  #items table thead tr th.price, #items table tbody tr td.price {padding-right:14px; text-align:right}
+  #items table thead tr th.amount, #items table tfoot tr td.value, #items table tfoot tr td.value-total, #items table tbody tr td.amount {padding-right:6px; text-align:right}
+  #footer .user, #footer .notes, #footer .payment {padding-top:10px; border-top: 1px solid #ccc}
+  #footer h3 {font:normal 16px Georgia, "Times New Roman", Times, serif; text-transform:uppercase; color:#4d4d4d}
+  #footer p {margin-top:6px; font:italic 11px Georgia, "Times New Roman", Times, serif; line-height:1.4; color:#4d4d4d}
+  #footer address p {line-height:1}
+  #footer p a {color:#4d4d4d; text-decoration:none}
   /* css rules for printing */
   @media print {
-    body { -webkit-print-color-adjust:exact; }
-    #items tr { page-break-inside: avoid; }
-    #items tfoot { display: table-row-group; }
+    body {-webkit-print-color-adjust:exact}
+    #items tr {page-break-inside:avoid}
+    #items tfoot {display:table-row-group}
   }
 </style>
 </head>
 <body>
 <div id="header">
-  <table width="722" border="0" cellspacing="0" cellpadding="0" style="font-size:100%">
+  <table class="table-block">
     <tr>
-      <td width="308" rowspan="2" valign="top">
+      <td class="w308 valign-top" rowspan="2">
          <!-- logo -->
          {% if account.logo_url != blank %}
-          <img src="{{ account.logo_url}}" width="300" />
+          <img src="{{ account.logo_url}}" class="w300" alt="Logo">
          {% endif %}
       </td>
-      <td width="14" rowspan="2">&nbsp;</td>
+      <td class="w14" rowspan="2">&nbsp;</td>
       <td colspan="3">
         <h1>{{title}}</h1>
         {% if document.subject != blank %}
@@ -155,7 +89,7 @@
       </td>
     </tr>
     <tr>
-      <td width="124" valign="top" class="document-data">
+      <td class="document-data w124 valign-top">
         <!-- document data -->
         <h2>{{labels.number}}</h2>
         <p>{{document.number}}</p>
@@ -169,13 +103,18 @@
         <h2 class="line">{{labels.due_date}}</h2>
         <p>{{document.due_date | date:'long'}}</p>
         {% endif %}
+        {% if document.related_document_type != blank %}
+        <h2 class="line">{{labels.related_document}}</h2>
+        <p><a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</a></p>
+        <p class="small">{{document.related_document_date | date}}</p>
+        {% endif %}
         {% if document.valid_until != blank %}
         <h2 class="line">{{labels.valid_until}}</h2>
         <p>{{document.valid_until | date:'long'}}</p>
         {% endif %}
       </td>
-      <td width="14">&nbsp;</td>
-      <td width="262" valign="top" class="contact-data">
+      <td class="w14">&nbsp;</td>
+      <td class="contact-data w262 valign-top">
         <!-- contact's data -->
         <h2>{{labels.to}}</h2>
         <h3>{{contact.full_name}}</h3>
@@ -188,56 +127,56 @@
 </div>
 <div id="items">
 <!-- items -->
-  <table width="722" border="0" cellspacing="0" cellpadding="0" style="font-size:100%">
+  <table class="table-block">
   <thead>
     <tr>
-      <th width="322" class="description" scope="col">{{labels.description}}</th>
-      <th width="92" class="quantity">{{labels.quantity}}</th>
-      <th width="138" class="price">{{labels.unit_price}}</th>
-      <th width="170" class="amount">{{labels.amount}}</th>
+      <th class="description w322" scope="col">{{labels.description}}</th>
+      <th class="quantity w92">{{labels.quantity}}</th>
+      <th class="price w138">{{labels.unit_price}}</th>
+      <th class="amount w170">{{labels.amount}}</th>
     </tr>
   </thead>
   <tbody>
     {% for item in document.items %}
     <tr>
-      <td width="322" valign="top" class="description">{{item.description}}</td>
-      <td width="92" valign="top" class="quantity">{{item.quantity | precision}}</td>
-      <td width="138" valign="top" class="price">{{item.unit_price | precision}}</td>
-      <td width="170" valign="top" class="amount"><strong>{{item.subtotal | money}}</strong></td>
+      <td class="description w322 valign-top">{{item.description}}</td>
+      <td class="quantity w92 valign-top">{{item.quantity | precision}}</td>
+      <td class="price w138 valign-top">{{item.unit_price | precision}}</td>
+      <td class="amount w170 valign-top"><strong>{{item.subtotal | money}}</strong></td>
     </tr>
     {% endfor %} 
   </tbody>
   <tfoot>
     <tr>
-      <td width="322">&nbsp;</td>
-      <td width="92">&nbsp;</td>
-      <td width="138" valign="top" class="label border">{{labels.subtotal}}</td>
-      <td width="170" valign="top" class="value border"><strong>{{document.subtotal | money}}</strong></td>
+      <td class="w322">&nbsp;</td>
+      <td class="w92">&nbsp;</td>
+      <td class="label border w138 valign-top">{{labels.subtotal}}</td>
+      <td class="value border w170 valign-top"><strong>{{document.subtotal | money}}</strong></td>
     </tr>
     {% if document.discount > 0 %}
     <tr>
-      <td width="322">&nbsp;</td>
-      <td width="92">&nbsp;</td>
-      <td width="138" valign="top" class="label border">{{labels.discount}}</td>
-      <td width="170" valign="top" class="value border"><strong>{{document.discount | money}}</strong></td>
+      <td class="w322">&nbsp;</td>
+      <td class="w92">&nbsp;</td>
+      <td class="label border w138 valign-top">{{labels.discount}}</td>
+      <td class="value border w170 valign-top"><strong>{{document.discount | money}}</strong></td>
     </tr>
     {% endif %}
     {% for tax in document.taxes %}
     <tr>
-      <td width="322">&nbsp;</td>
-      <td width="92">&nbsp;</td>
-      <td width="138" valign="top" class="label">{{tax.label}}</td>
-      <td width="170" valign="top" class="value">
+      <td class="w322">&nbsp;</td>
+      <td class="w92">&nbsp;</td>
+      <td class="label w138 valign-top">{{tax.label}}</td>
+      <td class="value w170 valign-top">
         <strong>{{tax.amount | money}}</strong>
         {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}  
       </td>
     </tr>
     {% endfor %}
     <tr>
-      <td width="322">&nbsp;</td>
-      <td width="92">&nbsp;</td>
-      <td width="138" valign="top" class="label-total">{{labels.total}}</td>
-      <td width="170" valign="top" class="value-total"><strong>{{document.total | money}}</strong></td>
+      <td class="w322">&nbsp;</td>
+      <td class="w92">&nbsp;</td>
+      <td class="label-total w138 valign-top">{{labels.total}}</td>
+      <td class="value-total w170 valign-top"><strong>{{document.total | money}}</strong></td>
     </tr>
     {% if document.state == "paid" %}
     <!-- paid state -->
@@ -245,10 +184,10 @@
       <td colspan="4" class="topspace14">&nbsp;</td>
     </tr>
     <tr>
-      <td width="322">&nbsp;</td>
-      <td width="92">&nbsp;</td>
-      <td width="138">&nbsp;</td>
-      <td width="170" valign="top" class="right"><span class="paid">{{paid_stamp}}<span></td>
+      <td class="w322">&nbsp;</td>
+      <td class="w92">&nbsp;</td>
+      <td class="w138">&nbsp;</td>
+      <td class="right w170 valign-top"><span class="paid">{{paid_stamp}}<span></td>
       </td>
     </tr>
     {% endif %}
@@ -257,9 +196,9 @@
 </div>
 <div id="footer">
 <!-- footer -->
-<table width="722" border="0" cellspacing="0" cellpadding="0">
+<table class="table-block">
   <tr>
-    <td width="216" valign="top" class="user">
+    <td class="user w216 valign-top">
       <!-- user data -->
       <h2>{{labels.from}}</h2>
       <h3>{{account.full_name}}</h3>
@@ -268,19 +207,19 @@
       {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
       <address>{{ account.formatted_address | newline_to_br }}</address>
       {% if account.phone_1 %}<p>{{labels.phone}}: {{account.phone_1}}</p>{% endif %}
-      <p>{{labels.email}}: {{account.email}}</p>
-      {% if account.web != '' %}<p>Web: {{account.web}}</p>{% endif %}
+      {% if account.email != blank %}<p>{{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
+      {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
     </td>
-    <td width="14">&nbsp;</td>
-    <td width="216" valign="top" class="notes">
+    <td class="w14">&nbsp;</td>
+    <td class="notes w216 valign-top">
       {% if document.notes != blank %}
       <!-- notes -->
       <h2>{{labels.notes}}</h2>
       <p>{{document.notes | textilize}}</p>
       {% endif %}
     </td>
-    <td width="14">&nbsp;</td>
-    <td width="216" valign="top" class="payment">
+    <td class="w14">&nbsp;</td>
+    <td class="payment w216 valign-top">
       {% if document.payment_details != blank %}
       <!-- payment details -->
       <h2>{{labels.payment_details}}</h2>

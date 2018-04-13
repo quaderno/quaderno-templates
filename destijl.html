@@ -1,66 +1,75 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="pdfkit-page_size" content="A4"/>
-    <meta name="pdfkit-margin_top" content="13mm"/>
-    <meta name="pdfkit-margin_right" content="13mm"/>
-    <meta name="pdfkit-margin_bottom" content="13mm"/>
-    <meta name="pdfkit-margin_left" content="13mm"/>
+    <meta name="pdfkit-page_size" content="A4">
+    <meta name="pdfkit-margin_top" content="13mm">
+    <meta name="pdfkit-margin_right" content="13mm">
+    <meta name="pdfkit-margin_bottom" content="13mm">
+    <meta name="pdfkit-margin_left" content="13mm">
     <title>{{document.number}}</title>
-    <style type="text/css">
-      body { padding: 20px; background: #fff; color: #000; font: normal 100% Helvetica, Arial, sans-serif; }
-      h1 { font-size: 32px; margin:0 0 20px 0; line-height:1.1; color:{{account.color_scheme}}; }
-      h2 { font-size: 16px; font-weight: bold; margin: 0; }
-      h3 { margin:2px 0; }
-      p { font-size: 12px; margin: 0; }
-      address { font-style: normal; }
-      a:link, a:visited { color: #000; text-decoration: none; }
-      a:hover { color: #000; text-decoration: none; }
-      abbr { border:none; }
-      .label, .currency { font-size: 11px; text-transform: uppercase; font-weight: normal; }
-      .total-currency { font-size: 16px; }
-      .smalltxt { font-size: 14px; }
-      .txt { font-size: 16px; font-weight: bold; }
-      #items th {font-size: 13px; }
-      table { width: 100%; border: none; border-collapse: collapse; }
-      table td { padding: 5px 0; font-size: 13px; line-height: 16px; }
-      #items { margin: 30px 0 30px 0; }
-      #items thead tr th { padding: 8px 0 6px 0; }
-      #items tbody { border-top: 2px solid #000; border-bottom: 2px solid #000; }
-      #items tbody tr { border-bottom: 1px solid #000; }
-      #items tfoot .label, #items tfoot .right { border-bottom: 1px solid #000; }
-      #items tfoot .txt { border-bottom: 1px solid {{account.color_scheme}}; }
-      #items td { padding: 8px 0; }
-      #items td.topspace14 { padding-top: 14px; }
-      .border-first { border-top: 4px solid {{account.color_scheme}}; margin-top: 0; padding-top: 5px; }
-      .border-end { border-bottom:2px solid {{account.color_scheme}}; }
-      .border2 { border-top:2px solid {{account.color_scheme}}; }
-      .border1 { border-top:1px solid #000; margin-top: 30px; padding-top: 5px; }
-      .space30 { padding-right: 30px; }
-      .space12 { padding-right: 12px; }
-      .left { text-align: left; }
-      .right { text-align: right; }
-      .center { text-align: center; }
-      .paid { padding: 5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font-size: 18px; font-weight: bold; text-transform: uppercase; }
+    <style>
+      body {padding:20px; background:#fff; color:#000; font:normal 100% Helvetica, Arial, sans-serif}
+      h1 {font-size:32px; margin:0 0 20px 0; line-height:1.1; color:{{account.color_scheme}}}
+      h2 {font-size:16px; font-weight:bold; margin:0}
+      h3 {margin:2px 0}
+      p {font-size:12px; margin:0}
+      address {font-style:normal}
+      a:link, a:visited {color:#000; text-decoration:none}
+      a:hover {color:#000; text-decoration:none}
+      abbr {border:none}
+      .label, .currency {font-size:11px; text-transform:uppercase; font-weight:normal}
+      .total-currency {font-size:16px}
+      .smalltxt {font-size:14px}
+      .txt {font-size:16px; font-weight:bold}
+      .w300 {width:300px}
+      .w18per {width:18%}
+      .w20per {width:20%}
+      .w38per {width:38%}
+      .w42per {width:42%}
+      .w47per {width:47%}
+      .w53per {width:53%}
+      .valign-bottom {vertical-align:bottom}
+      .valign-top {vertical-align:top}
+      #items th {font-size:13px}
+      table {width:100%; border:none; border-collapse:collapse}
+      table td {padding:5px 0; font-size:13px; line-height:16px}
+      #items {margin:30px 0 30px 0}
+      #items thead tr th {padding:8px 0 6px 0}
+      #items tbody {border-top:2px solid #000; border-bottom:2px solid #000}
+      #items tbody tr {border-bottom:1px solid #000}
+      #items tfoot .label, #items tfoot .right {border-bottom:1px solid #000}
+      #items tfoot .txt {border-bottom:1px solid {{account.color_scheme}}}
+      #items td {padding:8px 0}
+      #items td.topspace14 {padding-top:14px}
+      .border-first {border-top:4px solid {{account.color_scheme}}; margin-top:0; padding-top:5px}
+      .border-end {border-bottom:2px solid {{account.color_scheme}}}
+      .border2 {border-top:2px solid {{account.color_scheme}}}
+      .border1 {border-top:1px solid #000; margin-top:30px; padding-top:5px}
+      .space30 {padding-right:30px}
+      .space12 {padding-right:12px}
+      .left {text-align:left}
+      .right {text-align:right}
+      .center {text-align:center}
+      .paid {padding:5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font-size:18px; font-weight:bold; text-transform:uppercase}
       /* css rules for printing */
       @media print {
-        body { -webkit-print-color-adjust:exact; }
-        #items tr { page-break-inside: avoid; }
-        #items tfoot { display: table-row-group; }
+        body {-webkit-print-color-adjust:exact}
+        #items tr {page-break-inside:avoid}
+        #items tfoot {display:table-row-group}
       }
     </style>
   </head>
   <body>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <table>
       <!-- // Begin Template Header \\ -->
       <tr>
         <td colspan="2">
         {% if account.logo_url != blank %}
-          <img src="{{ account.logo_url }}" width="300" />
+          <img src="{{ account.logo_url }}" class="w300" alt="Logo">
         {% endif %}
         </td>
-        <td valign="bottom">
+        <td class="valign-bottom">
           <h1>{{title}}</h1>
           {% if document.subject != blank %}
             <p class="subject">{{ document.subject }}</p>
@@ -70,7 +79,7 @@
       <!-- // End Template Header \\ -->
       <!-- // Begin Template Body \\ -->
       <tr>
-        <td width="20%" rowspan="2" valign="top" class="space12">
+        <td rowspan="2" class="space12 w20per valign-top">
           <h2 class="label border-first">{{labels.number}}</h2>
           <p class="txt">{{ document.number }}</p>
           <h2 class="label border1">{{labels.issue_date}}</h2>
@@ -87,35 +96,40 @@
           <h2 class="label border1">{{labels.valid_until}}</h2>
           <p class="txt">{{document.valid_until | date}}</p>
           {% endif %}
+          {% if document.related_document_type != blank %}
+          <h2 class="label border1">{{labels.related_document}}</h2>
+          <p class="txt"><a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} <br> {{document.related_document_number}}</a></p>
+          <p>{{document.related_document_date | date}}</p>
+          {% endif %}
         </td>
-        <td width="38%" valign="top" class="space12">
+        <td class="space12 w38per valign-top">
           <h2 class="label border-first">{{labels.from}}</h2>
           <h3 class="txt">{{ account.full_name }}</h3>
-          <p>{% if account.tax_id != blank %} {{labels.tax_id}}: {{account.tax_id}} {% endif %}</p>
-          <p>{% if account.vat_number != blank %} {{labels.vat_number}}: {{account.vat_number}} {% endif %}</p>
-          <p>{% if account.company_number != blank %} {{labels.company_number}}: {{account.company_number}} {% endif %}</p>
+          {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+          {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
+          {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
           <address>{{ account.formatted_address | newline_to_br }}</address>
-          <p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>
-          <p><a href="{{account.web}}">{{ account.web }}</a></p>
+          {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
+          {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
         </td>
-        <td width="42%" valign="top">
+        <td class="w42per valign-top">
           <h2 class="label border-first">{{labels.to}}</h2>
           <h3 class="txt">{{ contact.full_name }}</h3>
-          <p>{% if contact.tax_id != blank %} {{labels.tax_id}}: {{contact.tax_id}} {% endif %}</p>
-          <p>{% if contact.vat_number != blank %} {{labels.vat_number}}: {{contact.vat_number}} {% endif %}</p>
+          {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
+          {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
           <p>{{ contact.contact_name }}</p>
           <address>{{ contact.formatted_address | newline_to_br }}</address>
         </td>
       </tr>
       <tr>
-        <td colspan="2" valign="top">
-        <table id="items" width="100%" border="0" cellspacing="0" cellpadding="0">
+        <td colspan="2" class="valign-top">
+        <table id="items">
           <thead>
             <tr class="border-first">
               <th scope="col" class="left">{{labels.description}}</th>
-              <th width="18%" class="right">{{labels.quantity}}</th>
-              <th width="20%" class="right">{{labels.unit_price}}</th>
-              <th width="20%" class="right">{{labels.amount}}</th>
+              <th class="right w18per">{{labels.quantity}}</th>
+              <th class="right w20per">{{labels.unit_price}}</th>
+              <th class="right w20per">{{labels.amount}}</th>
             </tr>
           </thead>
           <tbody>
@@ -163,7 +177,7 @@
             </tr>
             <tr>
               <td colspan="2">&nbsp;</td>
-              <td><span class="paid">{{paid_stamp}}<span></td>
+              <td><span class="paid">{{paid_stamp}}</span></td>
             </tr>
             {% endif %}
           </tfoot>
@@ -174,22 +188,22 @@
       <!-- // Begin Template Footer \\ -->
       <tr>
         <td>&nbsp;</td>
-        <td colspan="2" valign="top">
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <td colspan="2" class="valign-top">
+          <table>
             <tr>
               {% if document.notes != blank %}
-              <td width="47%" valign="top" {% if document.payment_details != blank %} class="space12" {% endif %}>
+              <td {% if document.payment_details != blank %} class="space12 w47per valign-top" {% endif %}>
                 <h2 class="label border-first">{{labels.notes}}</h2>
                 <p class="smalltxt">{{document.notes | textilize}}</p>
               </td>
               {% endif %}
               {% if document.payment_details != blank %}
-              <td width="53%" valign="top">
+              <td class="w53per valign-top">
                 <h2 class="label border-first">{{labels.payment_details}}</h2>
                 <p class="smalltxt">{{document.payment_details | textilize}}</p>
               </td>
               {% elsif document.state == "paid" %}
-              <td width="53%" valign="top">
+              <td class="w53per valign-top">
                 <h2 class="label border-first">{{labels.payment_details}}</h2>
                 <p class="smalltxt">{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}</p>
               </td>

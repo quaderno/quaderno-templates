@@ -1,42 +1,43 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>{{document.number}}</title>
-  <meta name="pdfkit-page_size" content="A4"/>
-  <meta name="pdfkit-margin_top" content="13mm"/>
-  <meta name="pdfkit-margin_right" content="13mm"/>
-  <meta name="pdfkit-margin_bottom" content="13mm"/>
-  <meta name="pdfkit-margin_left" content="13mm"/>
+  <meta name="pdfkit-page_size" content="A4">
+  <meta name="pdfkit-margin_top" content="13mm">
+  <meta name="pdfkit-margin_right" content="13mm">
+  <meta name="pdfkit-margin_bottom" content="13mm">
+  <meta name="pdfkit-margin_left" content="13mm">
   <style>
-    body { padding: 20px; background: #fff; color: #000; font: normal 10pt Tahoma, Geneva, sans-serif; }
-    h1 { font-size: 150%; color: {{account.color_scheme}}; margin: 10px 0; }
-    p { margin:2px 0; }
-    address { font-style: normal; }
-    .txt { margin: 0; }
-    table { width: 100%; border: none; }
-    table tr td { padding:5px; }
-    table#items { margin: 25px 0; border-collapse:collapse; }
-    table#items thead tr th { color: {{account.color_scheme}}; font-weight: normal; padding: 5px; border-bottom: 2px solid #666; }
-    table#items tbody tr td { border-bottom: 2px solid #666; }
-    table#items tfoot tr td { text-align: right; }
-    #details h4 { font-size: 100%; font-weight: bold; color: {{account.color_scheme}}; text-transform: uppercase; margin-bottom: 0; }
-    #details p { margin: 0; }
-    #paid-stamp { margin: 0 0 18px; }
-    .right { text-align: right; }
-    .center { text-align: center; }
-    .paid { padding: 5px 0; border-top:2px solid #666; border-bottom:2px solid #666; font-size: 18px; font-weight: bold; text-transform: uppercase; }
+    body {padding:20px; background:#fff; color:#000; font:normal 10pt Tahoma, Geneva, sans-serif}
+    h1 {font-size:150%; color:{{account.color_scheme}}; margin:10px 0}
+    p {margin:2px 0}
+    address {font-style:normal}
+    .txt {margin:0}
+    table {width:100%; border:none}
+    table tr td {padding:5px}
+    table#items {margin:25px 0; border-collapse:collapse;}
+    table#items thead tr th {color:{{account.color_scheme}}; font-weight:normal; padding:5px; border-bottom:2px solid #666}
+    table#items tbody tr td {border-bottom:2px solid #666}
+    table#items tfoot tr td {text-align:right}
+    #details h4 {font-size:100%; font-weight:bold; color:{{account.color_scheme}}; text-transform:uppercase; margin-bottom:0}
+    #details p {margin:0}
+    #paid-stamp {margin:0 0 18px}
+    .right {text-align:right}
+    .center {text-align:center}
+    .paid {padding:5px 0; border-top:2px solid #666; border-bottom:2px solid #666; font-size:18px; font-weight:bold; text-transform:uppercase}
     /* css rules for printing */
     @media print {
-      body { -webkit-print-color-adjust:exact; }
-      #items tr { page-break-inside: avoid; }
-      #items tfoot { display: table-row-group; }
+      body {-webkit-print-color-adjust:exact}
+      #items tr {page-break-inside:avoid}
+      #items tfoot {display:table-row-group}
     }
   </style>
 </head>
 <body>
   <table style="font-size:100%">
     <tr>
-      <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" width="200" />{% endif %}</td>
+      <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" width="200" alt="Logo">{% endif %}</td>
       <td class="right" style="font-size:150%;">
         {% if document.state == "paid" %}
         <!-- paid state -->
