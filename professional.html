@@ -12,8 +12,14 @@
     body {padding:20px; background:#fff; color:#000; font:normal 10pt Tahoma, Geneva, sans-serif}
     h1 {font-size:150%; color:{{account.color_scheme}}; margin:10px 0}
     p {margin:2px 0}
+    a:link, a:visited {color:#000; text-decoration:none}
+    a:hover {color:#000; text-decoration:none}
     address {font-style:normal}
     .txt {margin:0}
+    .w200 {width:200px}
+    .w10per {width:10%}
+    .w15per {width:15%}
+    .fs150per {font-size:150%}
     table {width:100%; border:none}
     table tr td {padding:5px}
     table#items {margin:25px 0; border-collapse:collapse;}
@@ -35,14 +41,14 @@
   </style>
 </head>
 <body>
-  <table style="font-size:100%">
+  <table>
     <tr>
-      <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" width="200" alt="Logo">{% endif %}</td>
-      <td class="right" style="font-size:150%;">
+      <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" class="w200" alt="Logo">{% endif %}</td>
+      <td class="right fs150per">
         {% if document.state == "paid" %}
         <!-- paid state -->
         <p id="paid-stamp">
-          <span class="paid">{{paid_stamp}}<span>
+          <span class="paid">{{paid_stamp}}</span>
         </p>
         {% endif %}
         {{document.issue_date | date}}
@@ -55,6 +61,8 @@
         {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
         {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
         <address>{{ account.formatted_address | newline_to_br }}</address>
+        {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
+        {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
       </td>
     </tr>
     <tr>
@@ -70,6 +78,11 @@
       <td colspan="2">
         <h1>{{title}} {{{document.number}}</h1>
         {% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
+        {% if document.related_document_type != blank %}
+        <p><strong>{{labels.related_document}}:</strong>
+        <a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</a>
+        ({{document.related_document_date | date}})</p>
+        {% endif %}
         {% if document.subject != blank %}<p><strong>{{labels.subject}}: </strong>{{ document.subject }}</p>{% endif %}
       </td>
     </tr>
@@ -79,17 +92,17 @@
           <thead>
             <tr>
               <th scope="col">{{labels.description}}</th>
-              <th width="10%">{{labels.quantity}}</th>
-              <th width="15%" class="right">{{labels.unit_price}}</th>
-              <th width="15%" class="right">{{labels.amount}}</th>
+              <th class="w10per">{{labels.quantity}}</th>
+              <th class="right w15per">{{labels.unit_price}}</th>
+              <th class="right w15per">{{labels.amount}}</th>
             </tr>
           </thead>
           <tbody>
             {% for item in document.items %}
             <tr>
               <td>{{item.description}}</td>
-              <td width="10%" class="center">{{item.quantity | precision}}</td>
-              <td width="15%" class="right">{{item.unit_price | precision}}</td>
+              <td class="center w10per">{{item.quantity | precision}}</td>
+              <td class="right w15per">{{item.unit_price | precision}}</td>
               <td class="right">{{item.subtotal | money}}</td>
             </tr>
             {% endfor %}
