@@ -67,11 +67,10 @@
     </tr>
     <tr>
       <td colspan="2">
-        <h3 class="txt">{{contact.full_name}}</h3>
-        {% if contact.contact_name != "" %}<p><strong>{{contact.contact_name}}</strong></p>{% endif %}
-        {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
-        {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
-        <address>{{ contact.formatted_address | newline_to_br }}</address>
+        <h3 class="txt">{{ document.contact }}</h3>
+        {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
+        {% if document.vat_number != blank %}<p>{{labels.vat_number}}: {{document.vat_number}}</p>{% endif %}
+        <address>{{ document.billing_address | newline_to_br }}</address>
       </td>
     </tr>
     <tr>

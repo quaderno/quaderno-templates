@@ -117,10 +117,10 @@
       <td class="contact-data w262 valign-top">
         <!-- contact's data -->
         <h2>{{labels.to}}</h2>
-        <h3>{{contact.full_name}}</h3>
-        {% if contact.tax_id != blank %}<p>{{labels.tax_id}}: {{contact.tax_id}}</p>{% endif %}
-        {% if contact.vat_number != blank %}<p>{{labels.vat_number}}: {{contact.vat_number}}</p>{% endif %}
-        <address>{{ contact.formatted_address | newline_to_br }}</address>
+        <h3>{{ document.contact }}</h3>
+        {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
+        {% if document.vat_number != blank %}<p>{{labels.vat_number}}: {{document.vat_number}}</p>{% endif %}
+        <address>{{ document.billing_address | newline_to_br }}</address>
       </td>
     </tr>
   </table>
