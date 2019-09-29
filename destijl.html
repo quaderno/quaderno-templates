@@ -160,7 +160,7 @@
               <td class="label">{{tax.label}}</td>
               <td class="right">
                 <strong>{{tax.amount | money}}</strong>
-                {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
+                {% if tax.currency != document.currency %} ({{0 | money}}){% endif %}
               </td>
             </tr>
             {% endfor %}
