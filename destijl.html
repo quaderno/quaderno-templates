@@ -106,8 +106,6 @@
           <h2 class="label border-first">{{labels.from}}</h2>
           <h3 class="txt">{{ account.full_name }}</h3>
           {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
-          {% if account.vat_number != blank %}<p>{{labels.vat_number}}: {{account.vat_number}}</p>{% endif %}
-          {% if account.company_number != blank %}<p>{{labels.company_number}}: {{account.company_number}}</p>{% endif %}
           <address>{{ account.formatted_address | newline_to_br }}</address>
           {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
           {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
@@ -116,7 +114,6 @@
           <h2 class="label border-first">{{labels.to}}</h2>
           <h3 class="txt">{{ document.contact }}</h3>
           {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
-          {% if document.vat_number != blank %}<p>{{labels.vat_number}}: {{document.vat_number}}</p>{% endif %}
           <address>{{ document.billing_address | newline_to_br }}</address>
         </td>
       </tr>

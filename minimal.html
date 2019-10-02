@@ -51,7 +51,6 @@
         <td colspan="2" class="right">
           <p><strong>{{ document.contact }}</strong></p>
           {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
-          {% if document.vat_number != blank %}<p>{{labels.vat_number}}: {{document.vat_number}}</p>{% endif %}
           <address>{{ document.billing_address | newline_to_br }}</address>
         </td>
       </tr>
@@ -150,7 +149,7 @@
   <div id="footer">
     <!-- account's data -->
     <p>
-      <strong>{{account.full_name}} {% if account.tax_id != blank %}- {{labels.tax_id}}: {{account.tax_id}}{% endif %} {% if account.vat_number != blank %}- {{labels.vat_number}}: {{account.vat_number}}{% endif %} {% if account.company_number != blank %}- {{labels.company_number}}: {{account.company_number}}{% endif %}</strong>
+      <strong>{{account.full_name}} {% if account.tax_id != blank %}- {{labels.tax_id}}: {{account.tax_id}}{% endif %}</strong>
       <address>{{account.street_line_1}} - {% if account.city != account.region %}{{account.city}} -{% endif %} {{account.region}} {{account.postal_code}} - {{account.country | country_name}}</address>
       {% if document.account.phone_1 != blank %}{{labels.phone}}: {{account.phone_1}} {% endif %}
       {% if document.account.email != blank %} {{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a> {% endif %}
