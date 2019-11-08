@@ -11,7 +11,7 @@
   <style>
     body {padding:20px; background:#fff; color:#000; font:normal 10pt Arial, Helvetica, sans-serif}
     #content {min-height:850px}
-    h1 {font-size:48px; text-transform:lowercase; color:{{account.color_scheme}}}
+    h1 {font-size:38pt; text-transform:lowercase; color:{{account.color_scheme}}}
     p {margin:2px 0}
     a:link, a:visited {color:#000; text-decoration:none}
     a:hover {color:#000; text-decoration:none}
@@ -21,14 +21,15 @@
     table#items thead tr th {padding:5px; color:#fff; background-color:{{account.color_scheme}}}
     table#items tbody tr td {padding:5px; border-bottom:1px solid {{account.color_scheme}}}
     table#items tfoot tr td {padding:0 5px; border-bottom: 2px solid {{account.color_scheme}}; text-align:right}
-    #footer {text-align:center; color:#666; font-size:80%}
+    #footer {text-align:center; color:#666; font-size:8pt}
     #footer a {color:#666;}
+    #legal {margin:20px 0}
     .w200 {width:200px}
     .w60per {width:60%}
     .right {text-align:right}
     .center {text-align:center}
     .topspace10 {padding-top:10px}
-    .paid {padding:5px 0; border-top:2px solid {{account.color_scheme}}; border-bottom:2px solid {{account.color_scheme}}; font-size: 18px; font-weight: bold; text-transform: uppercase}
+    .paid {padding:5px 0; border-top:2px solid {{account.color_scheme}}; border-bottom:2px solid {{account.color_scheme}}; font-size: 16pt; font-weight: bold; text-transform: uppercase}
     /* css rules for printing */
     @media print {
       body {-webkit-print-color-adjust:exact}
@@ -87,7 +88,7 @@
         <td colspan="2">
           <!-- items table -->
           <table id="items">
-            <thead> 
+            <thead>
               <tr>
                 <th class="w60per">{{labels.description}}</th>
                 <th class="right">{{labels.quantity}}</th>
@@ -155,6 +156,10 @@
       {% if document.account.email != blank %} {{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a> {% endif %}
       {% if document.account.web != blank %} <a href="{{account.web}}">{{ account.web }}</a>{% endif %}
     </p>
+    <!-- legal notes -->
+    {% if document.legal != blank %}
+    <p id="legal">{{document.legal | textilize}}</p>
+    {% endif %}
   </div>
 </body>
 </html>
