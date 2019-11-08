@@ -51,7 +51,8 @@
       .left {text-align:left}
       .right {text-align:right}
       .center {text-align:center}
-      .paid {padding:5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font-size:18px; font-weight:bold; text-transform:uppercase}
+      .paid {padding:5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font-size:24px; font-weight:bold; text-transform:uppercase}
+      .legal {padding:40px 0 20px; font-size:14px; vertical-align:top; text-align:center}
       /* css rules for printing */
       @media print {
         body {-webkit-print-color-adjust:exact}
@@ -169,11 +170,11 @@
             {% if document.state == "paid" %}
             <!-- paid state -->
             <tr>
-              <td colspan="3" class="topspace14">&nbsp;</td>
+              <td colspan="4" class="topspace14">&nbsp;</td>
             </tr>
             <tr>
               <td colspan="2">&nbsp;</td>
-              <td><span class="paid">{{paid_stamp}}</span></td>
+              <td colspan="2"><span class="paid">{{paid_stamp}}</span></td>
             </tr>
             {% endif %}
           </tfoot>
@@ -205,9 +206,15 @@
               </td>
               {% endif %}
             </tr>
-          </table>  
+          </table>
         </td>
       </tr>
+      <!-- legal notes -->
+      {% if document.legal != blank %}
+      <tr>
+        <td colspan="3" class="legal">{{document.legal | textilize}}</td>
+      </tr>
+      {% endif %}
       <!-- // End Template Footer \\ -->
     </table>
 </body>
