@@ -32,6 +32,8 @@
     .right {text-align:right}
     .center {text-align:center}
     .paid {padding:5px 0; border-top:2px solid #666; border-bottom:2px solid #666; font-size:18px; font-weight:bold; text-transform:uppercase}
+    #legal {font-size:8pt}
+    #legal p {margin:40px 0 20px}
     /* css rules for printing */
     @media print {
       body {-webkit-print-color-adjust:exact}
@@ -144,6 +146,13 @@
         {% if document.notes != blank %}
         <h4>{{labels.notes}}</h4>
         <p>{{document.notes | textilize}}</p>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" id="legal">
+        {% if document.legal != blank %}
+        <p>{{document.legal | textilize}}</p>
         {% endif %}
       </td>
     </tr>
