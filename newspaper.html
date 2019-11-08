@@ -30,9 +30,10 @@
   .w300 {width:300px}
   .w308 {width:308px}
   .w322 {width:322px}
+  .h27 {height:27px}
   .valign-bottom {vertical-align:bottom}
   .valign-top {vertical-align:top}
-  .subject {padding:5px 0}
+  .subject {font-style:italic}
   address {color:#4d4d4d; font-style:italic; font-size:14px}
   .line {border-top:1px solid #ccc}
   .document-data, .contact-data {padding-top:10px}
@@ -57,11 +58,12 @@
   #items table thead tr th.quantity, #items table tbody tr td.quantity {padding-right:14px; text-align:right}
   #items table thead tr th.price, #items table tbody tr td.price {padding-right:14px; text-align:right}
   #items table thead tr th.amount, #items table tfoot tr td.value, #items table tfoot tr td.value-total, #items table tbody tr td.amount {padding-right:6px; text-align:right}
-  #footer .user, #footer .notes, #footer .payment {padding-top:10px; border-top: 1px solid #ccc}
+  #footer .user, #footer .notes, #footer .payment, #footer .legal {padding-top:10px; border-top: 1px solid #ccc}
   #footer h3 {font:normal 16px Georgia, "Times New Roman", Times, serif; text-transform:uppercase; color:#4d4d4d}
-  #footer p {margin-top:6px; font:italic 11px Georgia, "Times New Roman", Times, serif; line-height:1.4; color:#4d4d4d}
-  #footer address p {line-height:1}
+  #footer p, #footer address {margin-top:6px; font:italic 11px Georgia, "Times New Roman", Times, serif; line-height:1.4; color:#4d4d4d}
+  #footer address {line-height:1}
   #footer p a {color:#4d4d4d; text-decoration:none}
+  #footer .legal p {font-style:normal}
   /* css rules for printing */
   @media print {
     body {-webkit-print-color-adjust:exact}
@@ -83,9 +85,6 @@
       <td class="w14" rowspan="2">&nbsp;</td>
       <td colspan="3">
         <h1>{{title}}</h1>
-        {% if document.subject != blank %}
-          <p class="subject">{{ document.subject }}</p>
-        {% endif %}
       </td>
     </tr>
     <tr>
@@ -111,6 +110,10 @@
         {% if document.valid_until != blank %}
         <h2 class="line">{{labels.valid_until}}</h2>
         <p>{{document.valid_until | date:'long'}}</p>
+        {% endif %}
+        {% if document.subject != blank %}
+        <h2 class="line">{{labels.subject}}</h2>
+        <p class="subject">{{ document.subject }}</p>
         {% endif %}
       </td>
       <td class="w14">&nbsp;</td>
@@ -143,7 +146,7 @@
       <td class="price w138 valign-top">{{item.unit_price | precision}}</td>
       <td class="amount w170 valign-top"><strong>{{item.subtotal | money}}</strong></td>
     </tr>
-    {% endfor %} 
+    {% endfor %}
   </tbody>
   <tfoot>
     <tr>
@@ -167,7 +170,7 @@
       <td class="label w138 valign-top">{{tax.label}}</td>
       <td class="value w170 valign-top">
         <strong>{{tax.amount | money}}</strong>
-        {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}  
+        {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
       </td>
     </tr>
     {% endfor %}
@@ -227,6 +230,17 @@
       {% endif %}
     </td>
   </tr>
+  <!-- legal notes -->
+  {% if document.legal != blank %}
+  <tr>
+    <td class="h27" colspan="5">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="5" class="legal valign-top">
+      <p>{{document.legal | textilize}}</p>
+    </td>
+  </tr>
+  {% endif %}
 </table>
 </div>
 </body>
