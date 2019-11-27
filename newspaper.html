@@ -207,7 +207,7 @@
       {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
       <address>{{ account.formatted_address | newline_to_br }}</address>
       {% if account.phone_1 %}<p>{{labels.phone}}: {{account.phone_1}}</p>{% endif %}
-      {% if account.email != blank %}<p>{{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
+      {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
       {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
     </td>
     <td class="w14">&nbsp;</td>
@@ -215,7 +215,7 @@
       {% if document.notes != blank %}
       <!-- notes -->
       <h2>{{labels.notes}}</h2>
-      <p>{{document.notes | textilize}}</p>
+      {{document.notes | textilize}}
       {% endif %}
     </td>
     <td class="w14">&nbsp;</td>
@@ -223,10 +223,10 @@
       {% if document.payment_details != blank %}
       <!-- payment details -->
       <h2>{{labels.payment_details}}</h2>
-      <p>{{document.payment_details | textilize}}</p>
+      {{document.payment_details | textilize}}
       {% elsif document.state == "paid" %}
       <h2>{{labels.payment_details}}</h2>
-      <p>{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}</p>
+      {% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}
       {% endif %}
     </td>
   </tr>

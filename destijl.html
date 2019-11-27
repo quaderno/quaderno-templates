@@ -191,18 +191,18 @@
               {% if document.notes != blank %}
               <td {% if document.payment_details != blank %} class="space12 w47per valign-top" {% endif %}>
                 <h2 class="label border-first">{{labels.notes}}</h2>
-                <p class="smalltxt">{{document.notes | textilize}}</p>
+                <div class="smalltxt">{{document.notes | textilize}}</div>
               </td>
               {% endif %}
               {% if document.payment_details != blank %}
               <td class="w53per valign-top">
                 <h2 class="label border-first">{{labels.payment_details}}</h2>
-                <p class="smalltxt">{{document.payment_details | textilize}}</p>
+                <div class="smalltxt">{{document.payment_details | textilize }}</div>
               </td>
               {% elsif document.state == "paid" %}
               <td class="w53per valign-top">
                 <h2 class="label border-first">{{labels.payment_details}}</h2>
-                <p class="smalltxt">{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}</p>
+                <div class="smalltxt">{% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}</div>
               </td>
               {% endif %}
             </tr>
