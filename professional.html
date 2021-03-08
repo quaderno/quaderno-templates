@@ -100,7 +100,7 @@
             <tr>
               <td>{{item.description}}</td>
               <td class="center w10per">{{item.quantity | precision}}</td>
-              <td class="right w15per">{{item.unit_price | precision}}</td>
+              <td class="right w15per">{{item.unit_price | money}}</td>
               <td class="right">{{item.subtotal | money}}</td>
             </tr>
             {% endfor %}
