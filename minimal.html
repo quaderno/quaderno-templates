@@ -59,7 +59,7 @@
       <tr>
         <!-- paid state -->
         <td colspan="2" class="right topspace10">
-          <span class="paid">{{paid_stamp}}<span>
+          <span class="paid">{{ labels.paid }}<span>
         </td>
       </tr>
       {% endif %}
@@ -77,7 +77,7 @@
           {% if document.related_document_type != blank %}
           <br /><strong>{{labels.related_document}}:</strong>
           <a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</a>
-          ({{document.related_document_date | date}})
+          ({{document.related_document_date | date: 'default', contact.country}})
           {% endif %}
           {% if document.po_number != blank %}<br /><strong>{{labels.po_number}}: </strong>{{document.po_number}}{% endif %}
           {% if document.subject != blank %}<br /><strong>{{labels.subject}}: </strong>{{ document.subject }}{% endif %}
@@ -149,12 +149,12 @@
   </div>
   <div id="footer">
     <!-- account's data -->
+    <p><strong>{{account.full_name}} {% if account.tax_id != blank %}– {{labels.tax_id}}: {{account.tax_id}}{% endif %}</strong></p>
+    <address>{{ account.formatted_address | newline_to_br | strip_newlines | replace: "<br />", " – " }}</address>
     <p>
-      <strong>{{account.full_name}} {% if account.tax_id != blank %}- {{labels.tax_id}}: {{account.tax_id}}{% endif %}</strong>
-      <address>{{account.street_line_1}} - {% if account.city != account.region %}{{account.city}} -{% endif %} {{account.region}} {{account.postal_code}} - {{account.country | country_name}}</address>
-      {% if document.account.phone_1 != blank %}{{labels.phone}}: {{account.phone_1}} {% endif %}
-      {% if document.account.email != blank %} {{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a> {% endif %}
-      {% if document.account.web != blank %} <a href="{{account.web}}">{{ account.web }}</a>{% endif %}
+      {% if account.phone_1 != blank %}{{labels.phone}}: {{account.phone_1}} {% endif %}
+      {% if account.email != blank %} {{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a> {% endif %}
+      {% if account.web != blank %} <a href="{{account.web}}">{{ account.web }}</a>{% endif %}
     </p>
     <!-- legal notes -->
     {% if document.legal != blank %}

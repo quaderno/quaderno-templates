@@ -50,10 +50,10 @@
         {% if document.state == "paid" %}
         <!-- paid state -->
         <p id="paid-stamp">
-          <span class="paid">{{paid_stamp}}</span>
+          <span class="paid">{{ labels.paid }}</span>
         </p>
         {% endif %}
-        {{document.issue_date | date}}
+        {{document.issue_date | date: 'default', contact.country}}
       </td>
     </tr>
     <tr>
@@ -79,7 +79,7 @@
         {% if document.related_document_type != blank %}
         <p><strong>{{labels.related_document}}:</strong>
         <a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</a>
-        ({{document.related_document_date | date}})</p>
+        ({{document.related_document_date | date: 'default', contact.country}})</p>
         {% endif %}
         {% if document.subject != blank %}<p><strong>{{labels.subject}}: </strong>{{ document.subject }}</p>{% endif %}
       </td>
@@ -127,12 +127,12 @@
       <td colspan="2" id="details">
         {% if document.due_date != blank %}
         <h4>{{labels.due_date}}</h4>
-        <p>{{document.due_date | date}}<p>
+        <p>{{document.due_date | date: 'default', contact.country}}<p>
         {% endif %}
 
         {% if document.valid_until != blank %}
         <h4>{{labels.valid_until}}</h4>
-        <p>{{document.valid_until | date}}<p>
+        <p>{{document.valid_until | date: 'default', contact.country}}<p>
         {% endif %}
 
         {% if document.payment_details != blank %}
