@@ -84,23 +84,23 @@
           <h2 class="label border-first">{{labels.number}}</h2>
           <p class="txt">{{ document.number }}</p>
           <h2 class="label border1">{{labels.issue_date}}</h2>
-          <p class="txt">{{document.issue_date | date}}</p>
+          <p class="txt">{{document.issue_date | date: 'default', contact.country}}</p>
           {% if document.po_number != blank %}
           <h2 class="label border1">{{labels.po_number}}</h2>
           <p class="txt">{{ document.po_number }}</p>
           {% endif %}
           {% if document.due_date != blank %}
           <h2 class="label border1">{{labels.due_date}}</h2>
-          <p class="txt">{{document.due_date | date}}</p>
+          <p class="txt">{{document.due_date | date: 'default', contact.country}}</p>
           {% endif %}
           {% if document.valid_until != blank %}
           <h2 class="label border1">{{labels.valid_until}}</h2>
-          <p class="txt">{{document.valid_until | date}}</p>
+          <p class="txt">{{document.valid_until | date: 'default', contact.country}}</p>
           {% endif %}
           {% if document.related_document_type != blank %}
           <h2 class="label border1">{{labels.related_document}}</h2>
           <p class="txt"><a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} <br> {{document.related_document_number}}</a></p>
-          <p>{{document.related_document_date | date}}</p>
+          <p>{{document.related_document_date | date: 'default', contact.country}}</p>
           {% endif %}
         </td>
         <td class="space12 w38per valign-top">
