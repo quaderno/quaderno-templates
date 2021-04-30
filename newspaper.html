@@ -10,9 +10,10 @@
 <title>{{document.number}}</title>
 <style>
   body {padding: 20px; background: #fff; color:#000; font:normal 100% Georgia, "Times New Roman", Times, serif}
-  #header, #items, #footer {padding:40px 0 0}
+  #header {padding:20px 0 0}
+  #items, #footer {padding:40px 0 0}
   #header table, #items table, #footer table {margin:0 auto}
-  .table-block {width:720px; border:none; border-collapse:collapse}
+  .table-block {border:none; border-collapse:collapse}
   h1, h2 {text-transform:uppercase; color:#4d4d4d; font-weight:normal; margin:0}
   h1 {font-size:32px; border-bottom:1px solid #ccc}
   h2 {font-size:11px}
@@ -41,7 +42,7 @@
   .document-data p {margin-bottom:10px; font-size:14px; color:#4d4d4d}
   .document-data p.small {margin-top:-10px; font-size:11px}
   .contact-data p {margin:6px 0 0; font-size:14px; color:#4d4d4d}
-  #items {min-height:450px}
+  #items {min-height:385px}
   #items table thead tr th, #items table tfoot tr td, #items table tbody tr td {padding:6px 0; font:11px Georgia, "Times New Roman", Times, serif; color:#4d4d4d; line-height:1.4}
   #items table thead tr th {background-color: {{account.color_scheme}}; color:#fff; font:normal 11px Georgia, "Times New Roman", Times, serif; text-transform:uppercase}
   #items table tfoot tr td.label, #items table tfoot tr td.label-total {text-transform:uppercase}
@@ -76,10 +77,10 @@
 <div id="header">
   <table class="table-block">
     <tr>
-      <td class="w308 valign-top" rowspan="2">
+      <td class="w262 valign-top" rowspan="2">
          <!-- logo -->
          {% if account.logo_url != blank %}
-          <img src="{{ account.logo_url}}" class="w300" alt="Logo">
+          <img src="{{ account.logo_url}}" class="w262" alt="Logo">
          {% endif %}
       </td>
       <td class="w14" rowspan="2">&nbsp;</td>
