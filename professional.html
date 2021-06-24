@@ -78,7 +78,7 @@
         {% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
         {% if document.related_document_type != blank %}
         <p><strong>{{labels.related_document}}:</strong>
-        <a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</a>
+        {{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}
         ({{document.related_document_date | date: 'default', contact.country}})</p>
         {% endif %}
         {% if document.subject != blank %}<p><strong>{{labels.subject}}: </strong>{{ document.subject }}</p>{% endif %}

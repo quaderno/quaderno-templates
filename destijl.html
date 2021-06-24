@@ -99,7 +99,7 @@
           {% endif %}
           {% if document.related_document_type != blank %}
           <h2 class="label border1">{{labels.related_document}}</h2>
-          <p class="txt"><a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} <br> {{document.related_document_number}}</a></p>
+          <p class="txt">{{document.related_document_type | localize_document_type: labels}} <br> {{document.related_document_number}}</p>
           <p>{{document.related_document_date | date: 'default', contact.country}}</p>
           {% endif %}
         </td>

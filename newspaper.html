@@ -105,7 +105,7 @@
         {% endif %}
         {% if document.related_document_type != blank %}
         <h2 class="line">{{labels.related_document}}</h2>
-        <p><a href="{{document.related_document_permalink}}">{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</a></p>
+        <p>{{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}</p>
         <p class="small">{{document.related_document_date | date: 'default', contact.country}}</p>
         {% endif %}
         {% if document.valid_until != blank %}
