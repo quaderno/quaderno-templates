@@ -164,7 +164,7 @@
             {% endfor %}
             <tr>
               <td colspan="2">&nbsp;</td>
-              <td class="border2 txt">{{labels.total}}</td>
+              <td class="border2 txt">{{labels.total}} ({{document.currency}})</td>
               <td class="border2 right txt"><strong>{{document.total | money}}</strong></td>
             </tr>
             {% if document.state == "paid" %}
