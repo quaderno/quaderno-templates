@@ -100,7 +100,7 @@
             <tr>
               <td>{{item.description}}</td>
               <td class="center w10per">{{item.quantity | precision}}</td>
-              <td class="right w15per">{{item.unit_price | precision}}</td>
+              <td class="right w15per">{{item.unit_price | money}}</td>
               <td class="right">{{item.subtotal | money}}</td>
             </tr>
             {% endfor %}
@@ -116,7 +116,7 @@
                     {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
                   </p>
                 {% endfor %}
-                <p>{{labels.total}}: {{document.total | money}}</p>
+                <p>{{labels.total}} ({{document.currency}}): {{document.total | money}}</p>
               </td>
             </tr>
           </tfoot>
