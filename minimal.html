@@ -99,7 +99,7 @@
             <tbody>
               {% for item in document.items %}
               <tr>
-                <td>{{item.description}}</td>
+                <td>{{item.description | textilize}}</td>
                 <td class="right">{{item.quantity | precision}}</td>
                 <td class="right">{{item.unit_price | money}}</td>
                 <td class="right">{{item.subtotal | money}}</td>
