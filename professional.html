@@ -156,6 +156,16 @@
         {% endif %}
       </td>
     </tr>
+
+    {% if document.verification_code %}
+    <tr>
+      <td class="right">&nbsp;</td>
+      <td class="right">
+        {{document.verification_code}} <br><br><br>
+        {{document.verification_permalink}}
+      </td>
+    </tr>
+    {% endif %}
   </table>
 </body>
 </html>

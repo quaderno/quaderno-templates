@@ -35,6 +35,7 @@
   .valign-bottom {vertical-align:bottom}
   .valign-top {vertical-align:top}
   .subject {font-style:italic}
+  .verification-code {text-align:right}
   address {color:#4d4d4d; font-style:italic; font-size:14px}
   .line {border-top:1px solid #ccc}
   .document-data, .contact-data {padding-top:10px}
@@ -239,6 +240,15 @@
   <tr>
     <td colspan="5" class="legal valign-top">
       <p>{{document.legal | textilize}}</p>
+    </td>
+  </tr>
+  {% endif %}
+  {% if document.verification_code %}
+  <tr>
+    <td colspan="4">&nbsp;</td>
+    <td class="valign-top verification-code">
+      <p>{{document.verification_code}}</p>
+      {{document.verification_permalink}}
     </td>
   </tr>
   {% endif %}
