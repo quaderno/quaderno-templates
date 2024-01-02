@@ -219,6 +219,15 @@
           <td colspan="3" class="legal">{{document.legal | textilize}}</td>
         </tr>
         {% endif %}
+        {% if document.verification_code %}
+          <tr>
+            <td colspan="2" class="right">&nbsp;</td>
+            <td class="right">
+              {{document.verification_code}} <br><br><br>
+              {{document.verification_permalink}}
+            </td>
+          </tr>
+        {% endif %}
         <!-- // End Template Footer \\ -->
         </table>
     </div>
