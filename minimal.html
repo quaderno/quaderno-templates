@@ -117,7 +117,8 @@
                       {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
                     </p>
                   {% endfor %}
-                  <p>{{labels.total}} ({{document.currency}}): {{document.total | money}}</p>
+                  <p>{{labels.total}}: {{document.total | money_with_currency}}</p>
+                  {% if document.exchange %}<p>{{labels.exchange}}: {{document.exchange | money_with_currency}}</p>{% endif %}
                 </td>
               </tr>
             </tfoot>

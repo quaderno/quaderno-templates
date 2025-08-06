@@ -170,8 +170,17 @@
           <tr>
             <td colspan="2">&nbsp;</td>
             <td class="border2 txt">{{labels.total}}</td>
-            <td class="border2 right txt"><strong>{{document.total | money}}</strong></td>
+            <td class="border2 right txt">
+              <strong>{{document.total | money}}</strong>
+            </td>
           </tr>
+          {% if document.exchange %}
+          <tr>
+            <td colspan="2">&nbsp;</td>
+            <td class="label">{{labels.exchange}}</td>
+            <td class="right">{{document.exchange | money}}</td>
+          </tr>
+          {% endif %}
           {% if document.state == "paid" %}
           <!-- paid state -->
           <tr>
