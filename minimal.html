@@ -51,8 +51,9 @@
         <!-- contact's data -->
         <td colspan="2" class="right">
           <p><strong>{{ document.contact }}</strong></p>
-          {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
+          {% if contact.contact_person != blank %}<p>{{contact.contact_person}}</p>{% endif %}
           <address>{{ document.billing_address | newline_to_br }}</address>
+          {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
         </td>
       </tr>
       {% if document.state == "paid" %}
