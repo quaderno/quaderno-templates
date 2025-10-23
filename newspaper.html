@@ -32,8 +32,6 @@
   .w308 {width:308px}
   .w322 {width:322px}
   .h27 {height:27px}
-  .valign-bottom {vertical-align:bottom}
-  .valign-top {vertical-align:top}
   .subject {font-style:italic}
   .verification-code {text-align:right}
   address {color:#4d4d4d; font-style:italic; font-size:14px}
@@ -44,23 +42,22 @@
   .document-data p.small {margin-top:-10px; font-size:11px}
   .contact-data p {margin:6px 0 0; font-size:14px; color:#4d4d4d}
   #items {min-height:385px}
+  #items table tr td {vertical-align: top;}
   #items table thead tr th, #items table tfoot tr td, #items table tbody tr td {padding:6px 0; font:11px Georgia, "Times New Roman", Times, serif; color:#4d4d4d; line-height:1.4}
   #items table thead tr th {background-color: {{account.color_scheme}}; color:#fff; font:normal 11px Georgia, "Times New Roman", Times, serif; text-transform:uppercase}
   #items table tfoot tr td.label, #items table tfoot tr td.label-total {text-transform:uppercase}
   #items table tfoot tr td.right {text-align:right}
   .border {border-bottom:1px solid #ccc}
-  .paid {padding:5px 0; border-top:2px solid #000; border-bottom:2px solid #000; font:bold 18px Impact, Charcoal, sans-serif; text-transform: uppercase}
   #items table tfoot tr td.label-total, #items table tfoot tr td.value-total {border-top:1px solid #4d4d4d; border-bottom:1px solid #4d4d4d; font:19px Impact, Charcoal, sans-serif; color: {{account.color_scheme}};}
   #items table tfoot tr td.label-total {text-transform:none}
   #items table tfoot tr td.value-total abbr {font-size:16px}
   #items table tfoot tr td.topspace14 {padding-top:14px}
   #items table tbody tr td {border-bottom:1px solid #ccc}
-  #items table thead tr th.description, #items table tbody tr td.description {padding-left:6px; padding-right:14px; text-align:left}
-  #items table tbody tr td.description {font-style:italic}
-  #items table thead tr th.quantity, #items table tbody tr td.quantity {padding-right:14px; text-align:right}
-  #items table thead tr th.price, #items table tbody tr td.price {padding-right:14px; text-align:right}
+  #items table thead tr th.description {padding-left:6px; padding-right:14px; text-align:left}
+  #items table thead tr th.quantity, #items table tbody tr td.quantity {padding-right:14px; text-align:left}
+  #items table thead tr th.price, #items table tbody tr td.price {padding-right:14px; text-align:left}
   #items table thead tr th.amount, #items table tfoot tr td.value, #items table tfoot tr td.value-total, #items table tbody tr td.amount {padding-right:6px; text-align:right}
-  #footer .user, #footer .notes, #footer .payment, #footer .legal {padding-top:10px; border-top: 1px solid #ccc}
+  #footer .user, #footer .notes, #footer .payment, #footer .legal {padding-top:10px; border-top: 1px solid #ccc; vertical-align: top;}
   #footer h3 {font:normal 16px Georgia, "Times New Roman", Times, serif; text-transform:uppercase; color:#4d4d4d}
   #footer p, #footer address {margin-top:6px; font:italic 11px Georgia, "Times New Roman", Times, serif; line-height:1.4; color:#4d4d4d}
   #footer address {line-height:1}
@@ -78,7 +75,7 @@
 <div id="header">
   <table class="table-block">
     <tr>
-      <td class="w262 valign-top" rowspan="2">
+      <td class="w262" rowspan="2">
          <!-- logo -->
          {% if account.logo_url != blank %}
           <img src="{{ account.logo_url}}" class="w262" alt="Logo">
@@ -90,7 +87,7 @@
       </td>
     </tr>
     <tr>
-      <td class="document-data w124 valign-top">
+      <td class="document-data w124">
         <!-- document data -->
         <h2>{{labels.number}}</h2>
         <p>{{document.number}}</p>
@@ -119,10 +116,11 @@
         {% endif %}
       </td>
       <td class="w14">&nbsp;</td>
-      <td class="contact-data w262 valign-top">
+      <td class="contact-data w262">
         <!-- contact's data -->
         <h2>{{labels.to}}</h2>
         <h3>{{ document.contact }}</h3>
+        {% if contact.department != blank %}<p>{{contact.department}}</p>{% endif %}
         {% if contact.contact_person != blank %}<p>{{contact.contact_person}}</p>{% endif %}
         <address>{{ document.billing_address | newline_to_br }}</address>
         {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
@@ -135,19 +133,19 @@
   <table class="table-block">
   <thead>
     <tr>
-      <th class="description w322" scope="col">{{labels.description}}</th>
-      <th class="quantity w92">{{labels.quantity}}</th>
-      <th class="price w138">{{labels.unit_price}}</th>
-      <th class="amount w170">{{labels.amount}}</th>
+      <th class="description w322 left" scope="col">{{labels.description}}</th>
+      <th class="quantity w92 left">{{labels.quantity}}</th>
+      <th class="price w138 left">{{labels.unit_price}}</th>
+      <th class="amount w170 right">{{labels.amount}}</th>
     </tr>
   </thead>
   <tbody>
     {% for item in document.items %}
     <tr>
-      <td class="description w322 valign-top">{{item.description}}</td>
-      <td class="quantity w92 valign-top">{{item.quantity | precision}}</td>
-      <td class="price w138 valign-top">{{item.unit_price | money}}</td>
-      <td class="amount w170 valign-top"><strong>{{item.subtotal | money}}</strong></td>
+      <td class="description w322 left">{{item.description}}</td>
+      <td class="quantity w92 left">{{item.quantity | precision}}</td>
+      <td class="price w138 left">{{item.unit_price}}</td>
+      <td class="amount w170 right"><strong>{{item.subtotal}}</strong></td>
     </tr>
     {% endfor %}
   </tbody>
@@ -155,53 +153,37 @@
     <tr>
       <td class="w322">&nbsp;</td>
       <td class="w92">&nbsp;</td>
-      <td class="label border w138 valign-top">{{labels.subtotal}}</td>
-      <td class="value border w170 valign-top"><strong>{{document.subtotal | money}}</strong></td>
+      <td class="label border w138">{{labels.subtotal}}</td>
+      <td class="value border w170"><strong>{{document.subtotal}}</strong></td>
     </tr>
     {% if document.discount > 0 %}
     <tr>
       <td class="w322">&nbsp;</td>
       <td class="w92">&nbsp;</td>
-      <td class="label border w138 valign-top">{{labels.discount}}</td>
-      <td class="value border w170 valign-top"><strong>{{document.discount | money}}</strong></td>
+      <td class="label border w138">{{labels.discount}}</td>
+      <td class="value border w170"><strong>{{document.discount}}</strong></td>
     </tr>
     {% endif %}
     {% for tax in document.taxes %}
     <tr>
       <td class="w322">&nbsp;</td>
       <td class="w92">&nbsp;</td>
-      <td class="label w138 valign-top">{{tax.label}}</td>
-      <td class="value w170 valign-top">
-        <strong>{{tax.amount | money}}</strong>
-        {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
-      </td>
+      <td class="label w138">{{tax.label}} × {{tax.taxable_base}}</td>
+      <td class="value w170"><strong>{{tax.amount}}</strong></td>
     </tr>
     {% endfor %}
     <tr>
       <td class="w322">&nbsp;</td>
       <td class="w92">&nbsp;</td>
-      <td class="label-total w138 valign-top">{{labels.total}}</td>
-      <td class="value-total w170 valign-top"><strong>{{document.total | money_with_currency}}</strong></td>
+      <td class="label-total w138">{{labels.total}} ({{document.currency}})</td>
+      <td class="value-total w170"><strong>{{document.total}}</strong></td>
     </tr>
     {% if document.exchange %}
     <tr>
       <td class="w322">&nbsp;</td>
       <td class="w92">&nbsp;</td>
-      <td class="label w138 valign-top">{{labels.exchange}}</td>
-      <td class="value w170 valign-top"><strong>{{document.exchange | money_with_currency}}</strong></td>
-    </tr>
-    {% endif %}
-    {% if document.state == "paid" %}
-    <!-- paid state -->
-    <tr>
-      <td colspan="4" class="topspace14">&nbsp;</td>
-    </tr>
-    <tr>
-      <td class="w322">&nbsp;</td>
-      <td class="w92">&nbsp;</td>
-      <td class="w138">&nbsp;</td>
-      <td class="right w170 valign-top"><span class="paid">{{ labels.paid }}<span></td>
-      </td>
+      <td class="label w138">{{labels.exchange}} ({{account.currency}})</td>
+      <td class="value w170"><strong>{{document.exchange}}</strong></td>
     </tr>
     {% endif %}
   </tfoot>
@@ -211,18 +193,18 @@
 <!-- footer -->
 <table class="table-block">
   <tr>
-    <td class="user w216 valign-top">
+    <td class="user w216">
       <!-- user data -->
       <h2>{{labels.from}}</h2>
       <h3>{{account.full_name}}</h3>
-      <address>{{ account.formatted_address | newline_to_br }}</address>
-      {% if account.phone_1 %}<p>{{labels.phone}}: {{account.phone_1}}</p>{% endif %}
-      {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
-      {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
-      {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+      <p>{{ account.formatted_address | newline_to_br }}</p>
+      <p>{% if account.email != blank %}<a href="mailto:{{account.email}}">{{ account.email }}</a>{% endif %}
+      {% if account.web != blank %}<br><a href="{{account.web}}">{{ account.web }}</a>{% endif %}
+      {% if account.tax_id != blank %}<br>{{labels.tax_id}}: {{account.tax_id}}{% endif %}
+      </p>
     </td>
     <td class="w14">&nbsp;</td>
-    <td class="notes w216 valign-top">
+    <td class="notes w216">
       {% if document.notes != blank %}
       <!-- notes -->
       <h2>{{labels.notes}}</h2>
@@ -230,14 +212,15 @@
       {% endif %}
     </td>
     <td class="w14">&nbsp;</td>
-    <td class="payment w216 valign-top">
+    <td class="payment w216">
       {% if document.payment_details != blank %}
-      <!-- payment details -->
-      <h2>{{labels.payment_details}}</h2>
-      {{document.payment_details | textilize}}
+        <!-- payment details -->
+        <h2>{{labels.payment_details}}</h2>
+        {{document.payment_details | textilize}}
       {% elsif document.state == "paid" %}
-      <h2>{{labels.payment_details}}</h2>
-      {% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}
+        <h2>{{labels.payment_details}}</h2>
+        {% assign payment = document.payments | last %}
+        <p><strong>{{ labels.paid }}</strong> — {{ payment.payment_method_text }}</p>
       {% endif %}
     </td>
   </tr>
@@ -247,7 +230,7 @@
     <td class="h27" colspan="5">&nbsp;</td>
   </tr>
   <tr>
-    <td colspan="5" class="legal valign-top">
+    <td colspan="5" class="legal">
       <p>{{document.legal | textilize}}</p>
     </td>
   </tr>
@@ -256,8 +239,7 @@
   <tr>
     <td colspan="4">&nbsp;</td>
     <td class="valign-top verification-code">
-      <p>{{document.verification_code}}</p>
-      {{document.verification_permalink}}
+      <p>{{document.verification_code}}<br>{{document.verification_permalink}}</p>
     </td>
   </tr>
   {% endif %}

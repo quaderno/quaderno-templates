@@ -28,10 +28,8 @@
     table#items tfoot tr td {text-align:right}
     #details h4 {font-size:100%; font-weight:bold; color:{{account.color_scheme}}; text-transform:uppercase; margin-bottom:0}
     #details p {margin:0}
-    #paid-stamp {margin:0 0 18px}
     .right {text-align:right}
-    .center {text-align:center}
-    .paid {padding:5px 0; border-top:2px solid #666; border-bottom:2px solid #666; font-size:18px; font-weight:bold; text-transform:uppercase}
+    .left {text-align:left}
     #legal {font-size:8pt}
     #legal p {margin:40px 0 20px}
     /* css rules for printing */
@@ -47,12 +45,6 @@
     <tr>
       <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" class="w200" alt="Logo">{% endif %}</td>
       <td class="right fs150per">
-        {% if document.state == "paid" %}
-        <!-- paid state -->
-        <p id="paid-stamp">
-          <span class="paid">{{ labels.paid }}</span>
-        </p>
-        {% endif %}
         {{document.issue_date | date: 'default', contact.country}}
       </td>
     </tr>
@@ -68,6 +60,7 @@
     <tr>
       <td colspan="2">
         <h3 class="txt">{{ document.contact }}</h3>
+        {% if contact.department != blank %}<p>{{contact.department}}</p>{% endif %}
         {% if contact.contact_person != blank %}<p>{{contact.contact_person}}</p>{% endif %}
         <address>{{ document.billing_address | newline_to_br }}</address>
         {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
@@ -90,35 +83,32 @@
         <table id="items" style="font-size:100%">
           <thead>
             <tr>
-              <th scope="col">{{labels.description}}</th>
-              <th class="w10per">{{labels.quantity}}</th>
-              <th class="right w15per">{{labels.unit_price}}</th>
+              <th class="left">{{labels.description}}</th>
+              <th class="left w10per">{{labels.quantity}}</th>
+              <th class="left w15per">{{labels.unit_price}}</th>
               <th class="right w15per">{{labels.amount}}</th>
             </tr>
           </thead>
           <tbody>
             {% for item in document.items %}
             <tr>
-              <td>{{item.description}}</td>
-              <td class="center w10per">{{item.quantity | precision}}</td>
-              <td class="right w15per">{{item.unit_price | money}}</td>
-              <td class="right">{{item.subtotal | money}}</td>
+              <td class="left">{{item.description}}</td>
+              <td class="left w10per">{{item.quantity | precision}}</td>
+              <td class="left w15per">{{item.unit_price | precision}}</td>
+              <td class="right w15per">{{item.subtotal}}</td>
             </tr>
             {% endfor %}
           </tbody>
           <tfoot>
             <tr>
               <td colspan="4">
-                <p>{{labels.subtotal}}: {{document.subtotal | money}}</p>
-                {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount | money}}</p>{% endif %}
+                <p>{{labels.subtotal}}: {{document.subtotal}}</p>
+                {% if document.discount > 0 %}<p>{labels.discount}}: {{document.discount}}</p>{% endif %}
                 {% for tax in document.taxes %}
-                  <p>
-                    {{tax.label}}: {{tax.amount | money}}
-                    {% if tax.currency != document.currency %} ({{tax.local_amount | money}}){% endif %}
-                  </p>
+                  <p>{{tax.label}} × {{tax.taxable_base}}: {{tax.amount}}</p>
                 {% endfor %}
-                <p>{{labels.total}}: {{document.total | money_with_currency}}</p>
-                {% if document.exchange %}<p>{{labels.exchange}}: {{document.exchange | money_with_currency}}</p>{% endif %}
+                <p style="font-size:110%"><strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong></p>
+                {% if document.exchange %}<p>{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p>{% endif %}
               </td>
             </tr>
           </tfoot>
@@ -142,7 +132,8 @@
         {{document.payment_details | textilize}}
         {% elsif document.state == "paid" %}
         <h4>{{labels.payment_details}}</h4>
-        {% assign payment = document.payments | last %}{{ payment.payment_method_text | textilize }}
+        {% assign payment = document.payments | last %}
+        <p><strong>{{labels.paid}}</strong> — {{ payment.payment_method_text }}</p>
         {% endif %}
 
         {% if document.notes != blank %}
@@ -163,7 +154,7 @@
     <tr>
       <td class="right">&nbsp;</td>
       <td class="right">
-        {{document.verification_code}} <br><br><br>
+        {{document.verification_code}}<br>
         {{document.verification_permalink}}
       </td>
     </tr>
