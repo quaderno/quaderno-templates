@@ -168,7 +168,7 @@
     <tr>
       <td class="w322">&nbsp;</td>
       <td class="w92">&nbsp;</td>
-      <td class="label w138">{{tax.label}} × {{tax.taxable_base}}</td>
+      <td class="label w138">{{tax.label}} × {{tax.taxable_base | precision}}</td>
       <td class="value w170"><strong>{{tax.amount}}</strong></td>
     </tr>
     {% endfor %}

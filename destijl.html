@@ -161,7 +161,7 @@
           {% for tax in document.taxes %}
           <tr>
             <td>&nbsp;</td>
-            <td class="label" colspan="2">{{tax.label}} × {{tax.taxable_base}}</td>
+            <td class="label" colspan="2">{{tax.label}} × {{tax.taxable_base | precision}}</td>
             <td class="right"><strong>{{tax.amount}}</strong></td>
           </tr>
           {% endfor %}

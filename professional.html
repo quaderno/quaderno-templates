@@ -105,7 +105,7 @@
                 <p>{{labels.subtotal}}: {{document.subtotal}}</p>
                 {% if document.discount > 0 %}<p>{labels.discount}}: {{document.discount}}</p>{% endif %}
                 {% for tax in document.taxes %}
-                  <p>{{tax.label}} × {{tax.taxable_base}}: {{tax.amount}}</p>
+                  <p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>
                 {% endfor %}
                 <p style="font-size:110%"><strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong></p>
                 {% if document.exchange %}<p>{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p>{% endif %}
