@@ -115,6 +115,18 @@
         </table>
       </td>
     </tr>
+
+    <!-- verification code -->  
+    {% if document.verification_code %}
+    <tr>
+      <td class="right">&nbsp;</td>
+      <td class="right">
+        {{document.verification_code}}<br>
+        {{document.verification_permalink}}
+      </td>
+    </tr>
+    {% endif %}
+
     <tr>
       <td colspan="2" id="details">
         {% if document.due_date != blank %}
@@ -150,15 +162,6 @@
       </td>
     </tr>
 
-    {% if document.verification_code %}
-    <tr>
-      <td class="right">&nbsp;</td>
-      <td class="right">
-        {{document.verification_code}}<br>
-        {{document.verification_permalink}}
-      </td>
-    </tr>
-    {% endif %}
   </table>
 </body>
 </html>

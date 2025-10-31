@@ -33,7 +33,7 @@
   .w322 {width:322px}
   .h27 {height:27px}
   .subject {font-style:italic}
-  .verification-code {text-align:right}
+  .verification-code {text-align:right;}
   address {color:#4d4d4d; font-style:italic; font-size:14px}
   .line {border-top:1px solid #ccc}
   .document-data, .contact-data {padding-top:10px}
@@ -186,9 +186,20 @@
       <td class="value w170"><strong>{{document.exchange}}</strong></td>
     </tr>
     {% endif %}
+
+    <!-- verification code -->
+    {% if document.verification_code %}
+    <tr>
+      <td colspan="4"  class="verification-code">
+        {{document.verification_code}}<br>
+        {{document.verification_permalink}}
+      </td>
+    </tr>
+    {% endif %}  
   </tfoot>
 </table>
 </div>
+
 <div id="footer">
 <!-- footer -->
 <table class="table-block">
@@ -224,6 +235,7 @@
       {% endif %}
     </td>
   </tr>
+
   <!-- legal notes -->
   {% if document.legal != blank %}
   <tr>
@@ -235,14 +247,7 @@
     </td>
   </tr>
   {% endif %}
-  {% if document.verification_code %}
-  <tr>
-    <td colspan="4">&nbsp;</td>
-    <td class="valign-top verification-code">
-      <p>{{document.verification_code}}<br>{{document.verification_permalink}}</p>
-    </td>
-  </tr>
-  {% endif %}
+
 </table>
 </div>
 </body>

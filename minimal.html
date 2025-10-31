@@ -138,6 +138,14 @@
         </td>
       </tr>
     </table>
+
+    <!-- verification code -->
+    {% if document.verification_code %}
+    <p class="right">
+      {{document.verification_code}}<br>
+      {{document.verification_permalink}}
+    </p>
+    {% endif %}
   </div>
   <div id="footer">
     <!-- account's data -->
@@ -152,14 +160,6 @@
     <!-- legal notes -->
     {% if document.legal != blank %}
     <p id="legal">{{document.legal | textilize}}</p>
-    {% endif %}
-
-    {% if document.verification_code %}
-    <!-- verification code -->
-    <p class="right">
-      {{document.verification_code}}<br>
-      {{document.verification_permalink}}
-    </p>
     {% endif %}
   </div>
 </body>
