@@ -33,7 +33,7 @@
   .w322 {width:322px}
   .h27 {height:27px}
   .subject {font-style:italic}
-  .verification-code {text-align:right;}
+  .verification-code {margin: 10px 0; text-align: right; font-size: small;}
   address {color:#4d4d4d; font-style:italic; font-size:14px}
   .line {border-top:1px solid #ccc}
   .document-data, .contact-data {padding-top:10px}
@@ -73,6 +73,14 @@
 </head>
 <body>
 <div id="header">
+  <!-- verification code -->
+  {% if document.verification_code %}
+  <div  class="verification-code">
+      {{document.verification_code}}<br>
+      {{document.verification_permalink}}
+  </div>
+  {% endif %}  
+
   <table class="table-block">
     <tr>
       <td class="w262" rowspan="2">
@@ -186,16 +194,6 @@
       <td class="value w170"><strong>{{document.exchange}}</strong></td>
     </tr>
     {% endif %}
-
-    <!-- verification code -->
-    {% if document.verification_code %}
-    <tr>
-      <td colspan="4"  class="verification-code">
-        {{document.verification_code}}<br>
-        {{document.verification_permalink}}
-      </td>
-    </tr>
-    {% endif %}  
   </tfoot>
 </table>
 </div>

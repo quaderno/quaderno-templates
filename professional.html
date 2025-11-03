@@ -20,6 +20,9 @@
     .w10per {width:10%}
     .w15per {width:15%}
     .fs150per {font-size:150%}
+    .right {text-align:right}
+    .left {text-align:left}
+    .verification-code {margin: 10px 0; text-align: right; font-size: small;}
     table {width:100%; border:none}
     table tr td {padding:5px}
     table#items {margin:25px 0; border-collapse:collapse;}
@@ -28,8 +31,6 @@
     table#items tfoot tr td {text-align:right}
     #details h4 {font-size:100%; font-weight:bold; color:{{account.color_scheme}}; text-transform:uppercase; margin-bottom:0}
     #details p {margin:0}
-    .right {text-align:right}
-    .left {text-align:left}
     #legal {font-size:8pt}
     #legal p {margin:40px 0 20px}
     /* css rules for printing */
@@ -41,6 +42,14 @@
   </style>
 </head>
 <body>
+  <!-- verification code -->  
+  {% if document.verification_code %}
+  <div class="verification-code">
+    {{document.verification_code}}<br>
+    {{document.verification_permalink}}
+  </div>
+  {% endif %}
+
   <table>
     <tr>
       <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" class="w200" alt="Logo">{% endif %}</td>
@@ -115,17 +124,6 @@
         </table>
       </td>
     </tr>
-
-    <!-- verification code -->  
-    {% if document.verification_code %}
-    <tr>
-      <td class="right">&nbsp;</td>
-      <td class="right">
-        {{document.verification_code}}<br>
-        {{document.verification_permalink}}
-      </td>
-    </tr>
-    {% endif %}
 
     <tr>
       <td colspan="2" id="details">

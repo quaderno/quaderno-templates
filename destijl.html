@@ -53,6 +53,7 @@
       .right {text-align:right}
       .center {text-align:center}
       .legal {padding:40px 0 20px; font-size:14px; vertical-align:top; text-align:center}
+      .verification-code {margin: 10px 0; text-align: right; font-size: small;}
       /* css rules for printing */
       @media print {
         body {-webkit-print-color-adjust:exact}
@@ -63,6 +64,14 @@
     </style>
   </head>
   <body>
+    <!-- verification code -->
+    {% if document.verification_code %}
+    <div class="verification-code">
+      {{document.verification_code}}<br>
+      {{document.verification_permalink}}
+    </div>
+    {% endif %}
+
     <table>
       <!-- // Begin Template Header \\ -->
       <tr>
@@ -214,17 +223,6 @@
             </table>
           </td>
         </tr>
-
-        <!-- verification code -->
-        {% if document.verification_code %}
-          <tr>
-            <td colspan="2" class="right">&nbsp;</td>
-            <td class="right">
-              {{document.verification_code}}<br>
-              {{document.verification_permalink}}
-            </td>
-          </tr>
-        {% endif %}
 
         <!-- legal notes -->
         {% if document.legal != blank %}

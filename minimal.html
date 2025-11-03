@@ -30,6 +30,7 @@
     .left {text-align:left}
     .center {text-align:center}
     .topspace20 {padding-top:20px}
+    .verification-code {margin: 10px 0; text-align: right; font-size: small;}
     /* css rules for printing */
     @media print {
       body {-webkit-print-color-adjust:exact}
@@ -40,6 +41,14 @@
 </head>
 <body>
   <div id="content">
+    <!-- verification code -->
+    {% if document.verification_code %}
+    <div class="verification-code">
+      {{document.verification_code}}<br>
+      {{document.verification_permalink}}
+    </div>
+    {% endif %}
+
     <table>
       {% if account.logo_url != blank %}
       <tr>
@@ -138,14 +147,6 @@
         </td>
       </tr>
     </table>
-
-    <!-- verification code -->
-    {% if document.verification_code %}
-    <p class="right">
-      {{document.verification_code}}<br>
-      {{document.verification_permalink}}
-    </p>
-    {% endif %}
   </div>
   <div id="footer">
     <!-- account's data -->
