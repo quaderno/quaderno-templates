@@ -42,14 +42,6 @@
   </style>
 </head>
 <body>
-  <!-- verification code -->  
-  {% if document.verification_code %}
-  <div class="verification-code">
-    {{document.verification_code}}<br>
-    {{document.verification_permalink}}
-  </div>
-  {% endif %}
-
   <table>
     <tr>
       <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" class="w200" alt="Logo">{% endif %}</td>

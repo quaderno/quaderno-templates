@@ -41,14 +41,6 @@
 </head>
 <body>
   <div id="content">
-    <!-- verification code -->
-    {% if document.verification_code %}
-    <div class="verification-code">
-      {{document.verification_code}}<br>
-      {{document.verification_permalink}}
-    </div>
-    {% endif %}
-
     <table>
       {% if account.logo_url != blank %}
       <tr>
