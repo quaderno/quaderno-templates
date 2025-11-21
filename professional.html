@@ -1,165 +1,172 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>{{document.number}}</title>
-  <meta name="pdfkit-page_size" content="A4">
-  <meta name="pdfkit-margin_top" content="13mm">
-  <meta name="pdfkit-margin_right" content="13mm">
-  <meta name="pdfkit-margin_bottom" content="13mm">
-  <meta name="pdfkit-margin_left" content="13mm">
-  <style>
-    body {padding:20px; background:#fff; color:#000; font:normal 10pt Tahoma, Geneva, sans-serif}
-    h1 {font-size:150%; color:{{account.color_scheme}}; margin:10px 0}
-    p {margin:2px 0}
-    a:link, a:visited {color:#000; text-decoration:none}
-    a:hover {color:#000; text-decoration:none}
-    address {font-style:normal}
-    .txt {margin:0}
-    .w200 {width:200px}
-    .w10per {width:10%}
-    .w15per {width:15%}
-    .fs150per {font-size:150%}
-    .right {text-align:right}
-    .left {text-align:left}
-    .verification-code {margin: 10px 0; text-align: right; font-size: small;}
-    table {width:100%; border:none}
-    table tr td {padding:5px}
-    table#items {margin:25px 0; border-collapse:collapse;}
-    table#items thead tr th {color:{{account.color_scheme}}; font-weight:normal; padding:5px; border-bottom:2px solid #666}
-    table#items tbody tr td {border-bottom:2px solid #666}
-    table#items tfoot tr td {text-align:right}
-    #details h4 {font-size:100%; font-weight:bold; color:{{account.color_scheme}}; text-transform:uppercase; margin-bottom:0}
-    #details p {margin:0}
-    #legal {font-size:8pt}
-    #legal p {margin:40px 0 20px}
-    /* css rules for printing */
-    @media print {
-      body {-webkit-print-color-adjust:exact}
-      #items tr {page-break-inside:avoid}
-      #items tfoot {display:table-row-group}
-    }
-  </style>
-</head>
-<body>
-  <!-- verification code -->  
-  {% if document.verification_code %}
-  <div class="verification-code">
-    {{document.verification_code}}<br>
-    {{document.verification_permalink}}
-  </div>
-  {% endif %}
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{{document.number}}</title>
+    <meta name="pdfkit-page_size" content="A4" />
+    <meta name="pdfkit-margin_top" content="13mm" />
+    <meta name="pdfkit-margin_right" content="13mm" />
+    <meta name="pdfkit-margin_bottom" content="13mm" />
+    <meta name="pdfkit-margin_left" content="13mm" />
+    <style>
+      body {padding:20px; background:#fff; color:#000; font:normal 10pt Tahoma, Geneva, sans-serif}
+      h1 {font-size:150%; color:{{account.color_scheme}}; margin:10px 0}
+      p {margin:2px 0}
+      a:link, a:visited {color:#000; text-decoration:none}
+      a:hover {color:#000; text-decoration:none}
+      address {font-style:normal}
+      .txt {margin:0}
+      .w200 {width:200px}
+      .w10per {width:10%}
+      .w15per {width:15%}
+      .fs150per {font-size:150%}
+      .right {text-align:right}
+      .left {text-align:left}
+      .verification-code {margin: 10px 0; text-align: right; font-size: small;}
+      table {width:100%; border:none}
+      table tr td {padding:5px}
+      table#items {margin:25px 0; border-collapse:collapse;}
+      table#items thead tr th {color:{{account.color_scheme}}; font-weight:normal; padding:5px; border-bottom:2px solid #666}
+      table#items tbody tr td {border-bottom:2px solid #666}
+      table#items tfoot tr td {text-align:right}
+      #details h4 {font-size:100%; font-weight:bold; color:{{account.color_scheme}}; text-transform:uppercase; margin-bottom:0}
+      #details p {margin:0}
+      #legal {font-size:8pt}
+      #legal p {margin:40px 0 20px}
+      /* css rules for printing */
+      @media print {
+        body {-webkit-print-color-adjust:exact}
+        #items tr {page-break-inside:avoid}
+        #items tfoot {display:table-row-group}
+      }
+    </style>
+  </head>
+  <body>
+    <!-- verification code -->
+    {% if document.verification_code %}
+    <div class="verification-code">
+      {{document.verification_code}}<br />
+      {{document.verification_permalink}}
+    </div>
+    {% endif %}
 
-  <table>
-    <tr>
-      <td>{% if account.logo_url != blank %}<img src="{{ account.logo_url }}" class="w200" alt="Logo">{% endif %}</td>
-      <td class="right fs150per">
-        {{document.issue_date | date: 'default', contact.country}}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <h3 class="txt">{{account.full_name}}</h3>
-        <address>{{ account.formatted_address | newline_to_br }}</address>
-        {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
-        {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
-        {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <h3 class="txt">{{ document.contact }}</h3>
-        {% if contact.department != blank %}<p>{{contact.department}}</p>{% endif %}
-        {% if contact.contact_person != blank %}<p>{{contact.contact_person}}</p>{% endif %}
-        <address>{{ document.billing_address | newline_to_br }}</address>
-        {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <h1>{{title}} {{{document.number}}</h1>
-        {% if document.po_number != blank %}<p><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p>{% endif %}
-        {% if document.related_document_type != blank %}
-        <p><strong>{{labels.related_document}}:</strong>
-        {{document.related_document_type | localize_document_type: labels}} {{document.related_document_number}}
-        ({{document.related_document_date | date: 'default', contact.country}})</p>
-        {% endif %}
-        {% if document.subject != blank %}<p><strong>{{labels.subject}}: </strong>{{ document.subject }}</p>{% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <table id="items" style="font-size:100%">
-          <thead>
-            <tr>
-              <th class="left">{{labels.description}}</th>
-              <th class="left w10per">{{labels.quantity}}</th>
-              <th class="left w15per">{{labels.unit_price}}</th>
-              <th class="right w15per">{{labels.amount}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in document.items %}
-            <tr>
-              <td class="left">{{item.description}}</td>
-              <td class="left w10per">{{item.quantity | precision}}</td>
-              <td class="left w15per">{{item.unit_price | precision}}</td>
-              <td class="right w15per">{{item.subtotal}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="4">
-                <p>{{labels.subtotal}}: {{document.subtotal}}</p>
-                {% if document.discount > 0 %}<p>{labels.discount}}: {{document.discount}}</p>{% endif %}
-                {% for tax in document.taxes %}
+    <table>
+      <tr>
+        <td
+          >{% if account.logo_url != blank %}<img
+            src="{{ account.logo_url }}"
+            class="w200"
+            alt="Logo" />{% endif %}</td
+        >
+        <td class="right fs150per"> {{document.issue_date | date: 'default', contact.country}} </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <h3 class="txt">{{account.full_name}}</h3>
+          <address>{{ account.formatted_address | newline_to_br }}</address>
+          {% if account.email != blank %}<p
+            ><a href="mailto:{{account.email}}">{{ account.email }}</a></p
+          >{% endif %} {% if account.web != blank %}<p
+            ><a href="{{account.web}}">{{ account.web }}</a></p
+          >{% endif %} {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p
+          >{% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <h3 class="txt">{{ document.contact }}</h3>
+          {% if contact.department != blank %}<p>{{contact.department}}</p>{% endif %} {% if
+          contact.contact_person != blank %}<p>{{contact.contact_person}}</p>{% endif %}
+          <address>{{ document.billing_address | newline_to_br }}</address>
+          {% if document.tax_id != blank %}<p>{{labels.tax_id}}: {{document.tax_id}}</p>{% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <h1>{{title}} {{document.number}}</h1>
+          {% if document.po_number != blank %}<p
+            ><strong>{{labels.po_number}}: </strong>{{document.po_number}}</p
+          >{% endif %} {% if document.related_document_type != blank %}
+          <p
+            ><strong>{{labels.related_document}}:</strong> {{document.related_document_type |
+            localize_document_type: labels}} {{document.related_document_number}}
+            ({{document.related_document_date | date: 'default', contact.country}})</p
+          >
+          {% endif %} {% if document.subject != blank %}<p
+            ><strong>{{labels.subject}}: </strong>{{ document.subject }}</p
+          >{% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table id="items" style="font-size: 100%">
+            <thead>
+              <tr>
+                <th class="left">{{labels.description}}</th>
+                <th class="left w10per">{{labels.quantity}}</th>
+                <th class="left w15per">{{labels.unit_price}}</th>
+                <th class="right w15per">{{labels.amount}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in document.items %}
+              <tr>
+                <td class="left">{{item.description}}</td>
+                <td class="left w10per">{{item.quantity | precision}}</td>
+                <td class="left w15per">{{item.unit_price | precision}}</td>
+                <td class="right w15per">{{item.subtotal}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">
+                  <p>{{labels.subtotal}}: {{document.subtotal}}</p>
+                  {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount}}</p>{%
+                  endif %} {% for tax in document.taxes %}
                   <p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>
-                {% endfor %}
-                <p style="font-size:110%"><strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong></p>
-                {% if document.exchange %}<p>{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p>{% endif %}
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </td>
-    </tr>
+                  {% endfor %}
+                  <p style="font-size: 110%"
+                    ><strong
+                      >{{labels.total}} ({{document.currency}}): {{document.total}}</strong
+                    ></p
+                  >
+                  {% if document.exchange %}<p
+                    >{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p
+                  >{% endif %}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </td>
+      </tr>
 
-    <tr>
-      <td colspan="2" id="details">
-        {% if document.due_date != blank %}
-        <h4>{{labels.due_date}}</h4>
-        <p>{{document.due_date | date: 'default', contact.country}}<p>
-        {% endif %}
-
-        {% if document.valid_until != blank %}
-        <h4>{{labels.valid_until}}</h4>
-        <p>{{document.valid_until | date: 'default', contact.country}}<p>
-        {% endif %}
-
-        {% if document.payment_details != blank %}
-        <h4>{{labels.payment_details}}</h4>
-        {{document.payment_details | textilize}}
-        {% elsif document.state == "paid" %}
-        <h4>{{labels.payment_details}}</h4>
-        {% assign payment = document.payments | last %}
-        <p><strong>{{labels.paid}}</strong> — {{ payment.payment_method_text }}</p>
-        {% endif %}
-
-        {% if document.notes != blank %}
-        <h4>{{labels.notes}}</h4>
-        {{document.notes | textilize}}
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2" id="legal">
-        {% if document.legal != blank %}
-        <p>{{document.legal | textilize}}</p>
-        {% endif %}
-      </td>
-    </tr>
-
-  </table>
-</body>
+      <tr>
+        <td colspan="2" id="details">
+          {% if document.due_date != blank %}
+          <h4>{{labels.due_date}}</h4>
+          <p>{{document.due_date | date: 'default', contact.country}}</p
+          ><p> {% endif %} {% if document.valid_until != blank %} </p
+          ><h4>{{labels.valid_until}}</h4>
+          <p>{{document.valid_until | date: 'default', contact.country}}</p
+          ><p> {% endif %} {% if document.payment_details != blank %} </p
+          ><h4>{{labels.payment_details}}</h4>
+          {{document.payment_details | textilize}} {% elsif document.state == "paid" %}
+          <h4>{{labels.payment_details}}</h4>
+          {% assign payment = document.payments | last %}
+          <p><strong>{{labels.paid}}</strong> — {{ payment.payment_method_text }}</p>
+          {% endif %} {% if document.notes != blank %}
+          <h4>{{labels.notes}}</h4>
+          {{document.notes | textilize}} {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" id="legal">
+          {% if document.legal != blank %}
+          <p>{{document.legal | textilize}}</p>
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
