@@ -107,51 +107,48 @@
                 {% if document.discount > 0 %}<p>{labels.discount}}: {{document.discount}}</p>{% endif %}
                 {% for tax in document.taxes %}
                   <p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>
-                {% endfor %}
-                <p style="font-size:110%"><strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong></p>
-                {% if document.exchange %}<p>{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p>{% endif %}
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </td>
-    </tr>
+                  {% endfor %}
+                  <p style="font-size: 110%"
+                    ><strong
+                      >{{labels.total}} ({{document.currency}}): {{document.total}}</strong
+                    ></p
+                  >
+                  {% if document.exchange %}<p
+                    >{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p
+                  >{% endif %}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </td>
+      </tr>
 
-    <tr>
-      <td colspan="2" id="details">
-        {% if document.due_date != blank %}
-        <h4>{{labels.due_date}}</h4>
-        <p>{{document.due_date | date: 'default', contact.country}}<p>
-        {% endif %}
-
-        {% if document.valid_until != blank %}
-        <h4>{{labels.valid_until}}</h4>
-        <p>{{document.valid_until | date: 'default', contact.country}}<p>
-        {% endif %}
-
-        {% if document.payment_details != blank %}
-        <h4>{{labels.payment_details}}</h4>
-        {{document.payment_details | textilize}}
-        {% elsif document.state == "paid" %}
-        <h4>{{labels.payment_details}}</h4>
-        {% assign payment = document.payments | last %}
-        <p><strong>{{labels.paid}}</strong> — {{ payment.payment_method_text }}</p>
-        {% endif %}
-
-        {% if document.notes != blank %}
-        <h4>{{labels.notes}}</h4>
-        {{document.notes | textilize}}
-        {% endif %}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2" id="legal">
-        {% if document.legal != blank %}
-        <p>{{document.legal | textilize}}</p>
-        {% endif %}
-      </td>
-    </tr>
-
-  </table>
-</body>
+      <tr>
+        <td colspan="2" id="details">
+          {% if document.due_date != blank %}
+          <h4>{{labels.due_date}}</h4>
+          <p>{{document.due_date | date: 'default', contact.country}}</p
+          ><p> {% endif %} {% if document.valid_until != blank %} </p
+          ><h4>{{labels.valid_until}}</h4>
+          <p>{{document.valid_until | date: 'default', contact.country}}</p
+          ><p> {% endif %} {% if document.payment_details != blank %} </p
+          ><h4>{{labels.payment_details}}</h4>
+          {{document.payment_details | textilize}} {% elsif document.state == "paid" %}
+          <h4>{{labels.payment_details}}</h4>
+          {% assign payment = document.payments | last %}
+          <p><strong>{{labels.paid}}</strong> — {{ payment.payment_method_text }}</p>
+          {% endif %} {% if document.notes != blank %}
+          <h4>{{labels.notes}}</h4>
+          {{document.notes | textilize}} {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" id="legal">
+          {% if document.legal != blank %}
+          <p>{{document.legal | textilize}}</p>
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
