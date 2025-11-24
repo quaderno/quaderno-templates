@@ -104,7 +104,7 @@
             <tr>
               <td colspan="4">
                 <p>{{labels.subtotal}}: {{document.subtotal}}</p>
-                {% if document.discount > 0 %}<p>{labels.discount}}: {{document.discount}}</p>{% endif %}
+                {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount}}</p>{% endif %}
                 {% for tax in document.taxes %}
                   <p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>
                   {% endfor %}
