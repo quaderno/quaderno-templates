@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="pdfkit-page_size" content="A4">
+  <meta name="pdfkit-margin_top" content="0mm">
+  <meta name="pdfkit-margin_right" content="0mm">
+  <meta name="pdfkit-margin_bottom" content="0mm">
+  <meta name="pdfkit-margin_left" content="0mm">
+  
+  <title>{{document.number}}</title>
+  
+  <style>
+    /* reset */
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0; 
+      /* body padding provides safe area */
+      padding: 0 13mm 13mm 13mm;
+      background: #fff; 
+      color: #45556C;
+      font: normal 9pt "Calibri", "Segoe UI", "Roboto", "Verdana", sans-serif;
+      line-height: 1.4;
+    }
+
+    /* typography */
+    .bold, strong, b { font-weight: bold; color: #020618; }
+    
+    .right { text-align: right; }
+    .left { text-align: left; }
+    
+    /* grid */
+    .w15 { width: 15%; }
+    .w20 { width: 20%; }
+    .w25 { width: 25%; float: left; }
+    .w50 { width: 50%; float: left; }
+    
+    /* totals alignment */
+    .w65 { width: 65%; float: left; }
+    .w35 { width: 35%; float: left; }
+    
+    /* clearfix */
+    .row:after { content: ""; display: table; clear: both; }
+    
+    /* columns */
+    .col-left { float: left; width: 48%; padding-right: 2%; }
+    .col-right { float: right; width: 48%; padding-left: 2%; }
+
+    /* hero section */
+    .hero-container {
+      background-color: #F3F4F6;
+      /* negative margins extend background */
+      margin-left: -13mm;
+      margin-right: -13mm;
+      /* padding aligns content */
+      padding: 13mm 13mm 10mm 13mm; 
+      border-bottom: 1px solid #fff;
+      
+      /* negative margin fix for ghost header */
+      margin-bottom: -13mm;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-title {
+      font-size: 28pt;
+      font-weight: bold;
+      color: #020618;
+    }
+    .subject { margin-top: 5px; font-size: 10pt; color: #45556C; }
+
+    /* metadata */
+    .meta-label { 
+      font-weight: bold; 
+      font-size: 8pt; 
+      display: block; 
+      margin-bottom: 2px; 
+      color: #020618;
+    }
+    .meta-value { font-size: 9pt; font-weight: normal; display: block; margin-bottom: 10px; }
+    
+    /* separator */
+    .hero-separator { 
+      border-bottom: 2px solid #020618; 
+      margin: 15px 0 20px 0; 
+      clear: both; 
+    }
+    
+    /* address */
+    .address-header { 
+      font-weight: bold; 
+      font-size: 9pt; 
+      margin-bottom: 5px; 
+      display: block;
+      color: #020618;
+    }
+    .address-body { font-size: 9pt; font-weight: normal; line-height: 1.4; }
+
+    /* table defaults */
+    table { width: 100%; border-collapse: collapse; border: none; }
+    td, th { padding: 4px 0; vertical-align: top; }
+
+    /* items header */
+    .items-header td {
+      font-weight: bold;
+      border-bottom: 2px solid #020618; 
+      color: #020618;
+      /* top padding handles page breaks */
+      padding-top: 13mm; 
+      padding-bottom: 10px;
+      font-size: 9pt;
+    }
+
+    /* column widths */
+    .col-qty { width: 15%; }
+    .col-price { width: 15%; }
+    .col-amount { width: 20%; }
+
+    /* item rows */
+    .item-row td { padding: 8px 0; border-bottom: none; }
+    
+    /* totals section */
+    .totals-table td { padding: 4px 0; text-align: right; }
+    .total-label { width: 50%; font-weight: bold; color: #020618; }
+    
+    .grand-total td { 
+      border-top: 2px solid #020618; 
+      border-bottom: 2px solid #020618; 
+      padding: 8px 0; 
+      font-size: 11pt; 
+      font-weight: bold; 
+      color: #020618; 
+    }
+
+    /* tax breakdown */
+    .tax-breakdown { margin-top: 25px; font-size: 8pt; }
+    .tax-header th { 
+      border-bottom: 2px solid #020618; 
+      padding-bottom: 5px; 
+      color: #020618; 
+      font-weight: bold; 
+      text-align: right;
+    }
+    .tax-header th.left { text-align: left; }
+    .tax-breakdown td { padding: 4px 0; }
+
+    /* footer */
+    .footer-wrapper {
+      border-top: 2px solid #020618;
+      padding-top: 10px;
+      margin-top: 10px;
+      font-size: 7pt;
+      line-height: 1.3;
+      color: #45556C;
+    }
+    .footer-table td { vertical-align: top; }
+    
+    .info-label { 
+      font-weight: bold; 
+      display: block; 
+      margin-bottom: 2px; 
+      color: #020618;
+      font-size: 8pt;
+    }
+    
+    .legal-text { 
+      margin-top: 8px; 
+      text-align: justify; 
+      font-size: 7pt; 
+      color: #45556C; 
+      line-height: 1.1; 
+    }
+
+    /* logo */
+    .logo-img { max-width: 250px; max-height: 150px; display: block; }
+
+    /* ghost spacer */
+    .margin-spacer { border: none !important; padding: 0 !important; }
+    .margin-spacer div { height: 13mm; } 
+
+    /* print optimizations */
+    @media print {
+      body { -webkit-print-color-adjust: exact; } 
+      thead { display: table-header-group; } 
+      tfoot { display: table-footer-group; }
+      tr { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero-container">
+    <table style="width: 100%; margin-bottom: 30px;">
+      <tr>
+        <td style="vertical-align: middle;">
+          {% if account.logo_url != blank %}
+            <img src="{{ account.logo_url }}" class="logo-img" alt="Logo">
+          {% else %}
+            <h2 class="bold" style="font-size: 22pt; margin: 0; color: #020618;">{{ account.name }}</h2>
+          {% endif %}
+        </td>
+        <td class="right" style="vertical-align: middle;">
+          <div class="hero-title" style="margin: 0;">{{ title }}</div>
+          {% if document.subject != blank %}
+            <div class="subject">{{ document.subject }}</div>
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+
+    <div class="row">
+      <div class="w25">
+        <span class="meta-label">{{ labels.number }}:</span>
+        <span class="meta-value">{{ document.number }}</span>
+      </div>
+      <div class="w25">
+        <span class="meta-label">{{ labels.issue_date }}:</span>
+        <span class="meta-value">{{ document.issue_date | date: 'default', contact.country }}</span>
+      </div>
+      <div class="w25">
+        {% if document.po_number != blank %}
+          <span class="meta-label">{{ labels.po_number }}:</span>
+          <span class="meta-value">{{ document.po_number }}</span>
+        {% elsif document.related_document_type != blank %}
+          <span class="meta-label">{{ labels.related_document }}:</span>
+          <span class="meta-value">
+            {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}
+          </span>
+        {% endif %}
+      </div>
+      <div class="w25">
+        {% if document.due_date != blank %}
+          <span class="meta-label">{{ labels.due_date }}:</span>
+          <span class="meta-value">{{ document.due_date | date: 'default', contact.country }}</span>
+        {% elsif document.valid_until != blank %}
+          <span class="meta-label">{{ labels.valid_until }}:</span>
+          <span class="meta-value">{{ document.valid_until | date: 'default', contact.country }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="hero-separator"></div>
+
+    <div class="row">
+      <div class="w50">
+         <span class="address-header">{{ labels.to }}:</span>
+         <div class="address-body">
+            <strong>{{ contact.full_name | default: document.contact }}</strong><br>
+            {% if contact.contact_person != blank %}{{ contact.contact_person }}<br>{% endif %}
+            {% if contact.department != blank %}{{ contact.department }}<br>{% endif %}
+            {{ document.billing_address | newline_to_br }}
+            {% if document.tax_id != blank %}
+              <br><strong>{{ labels.tax_id }}:</strong> {{ document.tax_id }}
+            {% endif %}
+         </div>
+      </div>
+      <div class="w50">
+         <span class="address-header">{{ labels.from }}:</span>
+         <div class="address-body">
+            <strong>{{ account.full_name }}</strong><br>
+            {{ account.formatted_address | newline_to_br }}
+            {% if account.tax_id != blank %}
+              <br><strong>{{ labels.tax_id }}:</strong> {{ account.tax_id }}
+            {% endif %}
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <table style="width: 100%; position: relative; z-index: 2;" role="presentation">
+    
+    <!-- ghost header for margins -->
+    <thead>
+      <tr>
+        <td colspan="4" class="margin-spacer">
+          <div></div>
+        </td>
+      </tr>
+    </thead>
+
+    <!-- footer structure -->
+    <tfoot>
+      <tr>
+        <td colspan="4">
+          <div class="footer-wrapper">
+            <table class="footer-table" style="width: 100%;">
+              <tr>
+                <td style="width: 50%; padding-right: 15px;">
+                  {% if document.payment_details != blank %}
+                    <span class="info-label">{{ labels.payment_details }}:</span>
+                    <div>{{ document.payment_details | newline_to_br }}</div>
+                  {% endif %}
+                </td>
+                <td class="right" style="width: 50%;">
+                  {% if document.notes != blank %}
+                    <span class="info-label">{{ labels.notes }}:</span>
+                    <div>{{ document.notes | newline_to_br }}</div>
+                  {% endif %}
+                </td>
+              </tr>
+            </table>
+            {% if document.legal != blank %}
+              <div class="legal-text">
+                {{ document.legal | textilize }}
+              </div>
+            {% endif %}
+            <div style="height: 10px;"></div>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+
+    <tbody>
+      
+      <!-- items header -->
+      <tr class="items-header">
+        <td class="left">{{ labels.description }}</td>
+        <td class="right col-qty">{{ labels.quantity }}</td>
+        <td class="right col-price">{{ labels.unit_price }}</td>
+        <td class="right col-amount">{{ labels.amount }}</td>
+      </tr>
+      
+      <!-- items loop -->
+      {% for item in document.items %}
+      <tr class="item-row">
+        <td class="left">
+          <div>{{ item.description }}</div>
+          {% if item.discount_rate > 0 %}
+            <small>({{ labels.discount }} {{ item.discount_rate | precision: 0 }}%)</small>
+          {% endif %}
+        </td>
+        <td class="right">{{ item.quantity | precision }}</td>
+        <td class="right">{{ item.unit_price }}</td>
+        <td class="right">{{ item.subtotal }}</td>
+      </tr>
+      {% endfor %}
+
+      <tr>
+        <td colspan="4" style="padding-top: 10px;">
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 60%;"></td>
+              <td style="width: 40%;">
+                
+                <!-- totals -->
+                <table class="totals-table" style="width: 100%;">
+                  <tr>
+                    <td class="total-label">{{ labels.subtotal }}</td>
+                    <td>{{ document.subtotal }}</td>
+                  </tr>
+                  {% if document.discount > 0 %}
+                  <tr>
+                    <td class="total-label">{{ labels.discount }}</td>
+                    <td>-{{ document.discount }}</td>
+                  </tr>
+                  {% endif %}
+                  {% if document.taxes %}
+                  <tr>
+                    <td class="total-label">{{ labels.tax | default: 'Tax' }}</td>
+                    <td>{{ document.tax_amount }}</td>
+                  </tr>
+                  {% endif %}
+                  {% if document.exchange %}
+                  <tr>
+                    <td class="total-label">{{ labels.exchange }} ({{ account.currency }})</td>
+                    <td>{{ document.exchange }}</td>
+                  </tr>
+                  {% endif %}
+                  <tr class="grand-total">
+                    <td class="total-label">{{ labels.total }}</td>
+                    <td>{{ document.total }}</td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+          <!-- tax breakdown -->
+          {% if document.taxes.size > 0 %}
+          <div class="tax-breakdown">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr class="tax-header">
+                  <th class="left" style="width: 40%;">{{ labels.tax_breakdown }}</th>
+                  <th class="right" style="width: 20%;">{{ labels.taxable_base }}</th>
+                  <th class="right" style="width: 20%;">{{ labels.rate }}</th>
+                  <th class="right" style="width: 20%;">{{ labels.amount }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for document_tax in document.taxes %}
+                <tr>
+                  <td></td> 
+                  <td class="right">{{ document_tax.taxable_base }}</td>
+                  <td class="right">{{ document_tax.label }}</td>
+                  <td class="right">{{ document_tax.amount }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endif %}
+          
+          <div style="height: 30px;"></div>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+</body>
+</html>

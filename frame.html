@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="pdfkit-page_size" content="A4">
+  <meta name="pdfkit-margin_top" content="13mm">
+  <meta name="pdfkit-margin_right" content="13mm">
+  <meta name="pdfkit-margin_bottom" content="13mm">
+  <meta name="pdfkit-margin_left" content="13mm">
+  
+  <title>{{document.number}}</title>
+  
+  <style>
+    /* reset */
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0; 
+      padding: 0;
+      background: #fff; 
+      color: #364153;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 9pt;
+      line-height: 1.3;
+    }
+
+    /* typography */
+    .bold, strong, b { font-weight: 600; color: #000000; }
+    
+    .right { text-align: right; }
+    .left { text-align: left; }
+    
+    /* grid */
+    .w15 { width: 15%; }
+    .w20 { width: 20%; }
+    .w25 { width: 25%; }
+    .w50 { width: 50%; }
+    
+    /* totals alignment */
+    .w65 { width: 65%; } 
+    .w35 { width: 35%; } 
+
+    /* table defaults */
+    table { width: 100%; border-collapse: collapse; border: none; }
+    td, th { padding: 0; vertical-align: top; }
+
+    /* master frame */
+    .frame-table {
+      width: 100%;
+      border-collapse: collapse;
+      /* borders: left, right, bottom only */
+      border-left: 3px solid #000;
+      border-right: 3px solid #000;
+      border-bottom: 3px solid #000;
+      border-top: none; 
+    }
+    
+    /* silent header border */
+    .frame-top-bar {
+      background-color: #000;
+      height: 3px;
+      padding: 0;
+      line-height: 0;
+      border: none;
+    }
+
+    /* padding utils */
+    .pad-box { padding: 15px; }
+    .pad-y { padding-top: 5px; padding-bottom: 5px; }
+
+    /* header styling */
+    .header-title {
+      font-size: 24pt;
+      letter-spacing: 2px;
+      margin: 0;
+      text-transform: uppercase;
+      font-weight: 600; 
+      color: #fff; 
+    }
+    .subject { margin-top: 5px; font-size: 10pt; color: #364153; }
+
+    /* logo */
+    .logo-img { max-width: 250px; max-height: 120px; display: block; }
+
+    /* metadata */
+    .divider-bottom { border-bottom: 3px solid #000; }
+    
+    .meta-label { 
+      font-weight: 600; 
+      font-size: 9pt; 
+      display: block; 
+      margin-bottom: 2px; 
+      color: #000000; 
+    }
+    .meta-value { font-size: 9pt; display: block; margin-bottom: 5px; }
+
+    /* address */
+    .address-header { 
+      font-weight: 600; 
+      font-size: 9pt; 
+      margin-bottom: 5px; 
+      display: block; 
+      color: #000000; 
+    }
+    .address-body { font-size: 9pt; line-height: 1.4; }
+
+    /* items grid */
+    .items-header td {
+      font-weight: 600;
+      padding-bottom: 10px;
+      font-size: 9pt;
+      padding-top: 15px;
+      color: #000000;
+    }
+    
+    /* totals section */
+    .totals-table td { padding: 4px 0; text-align: right; }
+    
+    .col-total-label { width: 43%; color: #000000; } 
+    .col-total-value { width: 57%; }
+
+    .total-row td { 
+      padding-top: 8px; 
+      font-weight: 600; 
+      font-size: 9pt; 
+      color: #000000;
+    }
+
+    /* tax breakdown */
+    .tax-breakdown { margin-top: 25px; font-size: 9pt; }
+    .tax-header th { 
+      border-bottom: 2px solid #000; 
+      padding-bottom: 5px; 
+      color: #000; 
+      font-weight: 600; 
+      text-align: right;
+      font-size: 9pt;
+    }
+    .tax-header th.left { text-align: left; }
+    .tax-breakdown td { padding: 4px 0; font-size: 9pt; vertical-align: top; }
+
+    /* footer */
+    .footer-cell {
+      border-top: 3px solid #000;
+      padding: 15px;
+    }
+    .footer-content {
+      font-size: 7pt;
+      line-height: 1.3;
+    }
+    
+    .info-label { 
+      font-weight: 600; 
+      display: block; 
+      margin-bottom: 2px; 
+      color: #000000;
+    }
+    .legal-text { margin-top: 10px; color: #364153; text-align: justify; }
+
+    /* print optimizations */
+    @media print {
+      body { -webkit-print-color-adjust: exact; } 
+      thead { display: table-header-group; } 
+      tfoot { display: table-footer-group; }
+      tr { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <table class="frame-table">
+    
+    <thead>
+      <tr>
+        <th colspan="4" class="frame-top-bar"></th>
+      </tr>
+    </thead>
+    
+    <!-- footer -->
+    <tfoot>
+      <tr>
+        <td colspan="4" class="footer-cell">
+          <div class="footer-content">
+            <table style="width: 100%">
+              <tr>
+                <td class="w50" style="padding-right: 15px; vertical-align: top;">
+                  {% if document.payment_details != blank %}
+                    <span class="info-label">{{ labels.payment_details }}:</span>
+                    <div>{{ document.payment_details | newline_to_br }}</div>
+                  {% endif %}
+                </td>
+                <td class="w50 right" style="padding-left: 15px; vertical-align: top;">
+                  {% if document.notes != blank %}
+                    <span class="info-label">{{ labels.notes }}:</span>
+                    <div>{{ document.notes | newline_to_br }}</div>
+                  {% endif %}
+                </td>
+              </tr>
+            </table>
+            
+            {% if document.legal != blank %}
+            <div class="legal-text">{{ document.legal | textilize }}</div>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+
+    <tbody>
+      
+      <!-- header -->
+      <tr>
+        <td colspan="4" class="divider-bottom">
+          <table style="width: 100%">
+            <tr>
+              <!-- title box -->
+              <td style="width: 50%; vertical-align: middle; text-align: left; background-color: #000; color: #fff; padding: 15px;">
+                <h1 class="header-title">{{ title }}</h1>
+                {% if document.subject != blank %}
+                  <div class="subject" style="color: #ccc;">{{ document.subject }}</div>
+                {% endif %}
+              </td>
+              <!-- logo box -->
+              <td style="width: 50%; vertical-align: middle; text-align: right; padding: 15px;">
+                {% if account.logo_url != blank %}
+                  <img src="{{ account.logo_url }}" class="logo-img" alt="Logo" style="margin-left: auto;">
+                {% else %}
+                  <h2 class="bold" style="margin: 0; font-size: 22pt;">{{ account.name }}</h2>
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- metadata -->
+      <tr>
+        <td colspan="4" class="pad-box divider-bottom">
+          <table style="width: 100%">
+            <tr>
+              <td class="w25">
+                <span class="meta-label">{{ labels.number }}:</span>
+                <span class="meta-value bold">{{ document.number }}</span>
+              </td>
+              <td class="w25">
+                <span class="meta-label">{{ labels.issue_date }}:</span>
+                <span class="meta-value">{{ document.issue_date | date: 'default', contact.country }}</span>
+              </td>
+              <td class="w25">
+                {% if document.po_number != blank %}
+                  <span class="meta-label">{{ labels.po_number }}:</span>
+                  <span class="meta-value">{{ document.po_number }}</span>
+                {% elsif document.related_document_type != blank %}
+                  <span class="meta-label">{{ labels.related_document }}:</span>
+                  <span class="meta-value">
+                    {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}
+                  </span>
+                {% endif %}
+              </td>
+              <td class="w25">
+                {% if document.due_date != blank %}
+                  <span class="meta-label">{{ labels.due_date }}:</span>
+                  <span class="meta-value">{{ document.due_date | date: 'default', contact.country }}</span>
+                {% elsif document.valid_until != blank %}
+                  <span class="meta-label">{{ labels.valid_until }}:</span>
+                  <span class="meta-value">{{ document.valid_until | date: 'default', contact.country }}</span>
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- address -->
+      <tr>
+        <td colspan="4" class="pad-box divider-bottom">
+          <table style="width: 100%">
+            <tr>
+              <td class="w50" style="padding-right: 15px;">
+                <span class="address-header">{{ labels.to }}:</span>
+                <div class="address-body">
+                   <strong>{{ contact.full_name | default: document.contact }}</strong><br>
+                   {% if contact.contact_person != blank %}{{ contact.contact_person }}<br>{% endif %}
+                   {% if contact.department != blank %}{{ contact.department }}<br>{% endif %}
+                   {{ document.billing_address | newline_to_br }}
+                   {% if document.tax_id != blank %}
+                     <br><strong>{{ labels.tax_id }}:</strong> {{ document.tax_id }}
+                   {% endif %}
+                </div>
+              </td>
+              <td class="w50" style="padding-left: 15px;">
+                <span class="address-header">{{ labels.from }}:</span>
+                <div class="address-body">
+                   <strong>{{ account.full_name }}</strong><br>
+                   {{ account.formatted_address | newline_to_br }}
+                   {% if account.tax_id != blank %}
+                     <br><strong>{{ labels.tax_id }}:</strong> {{ account.tax_id }}
+                   {% endif %}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- items header -->
+      <tr class="items-header">
+        <td class="pad-box" style="padding-bottom: 0;">{{ labels.description }}</td>
+        <td class="pad-box right w15" style="padding-bottom: 0;">{{ labels.quantity }}</td>
+        <td class="pad-box right w15" style="padding-bottom: 0;">{{ labels.unit_price }}</td>
+        <td class="pad-box right w20" style="padding-bottom: 0;">{{ labels.amount }}</td>
+      </tr>
+
+      <!-- items loop -->
+      {% for item in document.items %}
+      <tr class="item-row">
+        <td class="pad-box pad-y">
+          <div style="margin-bottom: 2px;">{{ item.description }}</div>
+          {% if item.discount_rate > 0 %}
+            <small style="display: block; margin-top: 0;">({{ labels.discount }} {{ item.discount_rate | precision: 0 }}%)</small>
+          {% endif %}
+        </td>
+        <td class="pad-box pad-y right">
+          {{ item.quantity | precision }}
+        </td>
+        <td class="pad-box pad-y right">
+          {{ item.unit_price }}
+        </td>
+        <td class="pad-box pad-y right">
+          {{ item.subtotal }}
+        </td>
+      </tr>
+      {% endfor %}
+
+      <tr>
+        <td colspan="4" class="pad-box" style="padding-top: 20px;">
+          <table style="width: 100%">
+            <tr>
+              <td class="w65">&nbsp;</td>
+              <td class="w35">
+                
+                <!-- totals -->
+                <table class="totals-table" style="width: 100%">
+                  <tr>
+                    <td class="col-total-label bold">{{ labels.subtotal }}</td>
+                    <td class="col-total-value">{{ document.subtotal }}</td>
+                  </tr>
+                  
+                  {% if document.discount > 0 %}
+                  <tr>
+                    <td class="bold">{{ labels.discount }}</td>
+                    <td>-{{ document.discount }}</td>
+                  </tr>
+                  {% endif %}
+                  
+                  {% if document.taxes %}
+                  <tr>
+                    <td class="bold">{{ labels.tax | default: 'Tax' }}</td>
+                    <td>{{ document.tax_amount }}</td>
+                  </tr>
+                  {% endif %}
+                  
+                  {% if document.exchange %}
+                  <tr>
+                    <td class="bold">{{ labels.exchange }} ({{ account.currency }})</td>
+                    <td>{{ document.exchange }}</td>
+                  </tr>
+                  {% endif %}
+                  
+                  <tr class="total-row">
+                    <td class="bold">{{ labels.total }} ({{ document.currency }})</td>
+                    <td>{{ document.total }}</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+          
+          <!-- tax breakdown -->
+          {% if document.taxes.size > 0 %}
+          <div class="tax-breakdown">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr class="tax-header">
+                  <th class="left" style="width: 40%;">{{ labels.tax_breakdown }}</th>
+                  <th class="right" style="width: 20%;">{{ labels.taxable_base }}</th>
+                  <th class="right" style="width: 20%;">{{ labels.rate }}</th>
+                  <th class="right" style="width: 20%;">{{ labels.amount }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for document_tax in document.taxes %}
+                <tr>
+                  <td></td> 
+                  <td class="right">{{ document_tax.taxable_base }}</td>
+                  <td class="right">{{ document_tax.label }}</td>
+                  <td class="right">{{ document_tax.amount }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+</body>
+</html>
