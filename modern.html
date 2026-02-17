@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ contact.language | default: 'en' }}">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
+  <meta charset="UTF-8">
+  <title>{{document.number}}</title>  
   <meta name="pdfkit-page_size" content="A4">
   <meta name="pdfkit-margin_top" content="13mm">
   <meta name="pdfkit-margin_right" content="13mm">
@@ -236,9 +236,9 @@
             <tr>
               <td style="vertical-align: middle; text-align: left;">
                 {% if account.logo_url != blank %}
-                  <img src="{{ account.logo_url }}" class="logo-img" alt="Logo">
+                  <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}">
                 {% else %}
-                  <h2 class="bold" style="margin: 0; font-size: 22pt;">{{ account.name }}</h2>
+                  <h2 class="bold" style="margin: 0; font-size: 22pt;">{{ account.full_name }}</h2>
                 {% endif %}
               </td>
               <td style="vertical-align: middle; text-align: right;">
@@ -272,7 +272,8 @@
                 {% elsif document.related_document_type != blank %}
                   <span class="meta-label">{{ labels.related_document }}</span>
                   <span class="meta-value">
-                    {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}
+                    {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}}<br>
+                    {{document.related_document_date | date: 'default', contact.country}}
                   </span>
                 {% endif %}
               </td>
@@ -399,9 +400,9 @@
               <tbody>
                 {% for document_tax in document.taxes %}
                 <tr class="tax-body-row">
-                  <td></td> 
+                  <td class="left">{{ document_tax.label }}</td>
                   <td class="right">{{ document_tax.taxable_base }}</td>
-                  <td class="right">{{ document_tax.label }}</td>
+                  <td class="right">{{ document_tax.rate }}%</td>
                   <td class="right">{{ document_tax.amount }}</td>
                 </tr>
                 {% endfor %}

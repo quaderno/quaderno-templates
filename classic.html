@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ contact.language | default: 'en' }}">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
+  <meta charset="UTF-8">  
+  <title>{{document.number}}</title>
   <meta name="pdfkit-page_size" content="A4">
   <meta name="pdfkit-margin_top" content="0mm">
   <meta name="pdfkit-margin_right" content="0mm">
@@ -196,9 +196,9 @@
       <tr>
         <td style="vertical-align: middle;">
           {% if account.logo_url != blank %}
-            <img src="{{ account.logo_url }}" class="logo-img" alt="Logo">
+            <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}">
           {% else %}
-            <h2 class="bold" style="font-size: 22pt; margin: 0; color: #020618;">{{ account.name }}</h2>
+            <h2 class="bold" style="font-size: 22pt; margin: 0; color: #020618;">{{ account.full_name }}</h2>
           {% endif %}
         </td>
         <td class="right" style="vertical-align: middle;">
@@ -226,7 +226,8 @@
         {% elsif document.related_document_type != blank %}
           <span class="meta-label">{{ labels.related_document }}:</span>
           <span class="meta-value">
-            {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}
+            {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}}<br>
+            {{document.related_document_date | date: 'default', contact.country}}
           </span>
         {% endif %}
       </div>
@@ -332,7 +333,7 @@
           {% endif %}
         </td>
         <td class="right">{{ item.quantity | precision }}</td>
-        <td class="right">{{ item.unit_price }}</td>
+        <td class="right">{{ item.unit_price | precision }}</td>
         <td class="right">{{ item.subtotal }}</td>
       </tr>
       {% endfor %}
@@ -369,7 +370,7 @@
                   </tr>
                   {% endif %}
                   <tr class="grand-total">
-                    <td class="total-label">{{ labels.total }}</td>
+                    <td class="total-label">{{ labels.total }} ({{ document.currency }})</td>
                     <td>{{ document.total }}</td>
                   </tr>
                 </table>
@@ -393,9 +394,9 @@
               <tbody>
                 {% for document_tax in document.taxes %}
                 <tr>
-                  <td></td> 
+                  <td class="left">{{ document_tax.label }}</td>
                   <td class="right">{{ document_tax.taxable_base }}</td>
-                  <td class="right">{{ document_tax.label }}</td>
+                  <td class="right">{{ document_tax.rate }}%</td>
                   <td class="right">{{ document_tax.amount }}</td>
                 </tr>
                 {% endfor %}
