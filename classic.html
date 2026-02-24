@@ -8,9 +8,7 @@
   <meta name="pdfkit-margin_right" content="0mm">
   <meta name="pdfkit-margin_bottom" content="0mm">
   <meta name="pdfkit-margin_left" content="0mm">
-  
-  <title>{{document.number}}</title>
-  
+
   <style>
     /* reset */
     * { box-sizing: border-box; }
@@ -26,7 +24,7 @@
     }
 
     /* typography */
-    .bold, strong, b { font-weight: bold; color: #020618; }
+    .bold, strong, b { font-weight: bold; color: {{account.color_scheme}}; }
     
     .right { text-align: right; }
     .left { text-align: left; }
@@ -67,7 +65,7 @@
     .hero-title {
       font-size: 28pt;
       font-weight: bold;
-      color: #020618;
+      color: {{account.color_scheme}};
     }
     .subject { margin-top: 5px; font-size: 10pt; color: #45556C; }
 
@@ -77,13 +75,13 @@
       font-size: 8pt; 
       display: block; 
       margin-bottom: 2px; 
-      color: #020618;
+      color: {{account.color_scheme}};
     }
     .meta-value { font-size: 9pt; font-weight: normal; display: block; margin-bottom: 10px; }
     
     /* separator */
     .hero-separator { 
-      border-bottom: 2px solid #020618; 
+      border-bottom: 2px solid {{account.color_scheme}}; 
       margin: 15px 0 20px 0; 
       clear: both; 
     }
@@ -94,7 +92,7 @@
       font-size: 9pt; 
       margin-bottom: 5px; 
       display: block;
-      color: #020618;
+      color: {{account.color_scheme}};
     }
     .address-body { font-size: 9pt; font-weight: normal; line-height: 1.4; }
 
@@ -105,8 +103,8 @@
     /* items header */
     .items-header td {
       font-weight: bold;
-      border-bottom: 2px solid #020618; 
-      color: #020618;
+      border-bottom: 2px solid {{account.color_scheme}}; 
+      color: {{account.color_scheme}};
       /* top padding handles page breaks */
       padding-top: 13mm; 
       padding-bottom: 10px;
@@ -123,23 +121,23 @@
     
     /* totals section */
     .totals-table td { padding: 4px 0; text-align: right; }
-    .total-label { width: 50%; font-weight: bold; color: #020618; }
+    .total-label { width: 50%; font-weight: bold; color: {{account.color_scheme}}; }
     
     .grand-total td { 
-      border-top: 2px solid #020618; 
-      border-bottom: 2px solid #020618; 
+      border-top: 2px solid {{account.color_scheme}}; 
+      border-bottom: 2px solid {{account.color_scheme}}; 
       padding: 8px 0; 
       font-size: 11pt; 
       font-weight: bold; 
-      color: #020618; 
+      color: {{account.color_scheme}}; 
     }
 
     /* tax breakdown */
     .tax-breakdown { margin-top: 25px; font-size: 8pt; }
     .tax-header th { 
-      border-bottom: 2px solid #020618; 
+      border-bottom: 2px solid {{account.color_scheme}}; 
       padding-bottom: 5px; 
-      color: #020618; 
+      color: {{account.color_scheme}}; 
       font-weight: bold; 
       text-align: right;
     }
@@ -148,7 +146,7 @@
 
     /* footer */
     .footer-wrapper {
-      border-top: 2px solid #020618;
+      border-top: 2px solid {{account.color_scheme}};
       padding-top: 10px;
       margin-top: 10px;
       font-size: 7pt;
@@ -161,7 +159,7 @@
       font-weight: bold; 
       display: block; 
       margin-bottom: 2px; 
-      color: #020618;
+      color: {{account.color_scheme}};
       font-size: 8pt;
     }
     
@@ -198,7 +196,7 @@
           {% if account.logo_url != blank %}
             <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}">
           {% else %}
-            <h2 class="bold" style="font-size: 22pt; margin: 0; color: #020618;">{{ account.trade_name }}</h2>
+            <h2 class="bold" style="font-size: 22pt; margin: 0; color: {{account.color_scheme}};">{{ account.trade_name }}</h2>
           {% endif %}
         </td>
         <td class="right" style="vertical-align: middle;">
@@ -226,7 +224,7 @@
         {% elsif document.related_document_type != blank %}
           <span class="meta-label">{{ labels.related_document }}:</span>
           <span class="meta-value">
-            {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}}<br>
+            {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}<br>
             {{document.related_document_date | date: 'default', contact.country}}
           </span>
         {% endif %}
