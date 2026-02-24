@@ -8,7 +8,6 @@
   <meta name="pdfkit-margin_right" content="13mm">
   <meta name="pdfkit-margin_bottom" content="13mm">
   <meta name="pdfkit-margin_left" content="13mm">
-
   <style>
     /* reset */
     * { box-sizing: border-box; }
@@ -293,9 +292,8 @@
                 <div class="address-body">
                    <strong>{{ account.full_name }}</strong><br>
                    {{ account.formatted_address | newline_to_br }}
-                   {% if account.tax_id != blank %}
-                     <br><strong>{{ labels.tax_id }}:</strong> {{ account.tax_id }}
-                   {% endif %}
+                   {% if account.registration_number != blank %} <br><strong>{{ labels.registration_number }}</strong>: {{ account.registration_number }} {% endif %}
+                   {% if account.tax_id != blank %} <br><strong>{{ labels.tax_id }}:</strong> {{ account.tax_id }}{% endif %}
                 </div>
               </td>
             </tr>
@@ -360,17 +358,22 @@
                   </tr>
                   {% endif %}
                   
-                  {% if document.exchange %}
-                  <tr>
-                    <td class="bold">{{ labels.exchange }} ({{ account.currency }})</td>
-                    <td>{{ document.exchange }}</td>
-                  </tr>
-                  {% endif %}
-                  
                   <tr class="total-row">
                     <td class="bold">{{ labels.total }} ({{ document.currency }})</td>
                     <td>{{ document.total }}</td>
                   </tr>
+
+                  {% if document.exchange %}
+                  <tr>
+                    <td class="bold">{{ labels.tax }} ({{ account.currency }})</td>
+                    <td>{{ document.tax_amount_exchange }}</td>
+                  </tr>
+                  <tr>
+                    <td class="bold">{{ labels.total }} ({{ account.currency }})</td>
+                    <td>{{ document.total_exchange }}</td>
+                  </tr>
+                  {% endif %}
+                  
                 </table>
               </td>
             </tr>

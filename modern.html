@@ -8,7 +8,6 @@
   <meta name="pdfkit-margin_right" content="13mm">
   <meta name="pdfkit-margin_bottom" content="13mm">
   <meta name="pdfkit-margin_left" content="13mm">
-
   <style>
     /* reset */
     * { box-sizing: border-box; }
@@ -311,6 +310,7 @@
                 <div class="address-body">
                   <span class="bold">{{ account.full_name }}</span><br>
                   {{ account.formatted_address | newline_to_br }}
+                  {% if account.registration_number != blank %} <br>{{ labels.registration_number }}: {{ account.registration_number }} {% endif %}
                   {% if account.tax_id != blank %}
                     <br><strong>{{ labels.tax_id }}:</strong> {{ account.tax_id }}
                   {% endif %}
@@ -370,16 +370,26 @@
       {% if document.exchange %}
       <tr class="total-row">
         <td></td>
-        <td colspan="2" class="total-label">{{ labels.exchange }} ({{ account.currency }})</td>
-        <td class="total-value">{{ document.exchange }}</td>
+        <td colspan="2" class="total-final-label">{{ labels.total }} ({{ document.currency }})</td>
+        <td class="total-final-value">{{ document.total }}</td>
       </tr>
-      {% endif %}
-
+      <tr class="total-row">
+        <td></td>
+        <td colspan="2" class="total-label">{{ labels.tax }} ({{ account.currency }})</td>
+        <td class="total-value">{{ document.tax_amount_exchange }}</td>
+      </tr>
       <tr class="total-row total-row-last">
+        <td></td>
+        <td colspan="2" class="total-label">{{ labels.total }} ({{ account.currency }})</td>
+        <td class="total-value">{{ document.total_exchange }}</td>
+      </tr>
+      {% else %}
+        <tr class="total-row total-row-last">
         <td></td>
         <td colspan="2" class="total-final-label">{{ labels.total }} ({{ document.currency }})</td>
         <td class="total-final-value">{{ document.total }}</td>
       </tr>
+      {% endif %}
 
       <!-- tax breakdown -->
       {% if document.taxes.size > 0 %}

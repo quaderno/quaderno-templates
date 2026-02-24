@@ -2,12 +2,12 @@
 <html lang="{{ contact.language | default: 'en' }}">
 <head>
 <meta charset="UTF-8">
+<title>{{document.number}}</title>
 <meta name="pdfkit-page_size" content="A4">
 <meta name="pdfkit-margin_top" content="13mm">
 <meta name="pdfkit-margin_right" content="13mm">
 <meta name="pdfkit-margin_bottom" content="13mm">
 <meta name="pdfkit-margin_left" content="13mm">
-<title>{{document.number}}</title>
 <style>
   body {padding: 20px; background: #fff; color:#000; font:normal 100% Georgia, "Times New Roman", Times, serif}
   #header {padding:20px 0 0}
@@ -182,8 +182,14 @@
       <tr>
         <td class="w322">&nbsp;</td>
         <td class="w92">&nbsp;</td>
-        <td class="label w138">{{labels.exchange}} ({{account.currency}})</td>
-        <td class="value w170"><strong>{{document.exchange}}</strong></td>
+        <td class="label w138">{{labels.tax}} ({{account.currency}})</td>
+        <td class="value w170"><strong>{{document.tax_amount_exchange}}</strong></td>
+      </tr>
+      <tr>
+        <td class="w322">&nbsp;</td>
+        <td class="w92">&nbsp;</td>
+        <td class="label w138">{{labels.total}} ({{account.currency}})</td>
+        <td class="value w170"><strong>{{document.total_exchange}}</strong></td>
       </tr>
       {% endif %}
     </tfoot>
@@ -198,10 +204,9 @@
         <!-- user data -->
         <h2>{{labels.from}}</h2>
         <h3>{{account.full_name}}</h3>
-        <p>{{ account.formatted_address | newline_to_br }}</p>
-        <p>{% if account.email != blank %}<a href="mailto:{{account.email}}">{{ account.email }}</a>{% endif %}
-        {% if account.web != blank %}<br><a href="{{account.web}}">{{ account.web }}</a>{% endif %}
-        {% if account.tax_id != blank %}<br>{{labels.tax_id}}: {{account.tax_id}}{% endif %}
+        <address>{{ account.formatted_address | newline_to_br }}</address>
+        {% if account.registration_number != blank %} <p>{{ labels.registration_number }}: {{ account.registration_number }}</p>{% endif %}
+        {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
         </p>
       </td>
       <td class="w14">&nbsp;</td>

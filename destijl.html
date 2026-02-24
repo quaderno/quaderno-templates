@@ -2,12 +2,12 @@
 <html lang="{{ contact.language | default: 'en' }}">
   <head>
     <meta charset="UTF-8">
+    <title>{{document.number}}</title>
     <meta name="pdfkit-page_size" content="A4">
     <meta name="pdfkit-margin_top" content="13mm">
     <meta name="pdfkit-margin_right" content="13mm">
     <meta name="pdfkit-margin_bottom" content="13mm">
     <meta name="pdfkit-margin_left" content="13mm">
-    <title>{{document.number}}</title>
     <style>
       body {padding:20px; background:#fff; color:#000; font:normal 100% Helvetica, Arial, sans-serif}
       h1 {font-size:32px; margin:0 0 20px 0; line-height:1.1; color:{{account.color_scheme}}}
@@ -18,8 +18,7 @@
       a:link, a:visited {color:#000; text-decoration:none}
       a:hover {color:#000; text-decoration:none}
       abbr {border:none}
-      .label, .currency {font-size:11px; text-transform:uppercase; font-weight:normal}
-      .total-currency {font-size:16px}
+      .label {font-size:11px; text-transform:uppercase; font-weight:normal}
       .smalltxt {font-size:14px}
       .txt {font-size:16px; font-weight:bold}
       .w300 {width:300px}
@@ -34,26 +33,20 @@
       #items th {font-size:13px}
       table {width:100%; border:none; border-collapse:collapse;}
       table td {padding:5px 0; font-size:13px; line-height:16px; vertical-align:top;}
-      #items-container { width: 75%; float:  right}
-      #items { margin:30px 0 30px 0}
+      #items { margin:0 0 30px 0}
       #items thead tr th {padding:8px 0 6px 0}
       #items tbody {border-top:2px solid #000; border-bottom:2px solid #000}
       #items tbody tr {border-bottom:1px solid #000}
       #items tfoot .label, #items tfoot .right {border-bottom:1px solid #000}
       #items tfoot .txt {border-bottom:1px solid {{account.color_scheme}}}
       #items td {padding:8px 0}
-      #items td.topspace14 {padding-top:14px}
       .border-first {border-top:4px solid {{account.color_scheme}}; margin-top:0; padding-top:5px}
-      .border-end {border-bottom:2px solid {{account.color_scheme}}}
       .border2 {border-top:2px solid {{account.color_scheme}}}
       .border1 {border-top:1px solid #000; margin-top:30px; padding-top:5px}
-      .space30 {padding-right:30px}
       .space12 {padding-right:12px}
       .left {text-align:left}
       .right {text-align:right}
-      .center {text-align:center}
       .legal {padding:40px 0 20px; font-size:14px; vertical-align:top; text-align:center}
-      .verification-code {margin: 10px 0; text-align: right; font-size: small;}
       /* css rules for printing */
       @media print {
         body {-webkit-print-color-adjust:exact}
@@ -65,12 +58,13 @@
   </head>
   <body>
     <table>
+
       <!-- // Begin Template Header \\ -->
       <tr>
         <td colspan="2">
-        {% if account.logo_url != blank %}
-          <img src="{{ account.logo_url }}" class="w300" alt="Logo">
-        {% endif %}
+          {% if account.logo_url != blank %}
+            <img src="{{ account.logo_url }}" class="w300" alt="Logo">
+          {% endif %}
         </td>
         <td class="valign-bottom">
           <h1>{{title}}</h1>
@@ -80,6 +74,7 @@
         </td>
       </tr>
       <!-- // End Template Header \\ -->
+
       <!-- // Begin Template Body \\ -->
       <tr>
         <td class="space12 w20per valign-top">
@@ -87,31 +82,17 @@
           <p class="txt">{{ document.number }}</p>
           <h2 class="label border1">{{labels.issue_date}}</h2>
           <p class="txt">{{document.issue_date | date: 'default', contact.country}}</p>
-          {% if document.po_number != blank %}
-          <h2 class="label border1">{{labels.po_number}}</h2>
-          <p class="txt">{{ document.po_number }}</p>
-          {% endif %}
-          {% if document.due_date != blank %}
-          <h2 class="label border1">{{labels.due_date}}</h2>
-          <p class="txt">{{document.due_date | date: 'default', contact.country}}</p>
-          {% endif %}
-          {% if document.valid_until != blank %}
-          <h2 class="label border1">{{labels.valid_until}}</h2>
-          <p class="txt">{{document.valid_until | date: 'default', contact.country}}</p>
-          {% endif %}
-          {% if document.related_document_type != blank %}
-          <h2 class="label border1">{{labels.related_document}}</h2>
-          <p class="txt">{{document.related_document_type | localize_document_type: labels}} <br> {{document.related_document_number}}</p>
-          <p>{{document.related_document_date | date: 'default', contact.country}}</p>
-          {% endif %}
         </td>
         <td class="space12 w38per valign-top">
           <h2 class="label border-first">{{labels.from}}</h2>
           <h3 class="txt">{{ account.full_name }}</h3>
           <address>{{ account.formatted_address | newline_to_br }}</address>
-          {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
-          {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
-          {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
+          {% if account.registration_number != blank %}
+            <p>{{ labels.registration_number }}: {{ account.registration_number }}</p>
+          {% endif %}
+          {% if account.tax_id != blank %}
+            <p>{{labels.tax_id}}: {{account.tax_id}}</p>
+          {% endif %}
         </td>
         <td class="w42per valign-top">
           <h2 class="label border-first">{{labels.to}}</h2>
@@ -123,108 +104,124 @@
         </td>
       </tr>
 
+      <tr>
+        <td class="space12 w20per valign-top">
+          {% if document.po_number != blank %}
+            <h2 class="label border1">{{labels.po_number}}</h2>
+            <p class="txt">{{ document.po_number }}</p>
+          {% endif %}
+          {% if document.due_date != blank %}
+            <h2 class="label border1">{{labels.due_date}}</h2>
+            <p class="txt">{{document.due_date | date: 'default', contact.country}}</p>
+          {% endif %}
+          {% if document.valid_until != blank %}
+            <h2 class="label border1">{{labels.valid_until}}</h2>
+            <p class="txt">{{document.valid_until | date: 'default', contact.country}}</p>
+          {% endif %}
+          {% if document.related_document_type != blank %}
+            <h2 class="label border1">{{labels.related_document}}</h2>
+            <p class="txt">{{document.related_document_type | localize_document_type: labels}} <br> {{document.related_document_number}}</p>
+            <p>{{document.related_document_date | date: 'default', contact.country}}</p>
+          {% endif %}
+        </td>
+        <td colspan="2" style="padding:0">
+          <table id="items">
+            <thead>
+              <tr class="border-first">
+                <th scope="col" class="left">{{labels.description}}</th>
+                <th class="left w18per">{{labels.quantity}}</th>
+                <th class="left w20per">{{labels.unit_price}}</th>
+                <th class="right w20per">{{labels.amount}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in document.items %}
+              <tr>
+                <td>{{item.description}}</td>
+                <td class="left">{{item.quantity | precision}}</td>
+                <td class="left">{{item.unit_price | precision}}</td>
+                <td class="right"><strong>{{item.subtotal}}</strong></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>&nbsp;</td>
+                <td class="label" colspan="2">{{labels.subtotal}}</td>
+                <td class="right"><strong>{{ document.subtotal}}</strong></td>
+              </tr>
+              {% if document.discount > 0 %}
+              <tr>
+                <td>&nbsp;</td>
+                <td class="label" colspan="2">{{labels.discount}}</td>
+                <td class="right"><strong>{{ document.discount}}</strong></td>
+              </tr>
+              {% endif %}
+              {% for tax in document.taxes %}
+              <tr>
+                <td>&nbsp;</td>
+                <td class="label" colspan="2">{{tax.label}} × {{tax.taxable_base | precision}}</td>
+                <td class="right"><strong>{{tax.amount}}</strong></td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>&nbsp;</td>
+                <td class="border2 txt" colspan="2">{{labels.total}} ({{document.currency}})</td>
+                <td class="border2 right txt"><strong>{{document.total}}</strong></td>
+              </tr>
+              {% if document.exchange %}
+              <tr>
+                <td>&nbsp;</td>
+                <td class="label" colspan="2">{{labels.tax}} ({{account.currency}})</td>
+                <td class="right">{{document.tax_amount_exchange}}</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td class="label" colspan="2">{{labels.total}} ({{account.currency}})</td>
+                <td class="right">{{document.total_exchange}}</td>
+              </tr>
+              {% endif %}
+            </tfoot>
+          </table>
+        </td>
+      </tr>
       <!-- // End Template Body \\ -->
-    </table>
-
-    <div id="items-container">
-      <table id="items">
-        <thead>
-          <tr class="border-first">
-            <th scope="col" class="left">{{labels.description}}</th>
-            <th class="left w18per">{{labels.quantity}}</th>
-            <th class="left w20per">{{labels.unit_price}}</th>
-            <th class="right w20per">{{labels.amount}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in document.items %}
-          <tr>
-            <td>{{item.description}}</td>
-            <td class="left">{{item.quantity | precision}}</td>
-            <td class="left">{{item.unit_price | precision}}</td>
-            <td class="right"><strong>{{item.subtotal}}</strong></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>&nbsp;</td>
-            <td class="label" colspan="2">{{labels.subtotal}}</td>
-            <td class="right"><strong>{{ document.subtotal}}</strong></td>
-          </tr>
-          {% if document.discount > 0 %}
-          <tr>
-            <td>&nbsp;</td>
-            <td class="label" colspan="2">{{labels.discount}}</td>
-            <td class="right"><strong>{{ document.discount}}</strong></td>
-          </tr>
-          {% endif %}
-          {% for tax in document.taxes %}
-          <tr>
-            <td>&nbsp;</td>
-            <td class="label" colspan="2">{{tax.label}} × {{tax.taxable_base | precision}}</td>
-            <td class="right"><strong>{{tax.amount}}</strong></td>
-          </tr>
-          {% endfor %}
-          
-          <tr>
-            <td>&nbsp;</td>
-            <td class="border2 txt" colspan="2">{{labels.total}} ({{document.currency}})</td>
-            <td class="border2 right txt">
-              <strong>{{document.total}}</strong>
-            </td>
-          </tr>
-          
-          {% if document.exchange %}
-          <tr>
-            <td>&nbsp;</td>
-            <td class="label" colspan="2">{{labels.exchange}} ({{account.currency}})</td>
-            <td class="right">{{document.exchange}}</td>
-          </tr>
-          {% endif %}
-
-        </tfoot>
-      </table>
 
       <!-- // Begin Template Footer \\ -->
-      <table id="footer">
-        <tr>
-          <td>&nbsp;</td>
-          <td colspan="2" class="valign-top">
-            <table>
-              <tr>
-                {% if document.notes != blank %}
-                <td {% if document.payment_details != blank %} class="space12 w47per valign-top" {% endif %}>
-                  <h2 class="label border-first">{{labels.notes}}</h2>
-                  <div class="smalltxt">{{document.notes | textilize}}</div>
-                </td>
-                {% endif %}
-                {% if document.payment_details != blank %}
-                <td class="w53per valign-top">
-                  <h2 class="label border-first">{{labels.payment_details}}</h2>
-                  <div class="smalltxt">{{document.payment_details | textilize }}</div>
-                </td>
-                {% elsif document.state == "paid" %}
-                {% assign payment = document.payments | last %}
-                <td class="w53per valign-top">
-                  <h2 class="label border-first">{{labels.payment_details}}</h2>
-                  <div class="smalltxt"><strong>{{labels.paid}}</strong> — {{ payment.payment_method_text }}</div>
-                </td>
-                {% endif %}
-              </tr>
-            </table>
-          </td>
-        </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="2" class="valign-top">
+          <table>
+            <tr>
+              {% if document.notes != blank %}
+              <td {% if document.payment_details != blank %}class="space12 w47per valign-top"{% endif %}>
+                <h2 class="label border-first">{{labels.notes}}</h2>
+                <div class="smalltxt">{{document.notes | textilize}}</div>
+              </td>
+              {% endif %}
+              {% if document.payment_details != blank %}
+              <td class="w53per valign-top">
+                <h2 class="label border-first">{{labels.payment_details}}</h2>
+                <div class="smalltxt">{{document.payment_details | textilize}}</div>
+              </td>
+              {% elsif document.state == "paid" %}
+              {% assign payment = document.payments | last %}
+              <td class="w53per valign-top">
+                <h2 class="label border-first">{{labels.payment_details}}</h2>
+                <div class="smalltxt"><strong>{{labels.paid}}</strong> — {{ payment.payment_method_text }}</div>
+              </td>
+              {% endif %}
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <!-- // End Template Footer \\ -->
 
-        <!-- legal notes -->
-        {% if document.legal != blank %}
-        <tr>
-          <td colspan="3" class="legal">{{document.legal | textilize}}</td>
-        </tr>
-        {% endif %}
-        
-        </table>
-        <!-- // End Template Footer \\ -->
-    </div>
-</body>
+    </table>
+
+    <!-- legal notes -->
+    {% if document.legal != blank %}
+    <div class="legal">{{document.legal | textilize}}</div>
+    {% endif %}
+  </body>
 </html>

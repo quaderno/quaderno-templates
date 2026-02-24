@@ -2,12 +2,12 @@
 <html lang="{{ contact.language | default: 'en' }}">
 <head>
   <meta charset="UTF-8">
+  <title>{{document.number}}</title>
   <meta name="pdfkit-page_size" content="A4">
   <meta name="pdfkit-margin_top" content="13mm">
   <meta name="pdfkit-margin_right" content="13mm">
   <meta name="pdfkit-margin_bottom" content="13mm">
   <meta name="pdfkit-margin_left" content="13mm">
-  <title>{{document.number}}</title>
   <style>
     body {padding:20px; background:#fff; color:#000; font:normal 10pt Arial, Helvetica, sans-serif}
     #content {min-height:850px}
@@ -108,7 +108,10 @@
                   {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount}}</p>{% endif %}
                   {% for tax in document.taxes %}<p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>{% endfor %}
                   <p style="font-size:110%"><strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong></p>
-                  {% if document.exchange %}<p>{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p>{% endif %}
+                  {% if document.exchange %}
+                    <p>{{labels.tax}} ({{account.currency}}): {{document.tax_amount_exchange}}</p>
+                    <p>{{labels.total}} ({{account.currency}}): {{document.total_exchange}}</p>
+                  {% endif %}
                 </td>
               </tr>
             </tfoot>
@@ -142,12 +145,10 @@
   </div>
   <div id="footer">
     <!-- account's data -->
-    <p><strong>{{account.full_name}} {% if account.tax_id != blank %}– {{labels.tax_id}}: {{account.tax_id}}{% endif %}</strong></p>
+    <p><strong>{{account.full_name}} {% if account.registration_number != blank %}– {{labels.registration_number}}: {{account.registration_number}}{% endif %} {% if account.tax_id != blank %}– {{labels.tax_id}}: {{account.tax_id}}{% endif %}</strong></p>
     <address>{{ account.formatted_address | newline_to_br | strip_newlines | replace: "<br />", " – " }}</address>
     <p>
       {% if account.phone_1 != blank %}{{labels.phone}}: {{account.phone_1}} {% endif %}
-      {% if account.email != blank %} {{labels.email}}: <a href="mailto:{{account.email}}">{{ account.email }}</a> {% endif %}
-      {% if account.web != blank %} <a href="{{account.web}}">{{ account.web }}</a>{% endif %}
     </p>
 
     <!-- legal notes -->

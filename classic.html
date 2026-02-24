@@ -8,7 +8,6 @@
   <meta name="pdfkit-margin_right" content="0mm">
   <meta name="pdfkit-margin_bottom" content="0mm">
   <meta name="pdfkit-margin_left" content="0mm">
-
   <style>
     /* reset */
     * { box-sizing: border-box; }
@@ -260,6 +259,7 @@
          <div class="address-body">
             <strong>{{ account.full_name }}</strong><br>
             {{ account.formatted_address | newline_to_br }}
+            {% if account.registration_number != blank %} <br><strong>{{ labels.registration_number }}</strong>: {{ account.registration_number }} {% endif %}
             {% if account.tax_id != blank %}
               <br><strong>{{ labels.tax_id }}:</strong> {{ account.tax_id }}
             {% endif %}
@@ -361,16 +361,20 @@
                     <td>{{ document.tax_amount }}</td>
                   </tr>
                   {% endif %}
-                  {% if document.exchange %}
-                  <tr>
-                    <td class="total-label">{{ labels.exchange }} ({{ account.currency }})</td>
-                    <td>{{ document.exchange }}</td>
-                  </tr>
-                  {% endif %}
                   <tr class="grand-total">
                     <td class="total-label">{{ labels.total }} ({{ document.currency }})</td>
                     <td>{{ document.total }}</td>
                   </tr>
+                  {% if document.exchange %}
+                  <tr>
+                    <td class="total-label">{{ labels.tax }} ({{ account.currency }})</td>
+                    <td>{{ document.tax_amount_exchange }}</td>
+                  </tr>
+                  <tr>
+                    <td class="total-label">{{ labels.total }} ({{ account.currency }})</td>
+                    <td>{{ document.total_exchange }}</td>
+                  </tr>
+                  {% endif %}
                 </table>
 
               </td>

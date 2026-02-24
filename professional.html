@@ -53,8 +53,7 @@
       <td colspan="2">
         <h3 class="txt">{{account.full_name}}</h3>
         <address>{{ account.formatted_address | newline_to_br }}</address>
-        {% if account.email != blank %}<p><a href="mailto:{{account.email}}">{{ account.email }}</a></p>{% endif %}
-        {% if account.web != blank %}<p><a href="{{account.web}}">{{ account.web }}</a></p>{% endif %}
+        {% if account.registration_number != blank %} <p>{{ labels.registration_number }}: {{ account.registration_number }}</p> {% endif %}
         {% if account.tax_id != blank %}<p>{{labels.tax_id}}: {{account.tax_id}}</p>{% endif %}
       </td>
     </tr>
@@ -108,14 +107,13 @@
                 {% for tax in document.taxes %}
                   <p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>
                   {% endfor %}
-                  <p style="font-size: 110%"
-                    ><strong
-                      >{{labels.total}} ({{document.currency}}): {{document.total}}</strong
-                    ></p
-                  >
-                  {% if document.exchange %}<p
-                    >{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p
-                  >{% endif %}
+                  <p style="font-size: 110%">
+                    <strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong>
+                  </p>
+                  {% if document.exchange %}
+                    <p>{{labels.tax}} ({{account.currency}}): {{document.tax_amount_exchange}}</p>
+                    <p>{{labels.total}} ({{account.currency}}): {{document.total_exchange}}</p>
+                  {% endif %}
                 </td>
               </tr>
             </tfoot>
