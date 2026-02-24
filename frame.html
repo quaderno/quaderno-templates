@@ -8,9 +8,7 @@
   <meta name="pdfkit-margin_right" content="13mm">
   <meta name="pdfkit-margin_bottom" content="13mm">
   <meta name="pdfkit-margin_left" content="13mm">
-  
-  <title>{{document.number}}</title>
-  
+
   <style>
     /* reset */
     * { box-sizing: border-box; }
@@ -50,15 +48,15 @@
       width: 100%;
       border-collapse: collapse;
       /* borders: left, right, bottom only */
-      border-left: 3px solid #000;
-      border-right: 3px solid #000;
-      border-bottom: 3px solid #000;
+      border-left: 3px solid {{account.color_scheme}};
+      border-right: 3px solid {{account.color_scheme}};
+      border-bottom: 3px solid {{account.color_scheme}};
       border-top: none; 
     }
     
     /* silent header border */
     .frame-top-bar {
-      background-color: #000;
+      background-color: {{account.color_scheme}};
       height: 3px;
       padding: 0;
       line-height: 0;
@@ -84,14 +82,14 @@
     .logo-img { max-width: 250px; max-height: 120px; display: block; }
 
     /* metadata */
-    .divider-bottom { border-bottom: 3px solid #000; }
+    .divider-bottom { border-bottom: 3px solid {{account.color_scheme}}; }
     
     .meta-label { 
       font-weight: 600; 
       font-size: 9pt; 
       display: block; 
       margin-bottom: 2px; 
-      color: #000000; 
+      color: {{account.color_scheme}};
     }
     .meta-value { font-size: 9pt; display: block; margin-bottom: 5px; }
 
@@ -101,7 +99,7 @@
       font-size: 9pt; 
       margin-bottom: 5px; 
       display: block; 
-      color: #000000; 
+      color: {{account.color_scheme}};
     }
     .address-body { font-size: 9pt; line-height: 1.4; }
 
@@ -111,29 +109,29 @@
       padding-bottom: 10px;
       font-size: 9pt;
       padding-top: 15px;
-      color: #000000;
+      color: {{account.color_scheme}};
     }
     
     /* totals section */
     .totals-table td { padding: 4px 0; text-align: right; }
     
-    .col-total-label { width: 43%; color: #000000; } 
+    .col-total-label { width: 43%; color: {{account.color_scheme}}; }
     .col-total-value { width: 57%; }
 
-    .total-row td { 
-      padding-top: 8px; 
-      font-weight: 600; 
-      font-size: 9pt; 
-      color: #000000;
+    .total-row td {
+      padding-top: 8px;
+      font-weight: 600;
+      font-size: 9pt;
+      color: {{account.color_scheme}};
     }
 
     /* tax breakdown */
     .tax-breakdown { margin-top: 25px; font-size: 9pt; }
-    .tax-header th { 
-      border-bottom: 2px solid #000; 
-      padding-bottom: 5px; 
-      color: #000; 
-      font-weight: 600; 
+    .tax-header th {
+      border-bottom: 2px solid {{account.color_scheme}};
+      padding-bottom: 5px;
+      color: {{account.color_scheme}};
+      font-weight: 600;
       text-align: right;
       font-size: 9pt;
     }
@@ -142,7 +140,7 @@
 
     /* footer */
     .footer-cell {
-      border-top: 3px solid #000;
+      border-top: 3px solid {{account.color_scheme}};
       padding: 15px;
     }
     .footer-content {
@@ -150,11 +148,11 @@
       line-height: 1.3;
     }
     
-    .info-label { 
-      font-weight: 600; 
-      display: block; 
-      margin-bottom: 2px; 
-      color: #000000;
+    .info-label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+      color: {{account.color_scheme}};
     }
     .legal-text { margin-top: 10px; color: #364153; text-align: justify; }
 
@@ -215,7 +213,7 @@
           <table style="width: 100%">
             <tr>
               <!-- title box -->
-              <td style="width: 50%; vertical-align: middle; text-align: left; background-color: #000; color: #fff; padding: 15px;">
+              <td style="width: 50%; vertical-align: middle; text-align: left; background-color: {{account.color_scheme}}; color: #fff; padding: 15px;">
                 <h1 class="header-title">{{ title }}</h1>
                 {% if document.subject != blank %}
                   <div class="subject" style="color: #ccc;">{{ document.subject }}</div>
@@ -254,7 +252,7 @@
                 {% elsif document.related_document_type != blank %}
                   <span class="meta-label">{{ labels.related_document }}:</span>
                   <span class="meta-value">
-                    {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}}<br>
+                    {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}<br>
                     {{document.related_document_date | date: 'default', contact.country}}
                   </span>
                 {% endif %}

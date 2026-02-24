@@ -8,9 +8,7 @@
   <meta name="pdfkit-margin_right" content="13mm">
   <meta name="pdfkit-margin_bottom" content="13mm">
   <meta name="pdfkit-margin_left" content="13mm">
-  
-  <title>{{ document.number }}</title>
-  
+
   <style>
     /* reset */
     * { box-sizing: border-box; }
@@ -26,7 +24,7 @@
     }
 
     /* typography */
-    h1, .heading-text, .bold, th, .footer-label, .meta-label, .address-header, strong, b { color: #0C0A09; }
+    h1, .heading-text, .bold, th, .footer-label, .meta-label, .address-header, strong, b { color: {{account.color_scheme}}; }
     strong, b, h1, h2, h3, h4, h5, h6 { font-weight: 600; }
 
     .uppercase { text-transform: uppercase; }
@@ -49,7 +47,7 @@
       font-weight: 600;
       margin: 0; 
       text-transform: uppercase;
-      color: #0C0A09;
+      color: {{account.color_scheme}};
     }
     .subject { margin-top: 5px; font-size: 10pt; color: #57534D; }
     
@@ -87,7 +85,7 @@
       background-color: #F5F5F4;
       font-weight: 600;
       padding: 15px 20px;
-      color: #0C0A09;
+      color: {{account.color_scheme}};
     }
     /* rounded corners */
     .items-header td:first-child { border-top-left-radius: 20px; }
@@ -116,7 +114,7 @@
     .total-row-last td:last-child { border-bottom-right-radius: 20px; }
 
     .total-label {
-      color: #0C0A09; 
+      color: {{account.color_scheme}}; 
       font-weight: 600;
       text-align: right; 
       white-space: nowrap; 
@@ -130,7 +128,7 @@
     .total-final-label, .total-final-value {
       font-size: 9pt; 
       font-weight: 600; 
-      color: #0C0A09;
+      color: {{account.color_scheme}};
       text-align: right;
       padding-top: 5px;
     }
@@ -150,7 +148,7 @@
       background-color: transparent;
       font-weight: 600;
       padding: 10px 20px;
-      color: #0C0A09;
+      color: {{account.color_scheme}};
       font-size: 9pt;
       text-align: right;
     }
@@ -175,7 +173,7 @@
       font-weight: 600; 
       display: block; 
       margin-bottom: 2px; 
-      color: #0C0A09;
+      color: {{account.color_scheme}};
     }
     .legal-text { margin-top: 15px; color: #57534D; text-align: justify; }
 
@@ -272,7 +270,7 @@
                 {% elsif document.related_document_type != blank %}
                   <span class="meta-label">{{ labels.related_document }}</span>
                   <span class="meta-value">
-                    {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}}<br>
+                    {{ document.related_document_type | localize_document_type: labels }} {{ document.related_document_number }}<br>
                     {{document.related_document_date | date: 'default', contact.country}}
                   </span>
                 {% endif %}

@@ -45,7 +45,7 @@
       {% if account.logo_url != blank %}
       <tr>
         <!-- logo -->
-        <td colspan="2"><img src="{{ account.logo_url }}" class="w200" align="Logo"></td>
+        <td colspan="2"><img src="{{ account.logo_url }}" class="w200" alt="Logo"></td>
       </tr>
       {% endif %}
       <tr>
@@ -106,7 +106,7 @@
                 <td colspan="4">
                   <p>{{labels.subtotal}}: {{document.subtotal}}</p>
                   {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount}}</p>{% endif %}
-                  {% for tax in document.taxes %}<p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}{% endfor %}
+                  {% for tax in document.taxes %}<p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>{% endfor %}
                   <p style="font-size:110%"><strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong></p>
                   {% if document.exchange %}<p>{{labels.exchange}} ({{account.currency}}): {{document.exchange}}</p>{% endif %}
                 </td>

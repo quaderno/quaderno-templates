@@ -8,9 +8,7 @@
   <meta name="pdfkit-margin_right" content="15mm">
   <meta name="pdfkit-margin_bottom" content="15mm">
   <meta name="pdfkit-margin_left" content="15mm">
-  
-  <title>{{ document.number }}</title>
-  
+
   <style>
     /* reset */
     * { box-sizing: border-box; }
@@ -18,7 +16,7 @@
     
     /* utilities */
     .uppercase { text-transform: uppercase; }
-    .bold { font-weight: bold; color: #09090B; }
+    .bold { font-weight: bold; color: {{account.color_scheme}}; }
     .right { text-align: right; }
     .left { text-align: left; }
     
@@ -29,7 +27,7 @@
 
     /* footer */
     .footer-wrapper {
-      border-top: 2px solid #09090B;
+      border-top: 2px solid {{account.color_scheme}};
       padding-top: 10px;
       margin-top: 10px;
     }
@@ -38,18 +36,18 @@
 
     /* header */
     .logo-img { max-width: 200px; max-height: 120px; display: block; }
-    h1 { font-size: 22pt; margin: 0; text-transform: uppercase; font-weight: bold; color: #09090B; }
+    h1 { font-size: 22pt; margin: 0; text-transform: uppercase; font-weight: bold; color: {{account.color_scheme}}; }
     .subject { margin-top: 5px; font-size: 10pt; color: #52525C; }
 
     /* info blocks */
-    .info-label { font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 2px; color: #09090B; font-size: 8pt; }
+    .info-label { font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 2px; color: {{account.color_scheme}}; font-size: 8pt; }
     .info-value { margin-bottom: 10px; display: block; }
     .address-lines { white-space: pre-wrap; }
 
     /* items table */
     .items-header td {
       font-weight: bold; text-transform: uppercase;
-      border-bottom: 2px solid #09090B; color: #09090B;
+      border-bottom: 2px solid {{account.color_scheme}}; color: {{account.color_scheme}};
       padding: 10px 0 5px 0;
     }
     .item-row td {
@@ -60,12 +58,12 @@
     /* totals */
     .totals-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     .totals-table td { padding: 4px 0; text-align: right; }
-    .total-label { width: 50%; font-weight: bold; color: #09090B; }
-    .grand-total td { border-top: 2px solid #09090B; border-bottom: 2px solid #09090B; padding: 8px 0; font-size: 11pt; font-weight: bold; color: #09090B; }
+    .total-label { width: 50%; font-weight: bold; color: {{account.color_scheme}}; }
+    .grand-total td { border-top: 2px solid {{account.color_scheme}}; border-bottom: 2px solid {{account.color_scheme}}; padding: 8px 0; font-size: 11pt; font-weight: bold; color: {{account.color_scheme}}; }
 
     /* tax breakdown */
     .tax-breakdown { margin-top: 25px; font-size: 8pt; }
-    .tax-header th { border-bottom: 2px solid #09090B; padding-bottom: 5px; color: #09090B; font-weight: bold; text-transform: uppercase; }
+    .tax-header th { border-bottom: 2px solid {{account.color_scheme}}; padding-bottom: 5px; color: {{account.color_scheme}}; font-weight: bold; text-transform: uppercase; }
 
     /* print rules */
     @media print {
