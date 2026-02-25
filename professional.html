@@ -22,7 +22,6 @@
     .fs150per {font-size:150%}
     .right {text-align:right}
     .left {text-align:left}
-    .verification-code {margin: 10px 0; text-align: right; font-size: small;}
     table {width:100%; border:none}
     table tr td {padding:5px}
     table#items {margin:25px 0; border-collapse:collapse;}
@@ -33,7 +32,11 @@
     #details p {margin:0}
     #legal {font-size:8pt}
     #legal p {margin:40px 0 20px}
-    /* css rules for printing */
+
+    /* verification code */
+    .verification-code {margin: 10px 0; text-align: right; font-size: small;}
+
+    /* print optimizations */
     @media print {
       body {-webkit-print-color-adjust:exact}
       #items tr {page-break-inside:avoid}
