@@ -17,19 +17,17 @@
     a:hover {color:#000; text-decoration:none}
     address {font-style:normal}
     table {width:100%; border:none; font-size:100%}
-    table#items {margin:25px 0; border-collapse:collapse}
-    table#items thead tr th {padding:5px; color:#fff; background-color:{{account.color_scheme}}}
-    table#items tbody tr td {padding:5px; border-bottom:1px solid {{account.color_scheme}}}
-    table#items tfoot tr td {padding:0 5px; border-bottom: 2px solid {{account.color_scheme}}; text-align:right}
+    table.items {margin:25px 0; border-collapse:collapse}
+    table.items thead tr th {padding:5px; color:#fff; background-color:{{account.color_scheme}}}
+    table.items tbody tr td {padding:5px; border-bottom:1px solid {{account.color_scheme}}}
+    table.items tfoot tr td {padding:0 5px; border-bottom: 2px solid {{account.color_scheme}}; text-align:right}
     #footer {text-align:center; color:#666; font-size:8pt}
     #footer a {color:#666;}
     #legal {margin:20px 0}
     .w200 {width:200px}
-    .w50per {width:50%}
     .right {text-align:right}
     .left {text-align:left}
     .center {text-align:center}
-    .topspace20 {padding-top:20px}
 
     /* verification code */
     .verification-code {margin: 10px 0; text-align: right; font-size: small;}
@@ -85,10 +83,10 @@
       <tr>
         <td colspan="2">
           <!-- items table -->
-          <table id="items">
+          <table class="items">
             <thead>
               <tr>
-                <th class="left w50per">{{labels.description}}</th>
+                <th class="left">{{labels.description}}</th>
                 <th class="left">{{labels.quantity}}</th>
                 <th class="left">{{labels.unit_price}}</th>
                 <th class="right">{{labels.amount}}</th>
@@ -109,7 +107,7 @@
                 <td colspan="4">
                   <p>{{labels.subtotal}}: {{document.subtotal}}</p>
                   {% if document.discount > 0 %}<p>{{labels.discount}}: {{document.discount}}</p>{% endif %}
-                  {% for tax in document.taxes %}<p>{{tax.label}} × {{tax.taxable_base | precision}}: {{tax.amount}}</p>{% endfor %}
+                  {% if document.taxes %}<p>{{ labels.tax | default: 'Tax' }}: {{document.tax_amount}}</p>{% endif %}
                   <p style="font-size:110%"><strong>{{labels.total}} ({{document.currency}}): {{document.total}}</strong></p>
                   {% if document.exchange %}
                     <p>{{labels.tax}} ({{account.currency}}): {{document.tax_amount_exchange}}</p>
@@ -120,6 +118,29 @@
             </tfoot>
           </table>
 
+          <!-- tax breakdown -->
+          {% if document.taxes.size > 0 %}
+            <table class="items">
+              <thead>
+                <tr>
+                  <th class="left">{{ labels.tax_breakdown }}</th>
+                  <th class="left">{{ labels.taxable_base }}</th>
+                  <th class="left">{{ labels.rate }}</th>
+                  <th class="right">{{ labels.amount }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for document_tax in document.taxes %}
+                <tr>
+                  <td class="left">{{ document_tax.label }}</td>
+                  <td class="left">{{ document_tax.taxable_base }}</td>
+                  <td class="left">{{ document_tax.rate }}%</td>
+                  <td class="right">{{ document_tax.amount }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
         </td>
       </tr>
       <tr>
