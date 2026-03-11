@@ -16,7 +16,7 @@
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 0;
+      padding: 20px;
       background: #fff;
       color: #525252;
       font-family: "Helvetica Neue", Arial, sans-serif;
@@ -324,12 +324,12 @@
       width: 100%;
     }
     .financial-zone-breakdown {
-      width: 55%;
+      width: 65%;
       vertical-align: top;
       padding-right: 20px;
     }
     .financial-zone-summary {
-      width: 45%;
+      width: 35%;
       vertical-align: top;
     }
 
@@ -371,7 +371,7 @@
       width: 100%;
     }
     .summary-label {
-      text-align: right;
+      text-align: left;
       padding-right: 8px;
     }
     .summary-value {
@@ -411,9 +411,10 @@
       line-height: 1.4;
       padding-bottom: 5px;
       border-bottom: 1px solid #171717;
+      width: 65%; /* matches Tax Breakdown column width */
     }
     .currency-table {
-      width: 100%;
+      width: 65%; /* matches Tax Breakdown column width */
     }
     .currency-row td {
       font-size: 9px;
@@ -773,7 +774,7 @@
           </table>
           <!-- ════════════════════════════════════════════════════════
                SECTION 5 — FINANCIAL ZONE
-               Tax Breakdown (55%, left) and Summary (45%, right) side by side.
+               Tax Breakdown (65%, left) and Summary (35%, right) side by side.
                No section title labels — column headers are self-explanatory.
                Inner tables use <tbody> only — no <tfoot> needed.
                ════════════════════════════════════════════════════════ -->
@@ -787,9 +788,9 @@
                 <table class="tax-breakdown-table">
                   <thead>
                     <tr>
-                      <th class="col-left">{{ labels.tax | default: 'Tax name' }}</th>
+                      <th class="col-left">{{ labels.tax | default: 'Tax' }}</th>
                       <th class="col-right">{{ labels.taxable_base | default: 'Taxable amount' }}</th>
-                      <th class="col-right">{{ labels.rate | default: 'Tax rate' }}</th>
+                      <th class="col-right">{{ labels.rate }}</th>
                       <th class="col-right">{{ labels.tax_amount | default: 'Total tax per rate' }}</th>
                     </tr>
                   </thead>
@@ -806,7 +807,7 @@
                          Total taxable base: document.subtotal used as best available
                          aggregate. Confirm dedicated variable with Quaderno. -->
                     <tr class="tax-total-row">
-                      <td>{{ labels.tax | default: 'Total Tax' }}*</td>
+                      <td>{{ labels.tax | default: 'Tax' }}*</td>
                       <td class="col-right">{{ document.subtotal }}</td>
                       <td class="col-right">—</td>
                       <td class="col-right">{{ document.tax_amount }}</td>
@@ -829,7 +830,7 @@
                   </tr>
                   {% endif %}
                   <tr class="summary-row">
-                    <td class="summary-label">{{ labels.tax | default: 'Total Tax' }}*</td>
+                    <td class="summary-label">{{ labels.tax | default: 'Tax' }}*</td>
                     <td class="summary-value">{{ document.tax_amount }}</td>
                   </tr>
                   <tr class="summary-total-row">
@@ -858,45 +859,46 @@
           <!-- ════════════════════════════════════════════════════════
                SECTION 6 — CURRENCY CONVERSION (conditional)
                Entire block hidden when document.exchange is falsy.
-               labels.exchange resolves to "Exchange" per docs — using
-               'Currency conversion' as default. CLAUDE.md has a
-               contradiction (line 224: "EUR Equivalent", line 226:
-               "Currency Conversion") — resolve with Quaderno.
                ════════════════════════════════════════════════════════ -->
           {% if document.exchange %}
           <div class="section"></div>
 
-          <div class="currency-section-label">{{ labels.exchange | default: 'Currency conversion' }}</div>
+          <!-- No labels.currency_conversion label exists in Quaderno.
+               Hardcoded pending localisation support. -->
+          <div class="currency-section-label">Currency conversion</div>
 
           <table class="currency-table">
             <tr class="currency-row">
-              <!-- labels.exchange_rate is not confirmed in Quaderno docs.
-                   Using with 'Exchange rate' default to avoid collision with
-                   labels.exchange (= "Exchange") used for the section heading above. -->
-              <td class="currency-label">{{ labels.exchange_rate | default: 'Exchange rate' }}</td>
+              <!-- KNOWN ISSUE: No document.exchange_date variable exists.
+                   Design spec calls for "Exchange Rate (ECB, 22 Jan 2026)"
+                   but date and source cannot be displayed. Flagged for
+                   engineering. -->
+              <td class="currency-label">Exchange rate</td>
               <td class="currency-value">1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }}</td>
             </tr>
             <tr class="currency-row">
-              <td class="currency-label">{{ labels.tax }} ({{ account.currency }})</td>
+              <!-- Asterisk matches "Total Tax*" convention in Tax Breakdown and Summary tables. -->
+              <td class="currency-label">{{ labels.tax }}* ({{ account.currency }})</td>
               <td class="currency-value">{{ document.tax_amount_exchange }}</td>
             </tr>
             <tr class="currency-row">
               <td class="currency-label">{{ labels.total }} ({{ account.currency }})</td>
               <td class="currency-value">{{ document.total_exchange }}</td>
             </tr>
+            {% if document.amount_paid > 0 %}
+            <!-- KNOWN ISSUE: document.amount_due_exchange is unconfirmed.
+                 Not in docs or existing templates. May render blank.
+                 Flagged for engineering. -->
             <tr class="currency-row">
-              <!-- document.amount_due_exchange: not confirmed in Quaderno docs.
-                   Using as best-guess variable — confirm with Quaderno (open question). -->
               <td class="currency-label">{{ labels.balance_due | default: 'Balance due' }} ({{ account.currency }})</td>
               <td class="currency-value">{{ document.amount_due_exchange }}</td>
             </tr>
+            {% endif %}
           </table>
 
-          <!-- Deposit paid note: exchange rate + date at time of payment.
-               Exact source variable unconfirmed — document.payment_details used
-               as best available. Confirm with Quaderno (open question). -->
-          {% if document.payment_details != blank %}
-          <div class="currency-deposit-note">{{ document.payment_details | newline_to_br }}</div>
+          {% if document.amount_paid > 0 %}
+          {% assign payment = document.payments | last %}
+          <div class="currency-deposit-note">Deposit paid at 1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }} on {{ payment.date | date: 'default', contact.country }} ({{ payment.amount }} {{ document.currency }})</div>
           {% endif %}
 
           {% endif %}

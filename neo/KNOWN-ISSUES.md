@@ -71,6 +71,32 @@ quote or order when tax-inclusive pricing is used.
 
 Documented in /neo/analysis/items-table-audit.md.
 
+### 6. Missing Quaderno Labels
+The following user-facing text is hardcoded because no
+Quaderno label exists for localisation:
+
+- "Currency conversion" — section title (no labels.currency_conversion)
+- "Exchange rate" — row label (labels.exchange resolves to
+  "Exchange" which is incorrect; no labels.exchange_rate exists)
+- "Deposit paid at..." — full sentence with embedded variables
+  (no label system can support this without a template engine change)
+
+Additionally, these labels are used in the template but
+are not confirmed in Quaderno's official documentation:
+- labels.shipping_address
+- labels.service_date
+- labels.registration_number
+- labels.taxable_base
+- labels.tax_amount
+- labels.amount_paid
+- labels.balance_due
+
+These may work in practice (some are used in existing
+templates) but are not guaranteed. Each has a default
+fallback value.
+
+Documented in /neo/analysis/hardcoded-labels-audit.md.
+
 ## Status
 This is a work-in-progress template. The items above
 require Quaderno engineering input before the template
