@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="{{ contact.language | default: 'en' }}">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>{{ document.number }}</title>
+  <meta name="pdfkit-page_size" content="A4">
+  <meta name="pdfkit-margin_top" content="13mm">
+  <meta name="pdfkit-margin_right" content="13mm">
+  <meta name="pdfkit-margin_bottom" content="13mm">
+  <meta name="pdfkit-margin_left" content="13mm">
+  <style>
+
+    /* ═══════════════════════════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════════════════════════ */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #525252;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 9px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+    table { border-collapse: collapse; border-spacing: 0; }
+    h1, h2, h3, h4, p { margin: 0; padding: 0; font-weight: 400; }
+    address { font-style: normal; }
+    a:link, a:visited { color: #525252; text-decoration: none; }
+    /* Override <strong> to use weight 600 — 400/600 only; 500 not used (wkhtmltopdf
+       cannot visually distinguish 400 from 500). Bold (700) also not used. */
+    strong { font-weight: 600; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       VERIFICATION CODE
+       Class reserved — element is injected by Quaderno server-side.
+       (e.g., Verifactu QR codes, digital signatures)
+       ═══════════════════════════════════════════════════════════════ */
+    .verification-code {
+      margin: 10px 0;
+      text-align: right;
+      font-size: 9px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       FOOTER
+       Natural flow at end of document. A page-fixed repeating footer
+       is not achievable via template CSS/HTML in Quaderno's wkhtmltopdf.
+       See /analysis/footer-audit.md and /analysis/footer-debug.md.
+       ═══════════════════════════════════════════════════════════════ */
+    .footer-wrap {
+      margin-top: 24px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 1 — HEADER
+       ═══════════════════════════════════════════════════════════════ */
+    .header-table {
+      width: 100%;
+    }
+    .header-title-cell {
+      vertical-align: top;
+      width: 70%;
+    }
+    .header-logo-cell {
+      vertical-align: top;
+      text-align: right;
+      width: 30%;
+    }
+    .title-line {
+      line-height: 1.2;
+    }
+    .doc-title {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 24px;
+      font-weight: 600;
+      color: #171717;
+      line-height: 1.2;
+    }
+    .doc-number {
+      font-size: 11px;
+      font-weight: 400;
+      color: #525252;
+      margin-top: 4px;
+    }
+    .logo-img {
+      max-width: 150px;
+      max-height: 55px;
+      border-radius: 4px;
+    }
+
+    /* ─── Status badges ───────────────────────────────────────────── */
+    /* Shape: slightly rounded, inline next to document title.
+       Border: 1px at 10% opacity of the text color.
+       Draft: dashed border. All others: solid.                        */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      vertical-align: middle;
+      margin-left: 8px;
+      line-height: 1.4;
+    }
+    .badge-draft {
+      background-color: #EBEBEB;
+      color: #525252;
+      border: 1px dashed rgba(82, 82, 82, 0.1);
+    }
+    .badge-outstanding {
+      background-color: #FFEDD4;
+      color: #9F2D00;
+      border: 1px solid rgba(159, 45, 0, 0.1);
+    }
+    .badge-paid {
+      background-color: #A4F4C0;
+      color: #016630;
+      border: 1px solid rgba(1, 102, 48, 0.1);
+    }
+    .badge-overdue {
+      background-color: #FFE2E2;
+      color: #9F0712;
+      border: 1px solid rgba(159, 7, 18, 0.1);
+    }
+
+    /* ─── Payment method (shown inline after badge when state = paid) */
+    .payment-method {
+      display: inline;
+      font-size: 8px;
+      font-weight: 400;
+      color: #737373;
+      font-style: italic;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════ */
+    .footer-bar {
+      height: 6px;
+      border-radius: 3px;
+      background-color: {{ account.color_scheme }};
+      margin-bottom: 6px;
+    }
+    .footer-inner {
+      width: 100%;
+      font-size: 9px;
+    }
+    .footer-invoice     { text-align: left; }
+    .footer-invoice-label { font-weight: 600; color: #171717; }
+    .footer-invoice-value { font-weight: 400; color: #525252; }
+    .footer-pagination {
+      text-align: right;
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+    }
+
+    /* ─── Page numbers ────────────────────────────────────────────────
+       @page margin boxes and JS URL-param substitution (vars.page)
+       both require features unavailable in Quaderno's wkhtmltopdf
+       build. Pagination is omitted from the footer for now.
+       TODO: Quaderno engineering to confirm supported mechanism
+             for "Page X of Y" in the main body HTML template.        */
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION SPACING
+       ═══════════════════════════════════════════════════════════════ */
+    .section {
+      margin-top: 24px;
+    }
+    /* Simple 1px line divider — used between Metadata and Parties.
+       Provides 24px margin above (from .section) and 24px below. */
+    .divider-line {
+      margin-top: 24px;
+      border-top: 1px solid #E5E5E5;
+      margin-bottom: 24px;
+    }
+    /* Colored bar divider — same style as footer bar.
+       Used between Parties and Items table. */
+    .divider-bar {
+      margin-top: 24px;
+      height: 6px;
+      border-radius: 3px;
+      background-color: {{ account.color_scheme }};
+      margin-bottom: 24px;
+    }
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 1b — SUBJECT
+       Standalone div between header and metadata. NOT a table row.
+       ═══════════════════════════════════════════════════════════════ */
+    .subject-section {
+      margin-top: 8px;
+      font-size: 9px;
+      line-height: 1.4;
+      color: #525252;
+    }
+    .subject-label {
+      font-weight: 600;
+      color: #171717;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 2 — METADATA
+       ═══════════════════════════════════════════════════════════════ */
+    .meta-table {
+      width: 100%;
+    }
+    .meta-cell {
+      width: 33.33%;
+      vertical-align: top;
+      padding: 8px 0;
+    }
+    /* Row 1 border: only when items overflow to a second row (>3 items) */
+    .meta-cell-bordered {
+      border-bottom: 1px solid #E5E5E5;
+    }
+    .meta-label {
+      display: block;
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      line-height: 1.4;
+    }
+    .meta-value {
+      display: block;
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+      line-height: 1.4;
+    }
+    .related-doc-link {
+      color: #525252;
+      text-decoration: underline;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 3 — PARTIES
+       ═══════════════════════════════════════════════════════════════ */
+    .parties-table {
+      width: 100%;
+    }
+    .party-cell {
+      vertical-align: top;
+      padding-right: 16px;
+    }
+    .party-cell-last {
+      padding-right: 0;
+    }
+    /* 2-column layout (no shipping address) */
+    .party-cell-2col { width: 50%; }
+    /* 3-column layout (shipping address present) */
+    .party-cell-3col { width: 33%; }
+    .party-section-label {
+      display: block;
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .party-name {
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      line-height: 1.4;
+    }
+    .party-body {
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+      line-height: 1.4;
+    }
+    .party-field-label {
+      font-weight: 600;
+      color: #171717;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 4 — LINE ITEMS
+       ═══════════════════════════════════════════════════════════════ */
+    .items-table {
+      width: 100%;
+    }
+    .items-header th {
+      font-size: 8px;
+      font-weight: 600;
+      color: #171717;
+      padding: 5px 6px;
+      border-bottom: 1px solid #171717;
+      line-height: 1.4;
+    }
+    .items-header th.col-left {
+      text-align: left;
+    }
+    .items-header th.col-right {
+      text-align: right;
+    }
+    .item-row td {
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+      padding: 5px 6px;
+      border-bottom: 1px solid #E5E5E5;
+      line-height: 1.4;
+      vertical-align: top;
+    }
+    .item-row td.col-right {
+      text-align: right;
+    }
+    /* Last item row: no bottom border (table pattern rule) */
+    .item-row:last-child td {
+      border-bottom: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 5 — FINANCIAL ZONE
+       ═══════════════════════════════════════════════════════════════ */
+    .financial-zone {
+      width: 100%;
+    }
+    .financial-zone-breakdown {
+      width: 55%;
+      vertical-align: top;
+      padding-right: 20px;
+    }
+    .financial-zone-summary {
+      width: 45%;
+      vertical-align: top;
+    }
+
+    /* ─── Tax breakdown table ─────────────────────────────────── */
+    .tax-breakdown-table {
+      width: 100%;
+    }
+    .tax-breakdown-table thead th {
+      font-size: 8px;
+      font-weight: 600;
+      color: #171717;
+      padding: 5px 6px;
+      border-bottom: 1px solid #171717;
+      line-height: 1.4;
+    }
+    .tax-breakdown-table thead th.col-left  { text-align: left; }
+    .tax-breakdown-table thead th.col-right { text-align: right; }
+    .tax-body-row td {
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+      padding: 5px 6px;
+      border-bottom: 1px solid #E5E5E5;
+      line-height: 1.4;
+    }
+    .tax-body-row td.col-right { text-align: right; }
+    /* Total row: weight 600 + primary color — matches Total/Balance Due in summary */
+    .tax-total-row td {
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      padding: 5px 6px;
+      line-height: 1.4;
+    }
+    .tax-total-row td.col-right { text-align: right; }
+
+    /* ─── Summary table ───────────────────────────────────────── */
+    .summary-table {
+      width: 100%;
+    }
+    .summary-label {
+      text-align: right;
+      padding-right: 8px;
+    }
+    .summary-value {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .summary-row td {
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+      padding: 4px 6px;
+      border-bottom: 1px solid #E5E5E5;
+      line-height: 1.4;
+    }
+    /* Total and Balance due: weight 500, primary color */
+    .summary-total-row td,
+    .balance-due-row td {
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      padding: 4px 6px;
+      border-bottom: 1px solid #E5E5E5;
+      line-height: 1.4;
+    }
+    /* Last summary row: no bottom border (table pattern rule) */
+    .summary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 6 — CURRENCY CONVERSION
+       ═══════════════════════════════════════════════════════════════ */
+    .currency-section-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: #171717;
+      line-height: 1.4;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #171717;
+    }
+    .currency-table {
+      width: 100%;
+    }
+    .currency-row td {
+      font-size: 9px;
+      padding: 5px 6px;
+      border-bottom: 1px solid #E5E5E5;
+      line-height: 1.4;
+    }
+    .currency-label {
+      font-weight: 600;
+      color: #737373;
+    }
+    .currency-value {
+      font-weight: 400;
+      color: #737373;
+      text-align: right;
+      white-space: nowrap;
+    }
+    /* Last currency row: no bottom border (table pattern rule) */
+    .currency-table tr:last-child td {
+      border-bottom: none;
+    }
+    .currency-deposit-note {
+      font-size: 8px;
+      font-weight: 400;
+      color: #737373;
+      font-style: italic;
+      padding: 6px 0 0 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION 7 — OTHER INFO
+       ═══════════════════════════════════════════════════════════════ */
+    .other-info-table {
+      width: 100%;
+    }
+    .other-info-cell {
+      vertical-align: top;
+    }
+    .other-info-half {
+      width: 50%;
+    }
+    .other-info-half-left {
+      padding-right: 15px;
+    }
+    .other-info-label {
+      display: block;
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .other-info-value {
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+      line-height: 1.4;
+    }
+    .legal-text {
+      font-size: 8px;
+      font-weight: 400;
+      color: #737373;
+      line-height: 1.4;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       PRINT
+       ═══════════════════════════════════════════════════════════════ */
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      /* thead: table-header-group intentionally NOT set.
+         CLAUDE.md specifies "no header or column headers repeated on subsequent
+         pages". Setting it would cause items table column headers to repeat. */
+      .item-row { page-break-inside: avoid; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION 1 — HEADER
+       Two columns: title/badge/number (left 70%), logo (right 30%)
+       ════════════════════════════════════════════════════════ -->
+  <table class="header-table">
+            <tr>
+              <td class="header-title-cell">
+
+                <div class="title-line">
+                  <!-- Document title -->
+                  <h1 class="doc-title">{{ title }}</h1>
+
+                  <!-- Status badge
+                       No labels.* exist for document states — using
+                       document.state | capitalize (e.g. "paid" → "Paid") -->
+                  {% assign state = document.state %}
+                  {% if state == "draft" %}
+                    <span class="badge badge-draft">{{ document.state | capitalize }}</span>
+                  {% elsif state == "outstanding" %}
+                    <span class="badge badge-outstanding">{{ document.state | capitalize }}</span>
+                  {% elsif state == "paid" %}
+                    <span class="badge badge-paid">{{ document.state | capitalize }}</span>
+                  {% elsif state == "overdue" %}
+                    <span class="badge badge-overdue">{{ document.state | capitalize }}</span>
+                  {% endif %}
+
+                  <!-- Payment method — only when status is Paid -->
+                  {% if document.state == "paid" %}
+                    {% assign payment = document.payments | last %}
+                    {% if payment.payment_method_text != blank %}
+                      <span class="payment-method">{{ payment.payment_method_text }}</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+
+                <!-- Document number -->
+                <div class="doc-number">{{ document.number }}</div>
+
+              </td>
+              <td class="header-logo-cell">
+                <!-- Logo — conditional -->
+                {% if account.logo_url != blank %}
+                  <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}">
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+
+          <!-- ════════════════════════════════════════════════════════
+               SECTION 1b — SUBJECT
+               Standalone div between header and metadata.
+               margin-top: 8px separates it from the header above.
+               ════════════════════════════════════════════════════════ -->
+          {% if document.subject != blank %}
+          <div class="subject-section">
+            <span class="subject-label">{{ labels.subject }}:</span>
+            {{ document.subject }}
+          </div>
+          {% endif %}
+
+          <!-- ════════════════════════════════════════════════════════
+               SECTION 2 — METADATA (flowing layout)
+               Build array in rendering order, loop 3 per row.
+               Order: Issue Date (always), Due Date (cond.), Service Date (cond.),
+                      PO Number (cond.), Valid Until (cond.), Referenced Doc (cond.)
+               Row border: applied to row 1 cells only when array size > 3.
+               ════════════════════════════════════════════════════════ -->
+          {% comment %}
+            Build metadata item list using append+split (push is not available
+            in Quaderno's Liquid). Always starts with issue_date. Conditional
+            items append with pipe separator; split produces the final array.
+          {% endcomment %}
+          {% assign meta_str = "issue_date" %}
+          {% if document.due_date != blank %}{% assign meta_str = meta_str | append: "|due_date" %}{% endif %}
+          {% if document.service_date != blank %}{% assign meta_str = meta_str | append: "|service_date" %}{% endif %}
+          {% if document.po_number != blank %}{% assign meta_str = meta_str | append: "|po_number" %}{% endif %}
+          {% if document.valid_until != blank %}{% assign meta_str = meta_str | append: "|valid_until" %}{% endif %}
+          {% if document.related_document_type != blank %}{% assign meta_str = meta_str | append: "|related_document" %}{% endif %}
+          {% assign meta_items = meta_str | split: "|" %}
+
+          <div class="section"></div>
+
+          <table class="meta-table">
+            {% for item in meta_items %}
+              {% assign idx_mod = forloop.index | modulo: 3 %}
+              {% if idx_mod == 1 %}<tr>{% endif %}
+              <td class="meta-cell{% if meta_items.size > 3 and forloop.index <= 3 %} meta-cell-bordered{% endif %}">
+                {% if item == "issue_date" %}
+                  <span class="meta-label">{{ labels.issue_date }}</span>
+                  <span class="meta-value">{{ document.issue_date | date: 'default', contact.country }}</span>
+                {% elsif item == "due_date" %}
+                  <span class="meta-label">{{ labels.due_date }}</span>
+                  <span class="meta-value">{{ document.due_date | date: 'default', contact.country }}</span>
+                {% elsif item == "service_date" %}
+                  <!-- service_date: not in Quaderno docs, pending engineering confirmation.
+                       Not listed in Quaderno Tags documentation or labels reference.
+                       Zero existing templates use it. Conditional guard above prevents
+                       rendering if variable is blank/absent. -->
+                  <span class="meta-label">{{ labels.service_date }}</span>
+                  <span class="meta-value">{{ document.service_date | date: 'default', contact.country }}</span>
+                {% elsif item == "po_number" %}
+                  <span class="meta-label">{{ labels.po_number }}</span>
+                  <span class="meta-value">{{ document.po_number }}</span>
+                {% elsif item == "valid_until" %}
+                  <span class="meta-label">{{ labels.valid_until }}</span>
+                  <span class="meta-value">{{ document.valid_until | date: 'default', contact.country }}</span>
+                {% elsif item == "related_document" %}
+                  <span class="meta-label">{{ labels.related_document }}</span>
+                  <span class="meta-value">
+                    {{ document.related_document_type | localize_document_type: labels }}
+                    <!-- Related doc number as link. href="#" is a placeholder —
+                         confirm URL variable with Quaderno (open question #3). -->
+                    <a href="#" class="related-doc-link">{{ document.related_document_number }}</a>,
+                    {{ document.related_document_date | date: 'default', contact.country }}
+                  </span>
+                {% endif %}
+              </td>
+              {% if idx_mod == 0 or forloop.last %}
+                {% if forloop.last and idx_mod == 1 %}
+                  <td class="meta-cell"></td><td class="meta-cell"></td>
+                {% elsif forloop.last and idx_mod == 2 %}
+                  <td class="meta-cell"></td>
+                {% endif %}
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </table>
+
+          <!-- ════════════════════════════════════════════════════════
+               SECTION 3 — PARTIES
+               2-column (From | Billed To) when no shipping address.
+               3-column (From | Billed To | Shipping) when shipping exists.
+               Column widths assigned via Liquid before the table.
+               ════════════════════════════════════════════════════════ -->
+          <div class="divider-line"></div>
+
+          {% if document.shipping_address != blank %}
+            {% assign party_col_class = "party-cell-3col" %}
+          {% else %}
+            {% assign party_col_class = "party-cell-2col" %}
+          {% endif %}
+
+          <table class="parties-table">
+            <tr>
+
+              <!-- From (Seller) -->
+              <td class="party-cell {{ party_col_class }}">
+                <span class="party-section-label">{{ labels.from }}</span>
+                <address class="party-body">
+                  <span class="party-name">{{ account.full_name }}</span><br>
+                  {{ account.formatted_address | newline_to_br }}
+                  {% if account.registration_number != blank %}
+                    <br><span class="party-field-label">{{ labels.registration_number }}:</span> {{ account.registration_number }}
+                  {% endif %}
+                  {% if account.tax_id != blank %}
+                    <br><span class="party-field-label">{{ labels.tax_id }}:</span> {{ account.tax_id }}
+                  {% endif %}
+                  {% if account.email != blank %}
+                    <br>{{ account.email }}
+                  {% endif %}
+                </address>
+              </td>
+
+              <!-- Billed to (Buyer) -->
+              <td class="party-cell {{ party_col_class }}{% if document.shipping_address == blank %} party-cell-last{% endif %}">
+                <span class="party-section-label">{{ labels.to }}</span>
+                <address class="party-body">
+                  <span class="party-name">{{ contact.full_name | default: document.contact }}</span>
+                  {% if contact.contact_person != blank %}
+                    <br>{{ contact.contact_person }}
+                  {% endif %}
+                  {% if contact.department != blank %}
+                    <br>{{ contact.department }}
+                  {% endif %}
+                  <br>{{ document.billing_address | newline_to_br }}
+                  {% if document.tax_id != blank %}
+                    <br><span class="party-field-label">{{ labels.tax_id }}:</span> {{ document.tax_id }}
+                  {% endif %}
+                  {% if contact.email != blank %}
+                    <br>{{ contact.email }}
+                  {% endif %}
+                </address>
+              </td>
+
+              <!-- Shipping address (conditional) -->
+              {% if document.shipping_address != blank %}
+              <td class="party-cell party-cell-3col party-cell-last">
+                <!-- labels.shipping_address may not be available — using default fallback.
+                     Confirm label variable with Quaderno (open question #6). -->
+                <span class="party-section-label">{{ labels.shipping_address | default: 'Shipping address' }}</span>
+                <address class="party-body">
+                  {{ document.shipping_address | newline_to_br }}
+                </address>
+              </td>
+              {% endif %}
+
+            </tr>
+          </table>
+
+          <!-- ════════════════════════════════════════════════════════
+               SECTION 4 — LINE ITEMS
+               Pre-scan for discounts before the table renders.
+               7 columns when any item has a discount; 6 columns otherwise.
+               Discount column (<th> and <td>) controlled by has_discounts pre-scan.
+               ════════════════════════════════════════════════════════ -->
+          <div class="divider-bar"></div>
+
+          {% assign has_discounts = false %}
+          {% for item in document.items %}
+            {% if item.discount_rate > 0 %}
+              {% assign has_discounts = true %}
+            {% endif %}
+          {% endfor %}
+
+          <table class="items-table">
+            <colgroup>
+              <!-- Description: fixed at 40% in both 6- and 7-column layouts.
+                   Only numeric columns redistribute when Discount column is hidden. -->
+              <col style="width:40%">
+              {% if has_discounts %}
+                <!-- 7 columns: Description | Qty | Unit Price | Subtotal | Discount | Tax Rate | Total -->
+                <col style="width:8%"><!-- Qty -->
+                <col style="width:11%"><!-- Unit price -->
+                <col style="width:11%"><!-- Subtotal -->
+                <col style="width:8%"><!-- Discount -->
+                <col style="width:8%"><!-- Tax rate -->
+                <col style="width:14%"><!-- Total -->
+              {% else %}
+                <!-- 6 columns: Description | Qty | Unit Price | Subtotal | Tax Rate | Total -->
+                <col style="width:10%"><!-- Qty -->
+                <col style="width:13%"><!-- Unit price -->
+                <col style="width:13%"><!-- Subtotal -->
+                <col style="width:10%"><!-- Tax rate -->
+                <col style="width:14%"><!-- Total -->
+              {% endif %}
+            </colgroup>
+            <thead>
+              <tr class="items-header">
+                <th class="col-left">{{ labels.description }}</th>
+                <th class="col-right">{{ labels.quantity }}</th>
+                <th class="col-right">{{ labels.unit_price }}</th>
+                <th class="col-right">{{ labels.subtotal }}</th>
+                {% if has_discounts %}<th class="col-right">{{ labels.discount }}</th>{% endif %}
+                <!-- labels.rate used in existing templates for Tax Rate column header -->
+                <th class="col-right">{{ labels.rate }}</th>
+                <!-- labels.total confirmed in all 8 reference templates -->
+                <th class="col-right">{{ labels.total }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in document.items %}
+              <tr class="item-row">
+                <td>{{ item.description }}</td>
+                <td class="col-right">{{ item.quantity | precision }}</td>
+                <!-- item.unit_price returns the back-calculated pre-discount,
+                     pre-tax base price. In tax-inclusive pricing mode, this
+                     differs from the customer-facing entered price. No Liquid
+                     variable exists for the entered price. Engineering
+                     confirmation needed. -->
+                <td class="col-right">{{ item.unit_price | precision }}</td>
+                <!-- item.subtotal = Qty × Unit Price (before discount, before tax) -->
+                <td class="col-right">{{ item.subtotal }}</td>
+                {% if has_discounts %}
+                  <td class="col-right">{% if item.discount_rate > 0 %}{{ item.discount_rate | precision }}%{% else %}—{% endif %}</td>
+                {% endif %}
+                {% assign has_tax1 = false %}{% assign has_tax2 = false %}{% if item.tax_1_rate != blank and item.tax_1_rate != 0 %}{% assign has_tax1 = true %}{% endif %}{% if item.tax_2_rate != blank and item.tax_2_rate != 0 %}{% assign has_tax2 = true %}{% endif %}<td class="col-right">{% if has_tax1 == false and has_tax2 == false %}—{% elsif has_tax1 and has_tax2 %}{{ item.tax_1_rate | precision }}%<br>{{ item.tax_2_rate | precision }}%{% elsif has_tax1 %}{{ item.tax_1_rate | precision }}%{% elsif has_tax2 %}{{ item.tax_2_rate | precision }}%{% endif %}</td>
+                <!-- item.total_amount = Subtotal − Discount + Tax (post-discount,
+                     post-tax per line). This differs from the Quaderno app's
+                     "Amount" column (which = item.subtotal). Neo has both a
+                     Subtotal column (item.subtotal) and a Total column
+                     (item.total_amount) — a 7-column design unique to this
+                     template. See /neo/analysis/financial-columns-debug.md. -->
+                <td class="col-right">{{ item.total_amount }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- ════════════════════════════════════════════════════════
+               SECTION 5 — FINANCIAL ZONE
+               Tax Breakdown (55%, left) and Summary (45%, right) side by side.
+               No section title labels — column headers are self-explanatory.
+               Inner tables use <tbody> only — no <tfoot> needed.
+               ════════════════════════════════════════════════════════ -->
+          <div class="section"></div>
+
+          <table class="financial-zone">
+            <tr>
+
+              <!-- Tax breakdown panel (55%) ──────────────────────── -->
+              <td class="financial-zone-breakdown">
+                <table class="tax-breakdown-table">
+                  <thead>
+                    <tr>
+                      <th class="col-left">{{ labels.tax | default: 'Tax name' }}</th>
+                      <th class="col-right">{{ labels.taxable_base | default: 'Taxable amount' }}</th>
+                      <th class="col-right">{{ labels.rate | default: 'Tax rate' }}</th>
+                      <th class="col-right">{{ labels.tax_amount | default: 'Total tax per rate' }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for document_tax in document.taxes %}
+                    <tr class="tax-body-row">
+                      <td>{{ document_tax.label | split: ' (' | first }}</td>
+                      <td class="col-right">{{ document_tax.taxable_base }}</td>
+                      <td class="col-right">{{ document_tax.rate }}%</td>
+                      <td class="col-right">{{ document_tax.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                    <!-- Total tax row: last row, no border-bottom.
+                         Total taxable base: document.subtotal used as best available
+                         aggregate. Confirm dedicated variable with Quaderno. -->
+                    <tr class="tax-total-row">
+                      <td>{{ labels.tax | default: 'Total Tax' }}*</td>
+                      <td class="col-right">{{ document.subtotal }}</td>
+                      <td class="col-right">—</td>
+                      <td class="col-right">{{ document.tax_amount }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+
+              <!-- Summary panel (45%) ────────────────────────────── -->
+              <td class="financial-zone-summary">
+                <table class="summary-table">
+                  <tr class="summary-row">
+                    <td class="summary-label">{{ labels.subtotal }}</td>
+                    <td class="summary-value">{{ document.subtotal }}</td>
+                  </tr>
+                  {% if document.discount > 0 %}
+                  <tr class="summary-row">
+                    <td class="summary-label">{{ labels.discount }}</td>
+                    <td class="summary-value">-{{ document.discount }}</td>
+                  </tr>
+                  {% endif %}
+                  <tr class="summary-row">
+                    <td class="summary-label">{{ labels.tax | default: 'Total Tax' }}*</td>
+                    <td class="summary-value">{{ document.tax_amount }}</td>
+                  </tr>
+                  <tr class="summary-total-row">
+                    <td class="summary-label">{{ labels.total }} ({{ document.currency }})</td>
+                    <td class="summary-value">{{ document.total }}</td>
+                  </tr>
+                  {% if document.amount_paid > 0 %}
+                  <tr class="summary-row">
+                    <!-- labels.amount_paid not confirmed in docs; default fallback used.
+                         Confirm label with Quaderno. -->
+                    <td class="summary-label">{{ labels.amount_paid | default: 'Amount paid' }}</td>
+                    <td class="summary-value">-{{ document.amount_paid }}</td>
+                  </tr>
+                  <tr class="balance-due-row">
+                    <!-- labels.balance_due not confirmed in docs; default fallback used.
+                         Confirm label with Quaderno. -->
+                    <td class="summary-label">{{ labels.balance_due | default: 'Balance due' }}</td>
+                    <td class="summary-value">{{ document.amount_due }}</td>
+                  </tr>
+                  {% endif %}
+                </table>
+              </td>
+
+            </tr>
+          </table>
+          <!-- ════════════════════════════════════════════════════════
+               SECTION 6 — CURRENCY CONVERSION (conditional)
+               Entire block hidden when document.exchange is falsy.
+               labels.exchange resolves to "Exchange" per docs — using
+               'Currency conversion' as default. CLAUDE.md has a
+               contradiction (line 224: "EUR Equivalent", line 226:
+               "Currency Conversion") — resolve with Quaderno.
+               ════════════════════════════════════════════════════════ -->
+          {% if document.exchange %}
+          <div class="section"></div>
+
+          <div class="currency-section-label">{{ labels.exchange | default: 'Currency conversion' }}</div>
+
+          <table class="currency-table">
+            <tr class="currency-row">
+              <!-- labels.exchange_rate is not confirmed in Quaderno docs.
+                   Using with 'Exchange rate' default to avoid collision with
+                   labels.exchange (= "Exchange") used for the section heading above. -->
+              <td class="currency-label">{{ labels.exchange_rate | default: 'Exchange rate' }}</td>
+              <td class="currency-value">1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }}</td>
+            </tr>
+            <tr class="currency-row">
+              <td class="currency-label">{{ labels.tax }} ({{ account.currency }})</td>
+              <td class="currency-value">{{ document.tax_amount_exchange }}</td>
+            </tr>
+            <tr class="currency-row">
+              <td class="currency-label">{{ labels.total }} ({{ account.currency }})</td>
+              <td class="currency-value">{{ document.total_exchange }}</td>
+            </tr>
+            <tr class="currency-row">
+              <!-- document.amount_due_exchange: not confirmed in Quaderno docs.
+                   Using as best-guess variable — confirm with Quaderno (open question). -->
+              <td class="currency-label">{{ labels.balance_due | default: 'Balance due' }} ({{ account.currency }})</td>
+              <td class="currency-value">{{ document.amount_due_exchange }}</td>
+            </tr>
+          </table>
+
+          <!-- Deposit paid note: exchange rate + date at time of payment.
+               Exact source variable unconfirmed — document.payment_details used
+               as best available. Confirm with Quaderno (open question). -->
+          {% if document.payment_details != blank %}
+          <div class="currency-deposit-note">{{ document.payment_details | newline_to_br }}</div>
+          {% endif %}
+
+          {% endif %}
+          <!-- ════════════════════════════════════════════════════════
+               SECTION 7 — OTHER INFO
+               Payment Details + Notes: side by side (50/50) when both
+               present; full width when only one exists.
+               Legal notices: always full width below, smaller text.
+               ════════════════════════════════════════════════════════ -->
+          {% assign show_payment = false %}
+          {% assign show_notes   = false %}
+          {% if document.payment_details != blank %}{% assign show_payment = true %}{% endif %}
+          {% if document.notes != blank %}{% assign show_notes = true %}{% endif %}
+
+          {% if show_payment or show_notes %}
+          <div class="section"></div>
+          <table class="other-info-table">
+            <tr>
+              {% if show_payment and show_notes %}
+                <td class="other-info-cell other-info-half other-info-half-left">
+                  <span class="other-info-label">{{ labels.payment_details }}</span>
+                  <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+                </td>
+                <td class="other-info-cell other-info-half">
+                  <span class="other-info-label">{{ labels.notes }}</span>
+                  <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+                </td>
+              {% elsif show_payment %}
+                <td class="other-info-cell" colspan="2">
+                  <span class="other-info-label">{{ labels.payment_details }}</span>
+                  <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+                </td>
+              {% elsif show_notes %}
+                <td class="other-info-cell" colspan="2">
+                  <span class="other-info-label">{{ labels.notes }}</span>
+                  <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+                </td>
+              {% endif %}
+            </tr>
+          </table>
+          {% endif %}
+
+          {% if document.legal != blank %}
+          <div class="section"></div>
+          <div class="legal-text">{{ document.legal | textilize }}</div>
+          {% endif %}
+
+  <!-- FOOTER NOTE: A page-fixed repeating footer is not achievable via
+       template CSS/HTML alone in Quaderno's wkhtmltopdf. Five approaches
+       were tested (position:fixed, tfoot+height:100%, tfoot+height:271mm,
+       tfoot+no-height, tfoot+271mm+cell-100%). All failed. This requires
+       --footer-html server-side support from Quaderno.
+       See /analysis/footer-audit.md for full documentation. -->
+  <div class="footer-wrap">
+    <div class="footer-bar"></div>
+    <table class="footer-inner">
+      <tr>
+        <td class="footer-invoice">
+          <span class="footer-invoice-label">{{ labels.invoice }}:</span>
+          <span class="footer-invoice-value">{{ document.number }}</span>
+        </td>
+        <td class="footer-pagination">Page 1 of 1</td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>
