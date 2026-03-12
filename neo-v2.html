@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="{{ contact.language | default: 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ document.number }}</title>
+  <meta name="pdfkit-page_size" content="A4">
+  <meta name="pdfkit-margin_top" content="13mm">
+  <meta name="pdfkit-margin_right" content="13mm">
+  <meta name="pdfkit-margin_bottom" content="13mm">
+  <meta name="pdfkit-margin_left" content="13mm">
+  <style>
+
+    /* reset & base */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #fff;
+      color: #525252;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 9px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+    table    { border-collapse: collapse; }
+    h1, h2, h3, h4, p { margin: 0; padding: 0; font-weight: 400; }
+    address  { font-style: normal; }
+    a:link, a:visited { color: #525252; text-decoration: none; }
+    strong   { font-weight: 600; } /* wkhtmltopdf: 400/600 only */
+
+    /* section spacing */
+    .section      { margin-top: 24px; }
+    .divider-line { margin-top: 24px; border-top: 1px solid #E5E5E5; margin-bottom: 24px; }
+    .divider-bar  { margin-top: 24px; height: 6px; border-radius: 3px; background-color: {{ account.color_scheme }}; margin-bottom: 24px; }
+
+    /* header */
+    .header-table      { width: 100%; }
+    .header-title-cell { vertical-align: top; width: 70%; }
+    .header-logo-cell  { vertical-align: top; text-align: right; width: 30%; }
+    .title-line        { line-height: 1.2; }
+    .doc-title {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 24px;
+      font-weight: 600;
+      color: #171717;
+      line-height: 1.2;
+    }
+    .doc-number { font-size: 11px; margin-top: 4px; }
+    .logo-img   { max-width: 150px; max-height: 55px; border-radius: 4px; }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    .badge-draft       { background-color: #EBEBEB; color: #525252; border: 1px dashed rgba(82,82,82,.1); }
+    .badge-outstanding { background-color: #FFEDD4; color: #9F2D00; border: 1px solid rgba(159,45,0,.1); }
+    .badge-paid        { background-color: #A4F4C0; color: #016630; border: 1px solid rgba(1,102,48,.1); }
+    .badge-overdue     { background-color: #FFE2E2; color: #9F0712; border: 1px solid rgba(159,7,18,.1); }
+
+    .payment-method {
+      display: inline;
+      font-size: 8px;
+      color: #737373;
+      font-style: italic;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* subject */
+    .subject-section { margin-top: 8px; }
+    .subject-label   { font-weight: 600; color: #171717; }
+
+    /* metadata */
+    .meta-table         { width: 100%; }
+    .meta-cell          { width: 33.33%; vertical-align: top; padding: 8px 0; }
+    .meta-cell-bordered { border-bottom: 1px solid #E5E5E5; }
+    .meta-value         { display: block; font-size: 9px; }
+    .related-doc-link   { color: #525252; text-decoration: underline; }
+
+    /* parties */
+    .parties-table     { width: 100%; }
+    .party-cell        { vertical-align: top; padding-right: 16px; }
+    .party-cell-last   { padding-right: 0; }
+    .party-cell-2col   { width: 50%; }
+    .party-cell-3col   { width: 33%; }
+    .party-name        { font-size: 9px; font-weight: 600; color: #171717; }
+    .party-body        { font-size: 9px; }
+    .party-field-label { font-weight: 600; color: #171717; }
+
+    /* shared section/field labels */
+    .meta-label,
+    .party-section-label,
+    .other-info-label { display: block; font-size: 9px; font-weight: 600; color: #171717; }
+    .party-section-label,
+    .other-info-label { margin-bottom: 4px; }
+
+    /* line items */
+    .items-table { width: 100%; }
+
+    /* shared table header: items + tax breakdown */
+    .items-header th,
+    .tax-breakdown-table thead th {
+      font-size: 8px;
+      font-weight: 600;
+      color: #171717;
+      padding: 5px 6px;
+      border-bottom: 1px solid #171717;
+    }
+
+    /* shared column alignment */
+    .items-header th.col-left,
+    .tax-breakdown-table thead th.col-left { text-align: left; }
+    .items-header th.col-right,
+    .tax-breakdown-table thead th.col-right,
+    .item-row td.col-right,
+    .tax-body-row td.col-right,
+    .tax-total-row td.col-right { text-align: right; }
+
+    /* shared data row cells: items, tax breakdown, currency conversion */
+    .item-row td,
+    .tax-body-row td,
+    .currency-row td {
+      font-size: 9px;
+      padding: 5px 6px;
+      border-bottom: 1px solid #E5E5E5;
+    }
+    .item-row td        { vertical-align: top; }
+    .item-row:last-child td { border-bottom: none; }
+
+    /* financial zone */
+    .financial-zone           { width: 100%; }
+    .financial-zone-breakdown { width: 55%; vertical-align: top; padding-right: 20px; }
+    .financial-zone-summary   { width: 45%; vertical-align: top; }
+
+    .tax-breakdown-table { width: 100%; }
+    .tax-total-row td {
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      padding: 5px 6px;
+    }
+
+    .summary-table { width: 100%; }
+    .summary-label { padding-right: 8px; }
+    .summary-value { text-align: right; white-space: nowrap; }
+    .summary-row td {
+      font-size: 9px;
+      padding: 4px 6px;
+      border-bottom: 1px solid #E5E5E5;
+    }
+    .summary-total-row td,
+    .balance-due-row td {
+      font-size: 9px;
+      font-weight: 600;
+      color: #171717;
+      padding: 4px 6px;
+      border-bottom: 1px solid #E5E5E5;
+    }
+    .summary-table tbody tr:last-child td { border-bottom: none; }
+
+    /* currency conversion */
+    .currency-section-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: #171717;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #171717;
+      width: 65%;
+    }
+    .currency-table { width: 65%; }
+    .currency-label { font-weight: 600; color: #737373; }
+    .currency-value { color: #737373; text-align: right; white-space: nowrap; }
+    .currency-table tbody tr:last-child td { border-bottom: none; }
+    .currency-deposit-note { font-size: 8px; color: #737373; font-style: italic; padding-top: 6px; }
+
+    /* other info */
+    .other-info-table     { width: 100%; }
+    .other-info-cell      { vertical-align: top; }
+    .other-info-half      { width: 50%; }
+    .other-info-half-left { padding-right: 15px; }
+    .other-info-value     { font-size: 9px; }
+    .legal-text           { font-size: 8px; color: #737373; }
+
+    /* footer */
+    .footer-wrap          { margin-top: 10px; }
+    .footer-bar           { height: 6px; border-radius: 3px; background-color: {{ account.color_scheme }}; margin-bottom: 6px; }
+    .footer-inner         { width: 100%; }
+    .footer-invoice-label { font-size: 9px; font-weight: 600; color: #171717; }
+    .footer-pagination    { text-align: right; font-size: 9px; }
+
+    /* verification code (server-injected) */
+    .verification-code { margin: 10px 0; text-align: right; font-size: 9px; }
+
+    /* print */
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      /* table-header-group omitted: column headers must not repeat on new pages */
+      .item-row { page-break-inside: avoid; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- header -->
+  <table class="header-table" role="presentation">
+    <tbody>
+      <tr>
+        <td class="header-title-cell">
+          <div class="title-line">
+            <h1 class="doc-title">{{ title }}</h1>
+            {% assign state_label = document.state | capitalize %}
+            {% if document.state == "draft" %}
+              <span class="badge badge-draft">{{ state_label }}</span>
+            {% elsif document.state == "outstanding" %}
+              <span class="badge badge-outstanding">{{ state_label }}</span>
+            {% elsif document.state == "paid" %}
+              <span class="badge badge-paid">{{ state_label }}</span>
+            {% elsif document.state == "overdue" %}
+              <span class="badge badge-overdue">{{ state_label }}</span>
+            {% endif %}
+            {% if document.state == "paid" %}
+              {% assign payment = document.payments | last %}
+              {% if payment.payment_method_text != blank %}
+                <span class="payment-method">{{ payment.payment_method_text }}</span>
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="doc-number">{{ document.number }}</div>
+        </td>
+        <td class="header-logo-cell">
+          {% if account.logo_url != blank %}
+            <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}" width="150" height="55" decoding="async">
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- subject -->
+  {% if document.subject != blank %}
+  <div class="subject-section">
+    <span class="subject-label">{{ labels.subject }}:</span>
+    {{ document.subject }}
+  </div>
+  {% endif %}
+
+  <!-- metadata: builds ordered array, renders 3 per row -->
+  {% assign meta_str = "issue_date" %}
+  {% if document.due_date != blank %}{% assign meta_str = meta_str | append: "|due_date" %}{% endif %}
+  {% if document.service_date != blank %}{% assign meta_str = meta_str | append: "|service_date" %}{% endif %}
+  {% if document.po_number != blank %}{% assign meta_str = meta_str | append: "|po_number" %}{% endif %}
+  {% if document.valid_until != blank %}{% assign meta_str = meta_str | append: "|valid_until" %}{% endif %}
+  {% if document.related_document_type != blank %}{% assign meta_str = meta_str | append: "|related_document" %}{% endif %}
+  {% assign meta_items = meta_str | split: "|" %}
+
+  <div class="section" aria-hidden="true"></div>
+
+  <table class="meta-table" role="presentation">
+    <tbody>
+      {% for item in meta_items %}
+        {% assign idx_mod = forloop.index | modulo: 3 %}
+        {% if idx_mod == 1 %}<tr>{% endif %}
+        <td class="meta-cell{% if meta_items.size > 3 and forloop.index <= 3 %} meta-cell-bordered{% endif %}">
+          {% if item == "issue_date" %}
+            <span class="meta-label">{{ labels.issue_date }}</span>
+            <span class="meta-value">{{ document.issue_date | date: 'default', contact.country }}</span>
+          {% elsif item == "due_date" %}
+            <span class="meta-label">{{ labels.due_date }}</span>
+            <span class="meta-value">{{ document.due_date | date: 'default', contact.country }}</span>
+          {% elsif item == "service_date" %}
+            <!-- service_date: see KNOWN-ISSUES.md -->
+            <span class="meta-label">{{ labels.service_date }}</span>
+            <span class="meta-value">{{ document.service_date | date: 'default', contact.country }}</span>
+          {% elsif item == "po_number" %}
+            <span class="meta-label">{{ labels.po_number }}</span>
+            <span class="meta-value">{{ document.po_number }}</span>
+          {% elsif item == "valid_until" %}
+            <span class="meta-label">{{ labels.valid_until }}</span>
+            <span class="meta-value">{{ document.valid_until | date: 'default', contact.country }}</span>
+          {% elsif item == "related_document" %}
+            <span class="meta-label">{{ labels.related_document }}</span>
+            <span class="meta-value">
+              {{ document.related_document_type | localize_document_type: labels }}
+              <!-- related doc url unconfirmed: see KNOWN-ISSUES.md -->
+              <a href="#" class="related-doc-link">{{ document.related_document_number }}</a>,
+              {{ document.related_document_date | date: 'default', contact.country }}
+            </span>
+          {% endif %}
+        </td>
+        {% if idx_mod == 0 or forloop.last %}
+          {% if forloop.last and idx_mod == 1 %}
+            <td class="meta-cell" aria-hidden="true"></td><td class="meta-cell" aria-hidden="true"></td>
+          {% elsif forloop.last and idx_mod == 2 %}
+            <td class="meta-cell" aria-hidden="true"></td>
+          {% endif %}
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- parties -->
+  <div class="divider-line" aria-hidden="true"></div>
+
+  {% if document.shipping_address != blank %}
+    {% assign party_col_class = "party-cell-3col" %}
+  {% else %}
+    {% assign party_col_class = "party-cell-2col" %}
+  {% endif %}
+
+  <table class="parties-table" role="presentation">
+    <tbody>
+      <tr>
+        <td class="party-cell {{ party_col_class }}">
+          <span class="party-section-label">{{ labels.from }}</span>
+          <address class="party-body">
+            <span class="party-name">{{ account.full_name }}</span><br>
+            {{ account.formatted_address | newline_to_br }}
+            {% if account.registration_number != blank %}
+              <br><span class="party-field-label">{{ labels.registration_number }}:</span> {{ account.registration_number }}
+            {% endif %}
+            {% if account.tax_id != blank %}
+              <br><span class="party-field-label">{{ labels.tax_id }}:</span> {{ account.tax_id }}
+            {% endif %}
+            {% if account.email != blank %}
+              <br>{{ account.email }}
+            {% endif %}
+          </address>
+        </td>
+        <td class="party-cell {{ party_col_class }}{% if document.shipping_address == blank %} party-cell-last{% endif %}">
+          <span class="party-section-label">{{ labels.to }}</span>
+          <address class="party-body">
+            <span class="party-name">{{ contact.full_name | default: document.contact }}</span>
+            {% if contact.contact_person != blank %}
+              <br>{{ contact.contact_person }}
+            {% endif %}
+            {% if contact.department != blank %}
+              <br>{{ contact.department }}
+            {% endif %}
+            <br>{{ document.billing_address | newline_to_br }}
+            {% if document.tax_id != blank %}
+              <br><span class="party-field-label">{{ labels.tax_id }}:</span> {{ document.tax_id }}
+            {% endif %}
+            {% if contact.email != blank %}
+              <br>{{ contact.email }}
+            {% endif %}
+          </address>
+        </td>
+        {% if document.shipping_address != blank %}
+        <td class="party-cell party-cell-3col party-cell-last">
+          <span class="party-section-label">{{ labels.shipping_address | default: 'Shipping address' }}</span>
+          <address class="party-body">
+            {{ document.shipping_address | newline_to_br }}
+          </address>
+        </td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- line items -->
+  <div class="divider-bar" aria-hidden="true"></div>
+
+  {% assign has_discounts = false %}
+  {% for item in document.items %}
+    {% if item.discount_rate > 0 %}{% assign has_discounts = true %}{% endif %}
+  {% endfor %}
+
+  <table class="items-table">
+    <colgroup>
+      <col style="width:40%">
+      {% if has_discounts %}
+        <col style="width:8%">
+        <col style="width:11%">
+        <col style="width:11%">
+        <col style="width:8%">
+        <col style="width:8%">
+        <col style="width:14%">
+      {% else %}
+        <col style="width:10%">
+        <col style="width:13%">
+        <col style="width:13%">
+        <col style="width:10%">
+        <col style="width:14%">
+      {% endif %}
+    </colgroup>
+    <thead>
+      <tr class="items-header">
+        <th class="col-left"  scope="col">{{ labels.description }}</th>
+        <th class="col-right" scope="col">{{ labels.quantity }}</th>
+        <th class="col-right" scope="col">{{ labels.unit_price }}</th>
+        <th class="col-right" scope="col">{{ labels.subtotal }}</th>
+        {% if has_discounts %}<th class="col-right" scope="col">{{ labels.discount }}</th>{% endif %}
+        <th class="col-right" scope="col">{{ labels.rate }}</th>
+        <th class="col-right" scope="col">{{ labels.total }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in document.items %}
+      <tr class="item-row">
+        <td>{{ item.description }}</td>
+        <td class="col-right">{{ item.quantity | precision }}</td>
+        <td class="col-right">{{ item.unit_price | precision }}</td>
+        <td class="col-right">{{ item.subtotal }}</td>
+        {% if has_discounts %}
+          <td class="col-right">{% if item.discount_rate > 0 %}{{ item.discount_rate | precision }}%{% else %}—{% endif %}</td>
+        {% endif %}
+        {% assign has_tax1 = false %}
+        {% assign has_tax2 = false %}
+        {% if item.tax_1_rate != blank and item.tax_1_rate != 0 %}{% assign has_tax1 = true %}{% endif %}
+        {% if item.tax_2_rate != blank and item.tax_2_rate != 0 %}{% assign has_tax2 = true %}{% endif %}
+        <td class="col-right">
+          {% if has_tax1 == false and has_tax2 == false %}
+            —
+          {% elsif has_tax1 and has_tax2 %}
+            {{ item.tax_1_rate | precision }}%<br>{{ item.tax_2_rate | precision }}%
+          {% elsif has_tax1 %}
+            {{ item.tax_1_rate | precision }}%
+          {% else %}
+            {{ item.tax_2_rate | precision }}%
+          {% endif %}
+        </td>
+        <td class="col-right">{{ item.total_amount }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- financial zone -->
+  <div class="section" aria-hidden="true"></div>
+
+  <table class="financial-zone" role="presentation">
+    <tbody>
+      <tr>
+        <td class="financial-zone-breakdown">
+          <table class="tax-breakdown-table">
+            <thead>
+              <tr>
+                <th class="col-left"  scope="col">{{ labels.tax | default: 'Tax' }}</th>
+                <th class="col-right" scope="col">{{ labels.taxable_base | default: 'Taxable amount' }}</th>
+                <th class="col-right" scope="col">{{ labels.rate }}</th>
+                <th class="col-right" scope="col">{{ labels.tax_amount | default: 'Total tax per rate' }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for document_tax in document.taxes %}
+              <tr class="tax-body-row">
+                <td>{{ document_tax.label | split: ' (' | first }}</td>
+                <td class="col-right">{{ document_tax.taxable_base }}</td>
+                <td class="col-right">{{ document_tax.rate }}%</td>
+                <td class="col-right">{{ document_tax.amount }}</td>
+              </tr>
+              {% endfor %}
+              <!-- document.subtotal as taxable base total: see KNOWN-ISSUES.md -->
+              <tr class="tax-total-row">
+                <td>{{ labels.tax | default: 'Tax' }}*</td>
+                <td class="col-right">{{ document.subtotal }}</td>
+                <td class="col-right">—</td>
+                <td class="col-right">{{ document.tax_amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td class="financial-zone-summary">
+          <table class="summary-table" role="presentation">
+            <tbody>
+              <tr class="summary-row">
+                <td class="summary-label">{{ labels.subtotal }}</td>
+                <td class="summary-value">{{ document.subtotal }}</td>
+              </tr>
+              {% if document.discount > 0 %}
+              <tr class="summary-row">
+                <td class="summary-label">{{ labels.discount }}</td>
+                <td class="summary-value">-{{ document.discount }}</td>
+              </tr>
+              {% endif %}
+              <tr class="summary-row">
+                <td class="summary-label">{{ labels.tax | default: 'Tax' }}*</td>
+                <td class="summary-value">{{ document.tax_amount }}</td>
+              </tr>
+              <tr class="summary-total-row">
+                <td class="summary-label">{{ labels.total }} ({{ document.currency }})</td>
+                <td class="summary-value">{{ document.total }}</td>
+              </tr>
+              {% if document.amount_paid > 0 %}
+              <tr class="summary-row">
+                <td class="summary-label">{{ labels.amount_paid | default: 'Amount paid' }}</td>
+                <td class="summary-value">-{{ document.amount_paid }}</td>
+              </tr>
+              <tr class="balance-due-row">
+                <td class="summary-label">{{ labels.balance_due | default: 'Balance due' }}</td>
+                <td class="summary-value">{{ document.amount_due }}</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- currency conversion -->
+  {% if document.exchange %}
+  <div class="section" aria-hidden="true"></div>
+  <!-- no labels.currency_conversion in quaderno: hardcoded, see KNOWN-ISSUES.md -->
+  <div class="currency-section-label">Currency conversion</div>
+  <table class="currency-table" role="presentation">
+    <tbody>
+      <tr class="currency-row">
+        <!-- exchange rate label: see KNOWN-ISSUES.md -->
+        <td class="currency-label">Exchange rate</td>
+        <td class="currency-value">1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }}</td>
+      </tr>
+      <tr class="currency-row">
+        <td class="currency-label">{{ labels.tax }}* ({{ account.currency }})</td>
+        <td class="currency-value">{{ document.tax_amount_exchange }}</td>
+      </tr>
+      <tr class="currency-row">
+        <td class="currency-label">{{ labels.total }} ({{ account.currency }})</td>
+        <td class="currency-value">{{ document.total_exchange }}</td>
+      </tr>
+      {% if document.amount_paid > 0 %}
+      <!-- document.amount_due_exchange: see KNOWN-ISSUES.md -->
+      <tr class="currency-row">
+        <td class="currency-label">{{ labels.balance_due | default: 'Balance due' }} ({{ account.currency }})</td>
+        <td class="currency-value">{{ document.amount_due_exchange }}</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+  {% if document.amount_paid > 0 %}
+  {% assign payment = document.payments | last %}
+  <div class="currency-deposit-note">Deposit paid at 1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }} on {{ payment.date | date: 'default', contact.country }} ({{ payment.amount }} {{ document.currency }})</div>
+  {% endif %}
+  {% endif %}
+
+  <!-- other info -->
+  {% if document.payment_details != blank %}{% assign show_payment = true %}{% endif %}
+  {% if document.notes != blank %}{% assign show_notes = true %}{% endif %}
+
+  {% if show_payment or show_notes %}
+  <div class="section" aria-hidden="true"></div>
+  <table class="other-info-table" role="presentation">
+    <tbody>
+      <tr>
+        {% if show_payment and show_notes %}
+          <td class="other-info-cell other-info-half other-info-half-left">
+            <span class="other-info-label">{{ labels.payment_details }}</span>
+            <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+          </td>
+          <td class="other-info-cell other-info-half">
+            <span class="other-info-label">{{ labels.notes }}</span>
+            <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+          </td>
+        {% elsif show_payment %}
+          <td class="other-info-cell" colspan="2">
+            <span class="other-info-label">{{ labels.payment_details }}</span>
+            <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+          </td>
+        {% elsif show_notes %}
+          <td class="other-info-cell" colspan="2">
+            <span class="other-info-label">{{ labels.notes }}</span>
+            <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+          </td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
+  {% endif %}
+
+  {% if document.legal != blank %}
+  <div class="section" aria-hidden="true"></div>
+  <div class="legal-text">{{ document.legal | textilize }}</div>
+  {% endif %}
+
+  <!-- footer: fixed repeat not achievable in wkhtmltopdf, see footer-audit.md -->
+  <div class="footer-wrap">
+    <div class="footer-bar" aria-hidden="true"></div>
+    <table class="footer-inner" role="presentation">
+      <tbody>
+        <tr>
+          <td class="footer-invoice">
+            <span class="footer-invoice-label">{{ labels.invoice }}:</span>
+            {{ document.number }}
+          </td>
+          <td class="footer-pagination">Page 1 of 1</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
