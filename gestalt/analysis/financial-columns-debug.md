@@ -53,7 +53,7 @@ The result is correctly lower than `item.subtotal`. This is not a bug — `item.
 
 ## Handling Two Tax Rates (item.tax_1_rate + item.tax_2_rate)
 
-No existing template shows per-line tax rates — there is no reference pattern. Decision for neo.html:
+No existing template shows per-line tax rates — there is no reference pattern. Decision for gestalt.html:
 
 Show `item.tax_1_rate` always; conditionally append `+ item.tax_2_rate` when it is present and non-zero:
 
@@ -78,7 +78,7 @@ This produces "21%" for single-tax items and "21% + 5.2%" for dual-tax items, wh
 - `document.service_date` is **not listed** in the Quaderno Tags documentation.
 - `labels.service_date` is **not listed** in the labels documentation.
 - No existing template uses either variable.
-- The conditional guard `{% if document.service_date != blank %}` in neo.html's metadata section prevents any visible error if the variable is absent.
+- The conditional guard `{% if document.service_date != blank %}` in gestalt.html's metadata section prevents any visible error if the variable is absent.
 - Status: kept in template with a `<!-- service_date: not in Quaderno docs, pending engineering confirmation -->` comment.
 
 ---

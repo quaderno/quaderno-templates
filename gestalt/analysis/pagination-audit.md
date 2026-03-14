@@ -1,7 +1,7 @@
 # Pagination Audit Report
 
 **Date:** 2026-03-11
-**Template:** neo.html
+**Template:** gestalt.html
 
 ---
 
@@ -33,10 +33,10 @@
 None. The string `Page 1 of 1` is hardcoded static text.
 
 ### JavaScript
-None. No `<script>` tags anywhere in neo.html.
+None. No `<script>` tags anywhere in gestalt.html.
 
 ### @page CSS rules
-None. No `@page` declarations anywhere in neo.html.
+None. No `@page` declarations anywhere in gestalt.html.
 
 ---
 
@@ -82,7 +82,7 @@ The real question is whether a dynamic mechanism is available.
 
 **wkhtmltopdf support status:** @page margin boxes (`@bottom-right`, `@bottom-left`, etc.) are part of the CSS Paged Media spec. wkhtmltopdf is built on an old QtWebKit engine that has **incomplete** CSS Paged Media support. The `@page` rule itself is partially supported (for page size/margins), but `@page` margin boxes with `content: counter(page)` are **not supported** in wkhtmltopdf's webkit build.
 
-**Verdict:** Would not work. Even if added to neo.html, it would render nothing.
+**Verdict:** Would not work. Even if added to gestalt.html, it would render nothing.
 
 ---
 

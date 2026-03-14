@@ -1,26 +1,4 @@
-# Neo Template — Known Issues & Pending Items
-
-## Platform Limitations (requires Quaderno engineering)
-
-### 1. Sticky Footer & Pagination
-The footer cannot be fixed to the bottom of every page,
-and dynamic page numbers (Page X of Y) cannot be generated
-from within the template. Both require wkhtmltopdf
---footer-html server-side support.
-
-Current state: footer renders at the end of the document
-with a static "Page 1 of 1" placeholder.
-
-Five CSS/HTML approaches were tested and documented in
-/neo/analysis/footer-audit.md and footer-debug.md.
-
-### 2. Service Date
-No document.service_date variable or labels.service_date
-label exists in Quaderno's documentation or any existing
-template. The metadata section includes a conditional for
-it that will render if/when the variable becomes available.
-
-Documented in /neo/analysis/metadata-debug.md.
+# Gestalt Template — Known Issues & Pending Items
 
 ## Pending Engineering Confirmation
 
@@ -30,10 +8,10 @@ discount + tax). Awaiting confirmation on whether this
 variable's behavior changes depending on the "Include
 taxes and discounts" pricing mode setting.
 
-Documented in /neo/analysis/financial-columns-debug.md.
+Documented in /gestalt/analysis/financial-columns-debug.md.
 
 ### 4. Tax Type Distinction at Item Level
-The Neo template introduces a per-line Tax Rate column —
+The Gestalt template introduces a per-line Tax Rate column —
 a feature not present in any of the 8 existing templates.
 This has surfaced a compliance issue: Quaderno attaches up
 to two taxes per item (item.tax_1_rate, item.tax_2_rate),
@@ -69,7 +47,7 @@ This means the Unit Price column on the invoice won't match
 the price the seller or buyer recognizes from the original
 quote or order when tax-inclusive pricing is used.
 
-Documented in /neo/analysis/items-table-audit.md.
+Documented in /gestalt/analysis/items-table-audit.md.
 
 ### 6. Missing Quaderno Labels
 The following user-facing text is hardcoded because no
@@ -95,7 +73,16 @@ These may work in practice (some are used in existing
 templates) but are not guaranteed. Each has a default
 fallback value.
 
-Documented in /neo/analysis/hardcoded-labels-audit.md.
+Documented in /gestalt/analysis/hardcoded-labels-audit.md.
+
+## Resolved
+
+### Sticky Footer & Pagination
+Resolved — footer separated into gestalt-footer.html. Engineering to
+configure --footer-html server-side.
+
+### Service Date
+Confirmed — mandatory in France, currently mirrors issue_date.
 
 ## Status
 This is a work-in-progress template. The items above

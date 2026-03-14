@@ -66,7 +66,7 @@ All 4 tfoot-using templates (mono, modern, frame, classic) confirmed to use:
 - `tfoot { display: table-footer-group; }` in `@media print`
 - **Zero** use of `height` or `min-height` on html, body, or outer table
 
-These templates do NOT require the footer to pin to the physical page bottom — their tfoot is a notes/legal block that appears after content. neo.html's requirement is different (color bar + invoice number always at physical page bottom), which is why the `height: 271mm` is added.
+These templates do NOT require the footer to pin to the physical page bottom — their tfoot is a notes/legal block that appears after content. gestalt.html's requirement is different (color bar + invoice number always at physical page bottom), which is why the `height: 271mm` is added.
 
 **CSS:**
 ```css

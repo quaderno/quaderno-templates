@@ -1,7 +1,7 @@
 # Financial Values Debug Report
 
 **Date:** 2026-03-11
-**Symptom:** Line item Amount values and Summary totals in neo.html do not match the correct values shown in the Quaderno app.
+**Symptom:** Line item Amount values and Summary totals in gestalt.html do not match the correct values shown in the Quaderno app.
 
 ---
 
@@ -9,7 +9,7 @@
 
 ### Line Items Table
 
-neo.html has **two separate monetary columns** in the line items table:
+gestalt.html has **two separate monetary columns** in the line items table:
 
 | Column | Header label | Variable used | Line |
 |--------|-------------|---------------|------|
@@ -20,7 +20,7 @@ neo.html has **two separate monetary columns** in the line items table:
 
 ### Document-Level Summary
 
-neo.html uses:
+gestalt.html uses:
 - `document.subtotal` → Subtotal row
 - `document.discount` → Discount row
 - `document.total` → Total row
@@ -48,8 +48,8 @@ Line item value column across every reference template:
 | minimal | Amount | `item.subtotal` |
 | frame | Amount | `item.subtotal` |
 | classic | Amount | `item.subtotal` |
-| **neo** | **Subtotal** | **`item.subtotal`** |
-| **neo** | **Amount** | **`item.total_amount` ← BUG** |
+| **gestalt** | **Subtotal** | **`item.subtotal`** |
+| **gestalt** | **Amount** | **`item.total_amount` ← BUG** |
 
 `item.total_amount` is used by **zero** production templates.
 
@@ -57,10 +57,10 @@ Document-level summary variables:
 
 | Row | Variable | Used by |
 |---|---|---|
-| Subtotal | `document.subtotal` | All 8 templates + neo ✓ |
-| Discount | `document.discount` | All 8 templates + neo ✓ |
-| Total tax | `document.tax_amount` | Modern, classic, frame, mono, minimal + neo ✓ |
-| Total | `document.total` | All 8 templates + neo ✓ |
+| Subtotal | `document.subtotal` | All 8 templates + gestalt ✓ |
+| Discount | `document.discount` | All 8 templates + gestalt ✓ |
+| Total tax | `document.tax_amount` | Modern, classic, frame, mono, minimal + gestalt ✓ |
+| Total | `document.total` | All 8 templates + gestalt ✓ |
 
 No calculation discrepancy in the summary — variables are identical to production templates.
 
@@ -84,7 +84,7 @@ From official docs and confirmed usage:
 
 ## Step 4 — Root Cause: Two Competing Amount Columns
 
-neo.html has an extra "Subtotal" column before the tax rate that no reference template has:
+gestalt.html has an extra "Subtotal" column before the tax rate that no reference template has:
 
 ```
 Description | Qty | Unit Price | [Discount] | Subtotal | Tax Rate | Amount
@@ -96,7 +96,7 @@ Reference template structure:
 Description | Qty | Unit Price | [Discount] | Subtotal/Amount
 ```
 
-neo.html was built with a two-column approach (showing both a pre-tax subtotal and a post-tax amount per line), but the Amount column was assigned `item.total_amount` which:
+gestalt.html was built with a two-column approach (showing both a pre-tax subtotal and a post-tax amount per line), but the Amount column was assigned `item.total_amount` which:
 1. Is not used in any production template
 2. Gives values that don't match what the app displays
 
@@ -111,7 +111,7 @@ neo.html was built with a two-column approach (showing both a pre-tax subtotal a
 
 ### Change 1: Remove the redundant "Subtotal" column
 
-The "Subtotal" column (`item.subtotal`) was redundant with the "Amount" column once Amount is corrected to also use `item.subtotal`. Removing it aligns neo.html with all 8 reference templates:
+The "Subtotal" column (`item.subtotal`) was redundant with the "Amount" column once Amount is corrected to also use `item.subtotal`. Removing it aligns gestalt.html with all 8 reference templates:
 
 ```
 Before: Description | Qty | Unit Price | [Discount] | Subtotal | Tax Rate | Amount

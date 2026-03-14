@@ -1,7 +1,7 @@
 # Line Items Table Audit
 
 **Date:** 2026-03-11
-**Template:** neo.html
+**Template:** gestalt.html
 
 ---
 
@@ -133,8 +133,8 @@ No filter.
 `item.unit_price` raw output: `"55555.556 EUR"`
 `item.unit_price | precision` output: `"55555.56"` (strips ISO code, rounds to 2dp)
 
-`item.subtotal` raw output: `"722222.222 EUR"` (no filter in neo.html → ISO code present)
-`item.total_amount` raw output: `"650000.00 EUR"` (no filter in neo.html → ISO code present)
+`item.subtotal` raw output: `"722222.222 EUR"` (no filter in gestalt.html → ISO code present)
+`item.total_amount` raw output: `"650000.00 EUR"` (no filter in gestalt.html → ISO code present)
 
 **Inconsistency:** Unit Price strips the ISO code via `| precision`; Subtotal and Amount do not. This is consistent with all 8 reference templates — they apply `| precision` to unit_price but not to subtotal. Likely intentional: the ISO code on monetary totals provides currency context.
 
@@ -179,7 +179,7 @@ Net tax = 0% (IGIC 7% + IRPF −7%), so tax does not affect the back-calculation
 | `item.tax_1_rate` | IGIC rate | `7` |
 | `item.tax_2_rate` | IRPF rate | `-7` |
 
-### What neo.html renders for each column
+### What gestalt.html renders for each column
 
 | Column | Code | Expected output |
 |---|---|---|
@@ -204,7 +204,7 @@ Net tax = 0% (IGIC 7% + IRPF −7%), so tax does not affect the back-calculation
 
 ### Discrepancy analysis
 
-| Column | App shows | Neo renders | Match? | Notes |
+| Column | App shows | Gestalt renders | Match? | Notes |
 |---|---|---|---|---|
 | Qty | 13 | 13 | ✓ | |
 | Unit Price | 50,000.00 | 55,555.56 | ✗ | **See Bug 1** |
@@ -257,7 +257,7 @@ The app's "Price" column (50,000.00) is the customer-facing entered price — wh
 
 **Code:** `{{ item.unit_price | precision }}` (line 750)
 
-**Issue:** In tax-inclusive pricing mode, `item.unit_price` returns the back-calculated pre-discount, pre-tax base price (55,555.556), not the customer-facing entered price (50,000.00). The app's "Price" column shows 50,000.00. Neo's Unit Price column shows 55,555.56.
+**Issue:** In tax-inclusive pricing mode, `item.unit_price` returns the back-calculated pre-discount, pre-tax base price (55,555.556), not the customer-facing entered price (50,000.00). The app's "Price" column shows 50,000.00. Gestalt's Unit Price column shows 55,555.56.
 
 **Root cause:** Quaderno stores `item.unit_price` as the pre-discount, pre-tax base price. In tax-inclusive mode, the back-calculation changes this value. There is no separate `item.entered_price` or `item.customer_price` Liquid variable. This is a Quaderno data model limitation, not a template bug.
 
@@ -273,11 +273,11 @@ The app's "Price" column (50,000.00) is the customer-facing entered price — wh
 
 **Code:** `{{ item.discount_rate | precision }}%` (line 752)
 
-**Issue:** All 5 reference templates that show discount use `| precision: 0` (zero decimal places), displaying "10%". Neo uses `| precision` (no argument), which may display "10.00%" (2 decimal places) or "10%" (no trailing zeros) depending on Quaderno's filter implementation.
+**Issue:** All 5 reference templates that show discount use `| precision: 0` (zero decimal places), displaying "10%". Gestalt uses `| precision` (no argument), which may display "10.00%" (2 decimal places) or "10%" (no trailing zeros) depending on Quaderno's filter implementation.
 
 **Reference template pattern:** `{{ item.discount_rate | precision: 0 }}%`
 
-**Impact:** Possible minor inconsistency: "10.00%" vs "10%". The app shows "10.00%" which would mean neo actually matches the app better, but diverges from all reference templates.
+**Impact:** Possible minor inconsistency: "10.00%" vs "10%". The app shows "10.00%" which would mean gestalt actually matches the app better, but diverges from all reference templates.
 
 **Recommended fix:** Align with reference templates: change to `| precision: 0` unless 2dp is preferred to match the app. Note: if a discount is 10.5%, `| precision: 0` would show "11%" (rounded) while `| precision` would show "10.5%". For non-integer discounts, `| precision` is more accurate.
 
@@ -289,15 +289,15 @@ The app's "Price" column (50,000.00) is the customer-facing entered price — wh
 
 **Code:** `{{ item.total_amount }}` (line 760)
 
-**Issue:** The app's "Amount" column shows 722,222.222 (= `item.subtotal`). Neo's Amount column shows 650,000.00 (= `item.total_amount`, post-discount post-tax). The values differ.
+**Issue:** The app's "Amount" column shows 722,222.222 (= `item.subtotal`). Gestalt's Amount column shows 650,000.00 (= `item.total_amount`, post-discount post-tax). The values differ.
 
-**Is this a bug?** No — it is intentional. Neo has a 7-column layout with both a Subtotal column AND an Amount column. The financial-columns-debug.md documents this explicitly:
+**Is this a bug?** No — it is intentional. Gestalt has a 7-column layout with both a Subtotal column AND an Amount column. The financial-columns-debug.md documents this explicitly:
 - Subtotal column = `item.subtotal` = 722,222.222 ← matches app's Amount value
 - Amount column = `item.total_amount` = 650,000 ← post-discount, post-tax
 
-The app has only one amount column (their "Amount" = neo's "Subtotal"). Neo adds an extra column showing the post-discount, post-tax figure, which is unique to this template's design.
+The app has only one amount column (their "Amount" = gestalt's "Subtotal"). Gestalt adds an extra column showing the post-discount, post-tax figure, which is unique to this template's design.
 
-**Impact:** A user comparing the neo invoice to the Quaderno app will see the Subtotal column match the app's Amount column (722,222.222), and neo's Amount column shows additional information (650,000). This is correct and expected per spec.
+**Impact:** A user comparing the gestalt invoice to the Quaderno app will see the Subtotal column match the app's Amount column (722,222.222), and gestalt's Amount column shows additional information (650,000). This is correct and expected per spec.
 
 **Recommended action:** No change. Add a comment clarifying that the Amount column differs from the app by design.
 
@@ -379,11 +379,11 @@ No code change — documentation only.
 
 ### Fix 3 — Clarify Amount column intent
 
-Add a comment distinguishing neo's Amount column from the app's Amount column:
+Add a comment distinguishing gestalt's Amount column from the app's Amount column:
 ```html
 <!-- item.total_amount = Subtotal − Discount + Tax (post-discount, post-tax per line).
      This differs from the Quaderno app's "Amount" column (which = item.subtotal).
-     Neo has both a Subtotal column (item.subtotal) and an Amount column (item.total_amount)
+     Gestalt has both a Subtotal column (item.subtotal) and an Amount column (item.total_amount)
      — a 7-column design unique to this template. See /analysis/financial-columns-debug.md. -->
 <td class="col-right">{{ item.total_amount }}</td>
 ```

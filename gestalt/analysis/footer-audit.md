@@ -1,7 +1,7 @@
 # Footer Audit Report
 
 **Date:** 2026-03-11
-**Template:** neo.html (Revision 4 — tfoot, no height declarations)
+**Template:** gestalt.html (Revision 4 — tfoot, no height declarations)
 
 ---
 
@@ -143,7 +143,7 @@ The mechanism is two-part:
 
 ### Bug 3 — Nested tables inside content-cell
 
-Neo.html has at least 8 nested tables inside `.content-cell`:
+Gestalt.html has at least 8 nested tables inside `.content-cell`:
 
 - `.header-table` (header)
 - `.meta-table` (metadata)
@@ -199,7 +199,7 @@ No Liquid block opens or closes a `<tr>`, `<td>`, `<tbody>`, or `</table>` tag a
 
 ### Bug 7 — Structural comparison with destijl.html
 
-| Aspect | destijl.html | neo.html |
+| Aspect | destijl.html | gestalt.html |
 |---|---|---|
 | Outer structure | `<body><table>` + flat `<tr>` rows for all sections `</table>` | `<body><table class="page-table"><tfoot>...<tbody><tr><td>` all content `</td></tr></tbody></table></body>` |
 | Footer type | Regular `<tr>` (not tfoot) — content flow only | `<tfoot>` — intended to repeat |
@@ -209,14 +209,14 @@ No Liquid block opens or closes a `<tr>`, `<td>`, `<tbody>`, or `</table>` tag a
 | body padding | `padding: 20px` | `padding: 0` |
 | Nested depth | Content is directly in `<tr><td>` rows of the main table | All content is inside a single `<td class="content-cell">` which contains nested tables |
 
-**Critical structural difference:** destijl's content is spread across multiple `<tr>` rows of the single outer table. Neo.html wraps ALL content inside ONE `<td class="content-cell">`. This means:
+**Critical structural difference:** destijl's content is spread across multiple `<tr>` rows of the single outer table. Gestalt.html wraps ALL content inside ONE `<td class="content-cell">`. This means:
 
 - destijl: `<table> → <tr> → <td>` for each section (shallow nesting)
-- neo.html: `<table> → <tfoot>+<tbody> → <tr> → <td> → <table> → <tr> → <td>` for each section (deep nesting, all inside one content cell)
+- gestalt.html: `<table> → <tfoot>+<tbody> → <tr> → <td> → <table> → <tr> → <td>` for each section (deep nesting, all inside one content cell)
 
 The depth itself is not a bug — it's the intended structure for tfoot repetition. But it does mean the single `content-cell` td must contain all the nested tables, and its `height: 1px` trick must make it expand to fill the available space.
 
-**Also critical:** destijl sets `#items tfoot { display: table-row-group; }` — converting items tfoot to a row group. Neo.html's global `tfoot { display: table-footer-group; }` would conflict IF any inner table had a tfoot — but they don't.
+**Also critical:** destijl sets `#items tfoot { display: table-row-group; }` — converting items tfoot to a row group. Gestalt.html's global `tfoot { display: table-footer-group; }` would conflict IF any inner table had a tfoot — but they don't.
 
 ---
 
@@ -255,7 +255,7 @@ The `height: 1px` on `.content-cell` does not help here. For `height: 1px` to ex
 
 `display: table-footer-group` is the CSS property that should cause tfoot repetition. Whether Quaderno's specific wkhtmltopdf build supports this for a top-level outer table (not just the items sub-table) has NOT been confirmed by any successful test.
 
-The templates that use this (mono, modern, frame, classic) use it for notes/legal footers that sit after content — not for a color-bar footer that must be at the physical page bottom. Their "repeating footer" test is less strict than neo.html's requirement.
+The templates that use this (mono, modern, frame, classic) use it for notes/legal footers that sit after content — not for a color-bar footer that must be at the physical page bottom. Their "repeating footer" test is less strict than gestalt.html's requirement.
 
 ---
 

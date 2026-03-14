@@ -1,4 +1,4 @@
-# Hardcoded Labels Audit — neo.html
+# Hardcoded Labels Audit — gestalt.html
 
 **Date:** 2026-03-11
 
@@ -63,7 +63,7 @@
 ### Category A — Label exists in Quaderno docs but not used
 *These are fixable bugs.*
 
-**None found.** Every piece of user-facing text either uses a `labels.*` variable or is hardcoded for a reason (Categories B or C). There are no cases where a documented label is available and neo.html uses a hardcoded string instead.
+**None found.** Every piece of user-facing text either uses a `labels.*` variable or is hardcoded for a reason (Categories B or C). There are no cases where a documented label is available and gestalt.html uses a hardcoded string instead.
 
 ---
 
@@ -126,4 +126,4 @@
 
 ### Overall assessment
 
-Neo.html has **excellent labels coverage**. All documented Quaderno labels are used correctly. The only issues are minor: one unnecessary default fallback and two mismatched default values. The three Category B hardcoded strings are genuine gaps in Quaderno's label system, not template errors.
+Gestalt.html has **excellent labels coverage**. All documented Quaderno labels are used correctly. The only issues are minor: one unnecessary default fallback and two mismatched default values. The three Category B hardcoded strings are genuine gaps in Quaderno's label system, not template errors.

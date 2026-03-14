@@ -47,7 +47,7 @@
       color: #171717;
       line-height: 1.2;
     }
-    .doc-number { font-size: 11px; margin-top: 4px; }
+    .doc-number { font-size: 13px; margin-top: 4px; }
     .logo-img   { max-width: 150px; max-height: 55px; border-radius: 4px; }
 
     .badge {
@@ -74,14 +74,14 @@
     }
 
     /* subject */
-    .subject-section { margin-top: 8px; }
+    .subject-section { margin-top: 8px; font-size: 11px; }
     .subject-label   { font-weight: 600; color: #171717; }
 
     /* metadata */
     .meta-table         { width: 100%; }
     .meta-cell          { width: 33.33%; vertical-align: top; padding: 8px 0; }
     .meta-cell-bordered { border-bottom: 1px solid #E5E5E5; }
-    .meta-value         { display: block; font-size: 9px; }
+    .meta-value         { display: block; font-size: 11px; }
     .related-doc-link   { color: #525252; text-decoration: underline; }
 
     /* parties */
@@ -90,14 +90,16 @@
     .party-cell-last   { padding-right: 0; }
     .party-cell-2col   { width: 50%; }
     .party-cell-3col   { width: 33%; }
-    .party-name        { font-size: 9px; font-weight: 600; color: #171717; }
-    .party-body        { font-size: 9px; }
+    .party-name        { font-size: 11px; font-weight: 600; color: #171717; }
+    .party-body        { font-size: 11px; }
     .party-field-label { font-weight: 600; color: #171717; }
 
     /* shared section/field labels */
     .meta-label,
     .party-section-label,
-    .other-info-label { display: block; font-size: 9px; font-weight: 600; color: #171717; }
+    .other-info-label { display: block; font-weight: 600; color: #171717; }
+    .meta-label,
+    .party-section-label { font-size: 11px; }
     .party-section-label,
     .other-info-label { margin-bottom: 4px; }
 
@@ -136,8 +138,8 @@
 
     /* financial zone */
     .financial-zone           { width: 100%; }
-    .financial-zone-breakdown { width: 55%; vertical-align: top; padding-right: 20px; }
-    .financial-zone-summary   { width: 45%; vertical-align: top; }
+    .financial-zone-breakdown { width: 65%; vertical-align: top; padding-right: 20px; }
+    .financial-zone-summary   { width: 35%; vertical-align: top; }
 
     .tax-breakdown-table { width: 100%; }
     .tax-total-row td {
@@ -186,14 +188,7 @@
     .other-info-half      { width: 50%; }
     .other-info-half-left { padding-right: 15px; }
     .other-info-value     { font-size: 9px; }
-    .legal-text           { font-size: 8px; color: #737373; }
-
-    /* footer */
-    .footer-wrap          { margin-top: 10px; }
-    .footer-bar           { height: 6px; border-radius: 3px; background-color: {{ account.color_scheme }}; margin-bottom: 6px; }
-    .footer-inner         { width: 100%; }
-    .footer-invoice-label { font-size: 9px; font-weight: 600; color: #171717; }
-    .footer-pagination    { text-align: right; font-size: 9px; }
+    .legal-text           { font-size: 7px; color: #737373; }
 
     /* verification code (server-injected) */
     .verification-code { margin: 10px 0; text-align: right; font-size: 9px; }
@@ -276,7 +271,8 @@
             <span class="meta-label">{{ labels.due_date }}</span>
             <span class="meta-value">{{ document.due_date | date: 'default', contact.country }}</span>
           {% elsif item == "service_date" %}
-            <!-- service_date: see KNOWN-ISSUES.md -->
+            <!-- service_date: mandatory in France. Currently mirrors
+                 issue_date value. -->
             <span class="meta-label">{{ labels.service_date }}</span>
             <span class="meta-value">{{ document.service_date | date: 'default', contact.country }}</span>
           {% elsif item == "po_number" %}
@@ -581,21 +577,7 @@
   <div class="legal-text">{{ document.legal | textilize }}</div>
   {% endif %}
 
-  <!-- footer: fixed repeat not achievable in wkhtmltopdf, see footer-audit.md -->
-  <div class="footer-wrap">
-    <div class="footer-bar" aria-hidden="true"></div>
-    <table class="footer-inner" role="presentation">
-      <tbody>
-        <tr>
-          <td class="footer-invoice">
-            <span class="footer-invoice-label">{{ labels.invoice }}:</span>
-            {{ document.number }}
-          </td>
-          <td class="footer-pagination">Page 1 of 1</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- Footer handled by gestalt-footer.html via --footer-html -->
 
 </body>
 </html>

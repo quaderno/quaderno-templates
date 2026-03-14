@@ -1,4 +1,4 @@
-# Neo Template — Implementation Plan
+# Gestalt Template — Implementation Plan
 
 Sources:
 - `/design/neo-invoice-design.pdf` — visual specification
@@ -25,7 +25,7 @@ Sources:
 **Weights:** `400` (normal) and `500` (medium) ONLY — **no bold/700 anywhere in the template**
 **Sizes:** `7px`, `8px`, `10px`, `24px` — all in px (no pt except inside `@page` margin boxes)
 
-> **No `<strong>` tags in Neo:** Because `<strong>` maps to font-weight 700 which is prohibited, use CSS classes with `font-weight: 500` instead. Reserve `<strong>` for semantic emphasis only — if used, override with `font-weight: 500` in CSS.
+> **No `<strong>` tags in Gestalt:** Because `<strong>` maps to font-weight 700 which is prohibited, use CSS classes with `font-weight: 500` instead. Reserve `<strong>` for semantic emphasis only — if used, override with `font-weight: 500` in CSS.
 
 | Element | Size | Weight | Color | Style |
 |---|---|---|---|---|

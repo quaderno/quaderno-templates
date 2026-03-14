@@ -1,12 +1,12 @@
 # Metadata Section Debug Report
 
 **Date:** 2026-03-11
-**Template:** neo.html
+**Template:** gestalt.html
 **Symptom:** Metadata section (Issue Date, Due Date, Service Date, PO Number, Valid Until, Referenced Document) not rendering in Quaderno test invoice.
 
 ---
 
-## Step 1 — Audit neo.html
+## Step 1 — Audit gestalt.html
 
 ### Does the metadata section exist?
 Yes. Lines 564–632. Structure:
@@ -47,8 +47,8 @@ None. Reviewed `.meta-table`, `.meta-cell`, `.meta-label`, `.meta-value` — no 
 **Observations:**
 - All 8 templates use identical variable names — confirmed correct.
 - `document.service_date` is used by zero reference templates. Not in official Quaderno docs.
-- All templates use `labels.issue_date`, `labels.due_date`, `labels.po_number`, `labels.valid_until`, `labels.related_document` — matches neo.html exactly.
-- Date filter `| date: 'default', contact.country` — matches neo.html.
+- All templates use `labels.issue_date`, `labels.due_date`, `labels.po_number`, `labels.valid_until`, `labels.related_document` — matches gestalt.html exactly.
+- Date filter `| date: 'default', contact.country` — matches gestalt.html.
 
 ---
 
@@ -58,7 +58,7 @@ None. Reviewed `.meta-table`, `.meta-cell`, `.meta-label`, `.meta-value` — no 
 ```
 grep "push" *.html
 ```
-Result: **`push` appears only in neo.html (6 times). Zero uses in any of the 8 reference templates.**
+Result: **`push` appears only in gestalt.html (6 times). Zero uses in any of the 8 reference templates.**
 
 ### Explanation
 The metadata array is built using Liquid's `push` filter:

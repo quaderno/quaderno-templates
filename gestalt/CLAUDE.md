@@ -1,7 +1,7 @@
-# Neo Invoice Template — Project Guidelines
+# Gestalt Invoice Template — Project Guidelines
 
 ## Project Overview
-Build a production-ready HTML/CSS invoice template called "Neo" for the Quaderno invoicing platform. The template must be compliant, accessible, and follow Quaderno's Liquid templating conventions.
+Build a production-ready HTML/CSS invoice template called "Gestalt" for the Quaderno invoicing platform. The template must be compliant, accessible, and follow Quaderno's Liquid templating conventions.
 
 ## Reference Materials
 
@@ -11,7 +11,7 @@ Build a production-ready HTML/CSS invoice template called "Neo" for the Quaderno
 - The De Stijl template (`destijl.html`) is the most feature-complete reference.
 
 ### Design Reference
-- The PDF in `/design/neo-invoice-design.pdf` is the visual design specification for the Neo template.
+- The PDF in `/design/neo-invoice-design.pdf` is the visual design specification for the Gestalt template.
 - Match the layout, spacing, typography hierarchy, and section ordering shown in the design.
 
 ### Documentation (read and follow)
@@ -51,7 +51,7 @@ Every conditional field must be wrapped in `{% if variable != blank %}` (or `> 0
 
 **2. Metadata**
 - Issue date — ALWAYS
-- Service date — ALWAYS
+- Service date — ALWAYS — Mandatory in France. Currently mirrors issue_date.
 - Due date — CONDITIONAL
 - PO number — CONDITIONAL
 - Valid until — CONDITIONAL
@@ -110,7 +110,7 @@ Every conditional field must be wrapped in `{% if variable != blank %}` (or `> 0
 - Notes — CONDITIONAL
 - Legal notices — CONDITIONAL
 
-**9. Footer**
+**9. Footer** *(gestalt-footer.html — served via wkhtmltopdf --footer-html)*
 - Color scheme bar (using `account.color_scheme`) — ALWAYS
 - Invoice number — ALWAYS
 - Page number — ALWAYS
@@ -161,15 +161,14 @@ Every conditional field must be wrapped in `{% if variable != blank %}` (or `> 0
 - Layout: Payment Details (left) + Notes (right) side by side, then Legal Notices full width below.
 - Each section is conditional — if only one of Payment Details or Notes exists, it takes the full width.
 
-**Footer — Fixed Position**
-- Footer elements (color bar, invoice number, page number) are fixed to the bottom of every page.
-- The footer has a top margin of 10px separating it from the content above.
-- If content would overlap the footer's top margin, the content continues on the next page instead.
+**Footer — Separate File**
+- Footer is in gestalt-footer.html, served via wkhtmltopdf `--footer-html`.
+- Spacing between content and footer is controlled by engineering via `--footer-spacing`.
+- Footer repeats on every page automatically via wkhtmltopdf.
 
 **Pagination**
 - When the invoice spills to multiple pages, content simply continues — no header or column headers are repeated on subsequent pages.
-- The footer (color bar + invoice number + page number) repeats on every page.
-- Page numbers must show the current page and total pages (e.g., "Page 1 of 3"). Investigate how the existing Quaderno templates and wkhtmltopdf handle page numbering — check the existing templates, Quaderno's documentation, and wkhtmltopdf's page/topage mechanism to determine the correct implementation approach.
+- Page numbers use wkhtmltopdf JS variables: `window.page` and `window.topage`, injected into `<span id="page">` and `<span id="topage">` via a `<script>` block in gestalt-footer.html.
 
 ### Payment Status Tags
 The invoice displays a status tag in the header, positioned next to the document title.
@@ -222,18 +221,19 @@ The invoice displays a status tag in the header, positioned next to the document
 **Line-height:** 1.4 ratio on all elements except Document title (1.2)
 **Weights:** 400 (normal) and 600 (semibold) only — no 500 or 700. wkhtmltopdf doesn't visually distinguish 400 from 500, so 600 is used to ensure visible contrast.
 **Colors:** Three-tier: `#171717` (primary), `#525252` (secondary), `#737373` (tertiary)
-**Sizes:** Four-step scale: 8px, 9px, 11px, 24px. All sizes bumped +1px from the original design (7→8, 8→9, 10→11) to compensate for wkhtmltopdf's slight size reduction. Title stays at 24px.
+**Sizes:** Five-step scale: 8px, 9px, 11px, 13px, 24px. All sizes bumped +1px from the original design (7→8, 8→9, 10→11) to compensate for wkhtmltopdf's slight size reduction. Title stays at 24px. Invoice number (header) is 13px.
 
 | Element | Size | Weight | Color | Style |
 |---|---|---|---|---|
 | Document title | 24px | 600 | #171717 | — |
 | Status tag | 11px | 600 | (per status) | — |
 | Payment method | 8px | 400 | #737373 | italic |
-| Invoice number (header) | 11px | 400 | #525252 | — |
-| Subject label | 9px | 600 | #171717 | — |
-| Section labels (From, Billed To) | 9px | 600 | #171717 | — |
-| Field labels (Issue Date, PO Number) | 9px | 600 | #171717 | — |
-| Field values | 9px | 400 | #525252 | — |
+| Invoice number (header) | 13px | 400 | #525252 | — |
+| Subject label | 11px | 600 | #171717 | — |
+| Subject value | 11px | 400 | #525252 | — |
+| Section labels (From, Billed To) | 11px | 600 | #171717 | — |
+| Field labels (Issue Date, PO Number) | 11px | 600 | #171717 | — |
+| Field values | 11px | 400 | #525252 | — |
 | Table column headers | 8px | 600 | #171717 | — |
 | Table cell content | 9px | 400 | #525252 | — |
 | Subtotal / Discount / Total tax / Amount paid (labels + values) | 9px | 400 | #525252 | — |
@@ -246,18 +246,17 @@ The invoice displays a status tag in the header, positioned next to the document
 | Payment details value | 9px | 400 | #525252 | — |
 | Notes label | 9px | 600 | #171717 | — |
 | Notes value | 9px | 400 | #525252 | — |
-| Legal notices | 8px | 400 | #737373 | — |
+| Legal notices | 7px | 400 | #737373 | — |
 | Footer — Invoice label | 9px | 600 | #171717 | — |
 | Footer — Invoice value | 9px | 400 | #525252 | — |
 | Pagination | 9px | 400 | #525252 | — |
 
 ### Design Specifications
 - Logo frame: 150 × 55px.
-- Financial Zone: Tax Breakdown (55% width, left) and Summary (45% width, right) side by side — implemented using a table, not flexbox.
+- Financial Zone: Tax Breakdown (65% width, left) and Summary (35% width, right) side by side — implemented using a table, not flexbox. Currency Conversion section also uses 65% width, matching Tax Breakdown.
 - Tax Breakdown and Summary tables do NOT need section title labels — column headers are self-explanatory.
-- Currency Conversion label: "EUR Equivalent" (short, not "Currency Conversion").
+- Currency Conversion label: "Currency Conversion" (hardcoded — no Quaderno label exists, see MISSING-LABELS.md).
 - Balance Due: largest, boldest number on the invoice — visually unmissable.
-- Currency Conversion label: "Currency Conversion".
 - Global discount in summary: sits between Subtotal and Total Tax, labeled simply "Discount".
 - Legal notices: smallest legible font (7–8pt), lighter text color.
 - Color scheme: `account.color_scheme` applied to footer accent bar.
