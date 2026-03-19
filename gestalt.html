@@ -193,9 +193,18 @@
     /* verification code (server-injected) */
     .verification-code { margin: 10px 0; text-align: right; font-size: 9px; }
 
+    /* footer */
+    .footer-cell  { padding-top: 10px; }
+    .footer-bar   { height: 6px; border-radius: 3px; background-color: {{ account.color_scheme }}; margin-bottom: 6px; }
+    .footer-inner { width: 100%; }
+
+    /* spanning cells in content tbody rows */
+    .section-cell { padding-top: 24px; }
+
     /* print */
     @media print {
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      tfoot { display: table-footer-group; }
       /* table-header-group omitted: column headers must not repeat on new pages */
       .item-row { page-break-inside: avoid; }
     }
@@ -204,7 +213,7 @@
 </head>
 <body>
 
-  <!-- header -->
+  <!-- ① header (standalone) -->
   <table class="header-table" role="presentation">
     <tbody>
       <tr>
@@ -239,7 +248,7 @@
     </tbody>
   </table>
 
-  <!-- subject -->
+  <!-- ② subject (standalone, conditional) -->
   {% if document.subject != blank %}
   <div class="subject-section">
     <span class="subject-label">{{ labels.subject }}:</span>
@@ -247,7 +256,7 @@
   </div>
   {% endif %}
 
-  <!-- metadata: builds ordered array, renders 3 per row -->
+  <!-- ③ metadata (standalone) — builds ordered array, renders 3 per row -->
   {% assign meta_str = "issue_date" %}
   {% if document.due_date != blank %}{% assign meta_str = meta_str | append: "|due_date" %}{% endif %}
   {% if document.service_date != blank %}{% assign meta_str = meta_str | append: "|service_date" %}{% endif %}
@@ -303,7 +312,7 @@
     </tbody>
   </table>
 
-  <!-- parties -->
+  <!-- ④ parties (standalone) -->
   <div class="divider-line" aria-hidden="true"></div>
 
   {% if document.shipping_address != blank %}
@@ -362,14 +371,18 @@
     </tbody>
   </table>
 
-  <!-- line items -->
+  <!-- ⑤ color divider bar (standalone) -->
   <div class="divider-bar" aria-hidden="true"></div>
 
+  <!-- ⑥ Liquid assigns — computed before content table (colspan depends on has_discounts) -->
   {% assign has_discounts = false %}
   {% for item in document.items %}
     {% if item.discount_rate > 0 %}{% assign has_discounts = true %}{% endif %}
   {% endfor %}
+  {% if document.payment_details != blank %}{% assign show_payment = true %}{% endif %}
+  {% if document.notes != blank %}{% assign show_notes = true %}{% endif %}
 
+  <!-- ⑦ content table: tfoot + items + post-items content -->
   <table class="items-table">
     <colgroup>
       <col style="width:40%">
@@ -388,7 +401,25 @@
         <col style="width:14%">
       {% endif %}
     </colgroup>
-    <thead>
+
+    <tfoot>
+      <tr>
+        <td class="footer-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
+          <div class="footer-bar" aria-hidden="true"></div>
+          <table class="footer-inner" role="presentation">
+            <tbody>
+              <tr>
+                <td><strong>{{ labels.invoice }}:</strong> {{ document.number }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tfoot>
+
+    <tbody>
+
+      <!-- items header (in tbody — no thead, prevents column header repeat on new pages) -->
       <tr class="items-header">
         <th class="col-left"  scope="col">{{ labels.description }}</th>
         <th class="col-right" scope="col">{{ labels.quantity }}</th>
@@ -398,8 +429,8 @@
         <th class="col-right" scope="col">{{ labels.rate }}</th>
         <th class="col-right" scope="col">{{ labels.total }}</th>
       </tr>
-    </thead>
-    <tbody>
+
+      <!-- item rows — each item is its own <tr> for wkhtmltopdf pagination -->
       {% for item in document.items %}
       <tr class="item-row">
         <td>{{ item.description }}</td>
@@ -427,157 +458,165 @@
         <td class="col-right">{{ item.total_amount }}</td>
       </tr>
       {% endfor %}
-    </tbody>
-  </table>
 
-  <!-- financial zone -->
-  <div class="section" aria-hidden="true"></div>
-
-  <table class="financial-zone" role="presentation">
-    <tbody>
+      <!-- financial zone -->
       <tr>
-        <td class="financial-zone-breakdown">
-          <table class="tax-breakdown-table">
-            <thead>
-              <tr>
-                <th class="col-left"  scope="col">{{ labels.tax | default: 'Tax' }}</th>
-                <th class="col-right" scope="col">{{ labels.taxable_base | default: 'Taxable amount' }}</th>
-                <th class="col-right" scope="col">{{ labels.rate }}</th>
-                <th class="col-right" scope="col">{{ labels.tax_amount | default: 'Total tax per rate' }}</th>
-              </tr>
-            </thead>
+        <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
+          <table class="financial-zone" role="presentation">
             <tbody>
-              {% for document_tax in document.taxes %}
-              <tr class="tax-body-row">
-                <td>{{ document_tax.label | split: ' (' | first }}</td>
-                <td class="col-right">{{ document_tax.taxable_base }}</td>
-                <td class="col-right">{{ document_tax.rate }}%</td>
-                <td class="col-right">{{ document_tax.amount }}</td>
-              </tr>
-              {% endfor %}
-              <!-- document.subtotal as taxable base total: see KNOWN-ISSUES.md -->
-              <tr class="tax-total-row">
-                <td>{{ labels.tax | default: 'Tax' }}*</td>
-                <td class="col-right">{{ document.subtotal }}</td>
-                <td class="col-right">—</td>
-                <td class="col-right">{{ document.tax_amount }}</td>
+              <tr>
+                <td class="financial-zone-breakdown">
+                  <table class="tax-breakdown-table">
+                    <thead>
+                      <tr>
+                        <th class="col-left"  scope="col">{{ labels.tax | default: 'Tax' }}</th>
+                        <th class="col-right" scope="col">{{ labels.taxable_base | default: 'Taxable amount' }}</th>
+                        <th class="col-right" scope="col">{{ labels.rate }}</th>
+                        <th class="col-right" scope="col">{{ labels.tax_amount | default: 'Total tax per rate' }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for document_tax in document.taxes %}
+                      <tr class="tax-body-row">
+                        <td>{{ document_tax.label | split: ' (' | first }}</td>
+                        <td class="col-right">{{ document_tax.taxable_base }}</td>
+                        <td class="col-right">{{ document_tax.rate }}%</td>
+                        <td class="col-right">{{ document_tax.amount }}</td>
+                      </tr>
+                      {% endfor %}
+                      <!-- document.subtotal as taxable base total: see KNOWN-ISSUES.md -->
+                      <tr class="tax-total-row">
+                        <td>{{ labels.tax | default: 'Tax' }}*</td>
+                        <td class="col-right">{{ document.subtotal }}</td>
+                        <td class="col-right">—</td>
+                        <td class="col-right">{{ document.tax_amount }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td class="financial-zone-summary">
+                  <table class="summary-table" role="presentation">
+                    <tbody>
+                      <tr class="summary-row">
+                        <td class="summary-label">{{ labels.subtotal }}</td>
+                        <td class="summary-value">{{ document.subtotal }}</td>
+                      </tr>
+                      {% if document.discount > 0 %}
+                      <tr class="summary-row">
+                        <td class="summary-label">{{ labels.discount }}</td>
+                        <td class="summary-value">-{{ document.discount }}</td>
+                      </tr>
+                      {% endif %}
+                      <tr class="summary-row">
+                        <td class="summary-label">{{ labels.tax | default: 'Tax' }}*</td>
+                        <td class="summary-value">{{ document.tax_amount }}</td>
+                      </tr>
+                      <tr class="summary-total-row">
+                        <td class="summary-label">{{ labels.total }} ({{ document.currency }})</td>
+                        <td class="summary-value">{{ document.total }}</td>
+                      </tr>
+                      {% if document.amount_paid > 0 %}
+                      <tr class="summary-row">
+                        <td class="summary-label">{{ labels.amount_paid | default: 'Amount paid' }}</td>
+                        <td class="summary-value">-{{ document.amount_paid }}</td>
+                      </tr>
+                      <tr class="balance-due-row">
+                        <td class="summary-label">{{ labels.balance_due | default: 'Balance due' }}</td>
+                        <td class="summary-value">{{ document.amount_due }}</td>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </td>
               </tr>
             </tbody>
           </table>
         </td>
-        <td class="financial-zone-summary">
-          <table class="summary-table" role="presentation">
+      </tr>
+
+      <!-- currency conversion (conditional) -->
+      {% if document.exchange %}
+      <tr>
+        <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
+          <!-- no labels.currency_conversion in quaderno: hardcoded, see KNOWN-ISSUES.md -->
+          <div class="currency-section-label">Currency conversion</div>
+          <table class="currency-table" role="presentation">
             <tbody>
-              <tr class="summary-row">
-                <td class="summary-label">{{ labels.subtotal }}</td>
-                <td class="summary-value">{{ document.subtotal }}</td>
+              <tr class="currency-row">
+                <!-- exchange rate label: see KNOWN-ISSUES.md -->
+                <td class="currency-label">Exchange rate</td>
+                <td class="currency-value">1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }}</td>
               </tr>
-              {% if document.discount > 0 %}
-              <tr class="summary-row">
-                <td class="summary-label">{{ labels.discount }}</td>
-                <td class="summary-value">-{{ document.discount }}</td>
+              <tr class="currency-row">
+                <td class="currency-label">{{ labels.tax }}* ({{ account.currency }})</td>
+                <td class="currency-value">{{ document.tax_amount_exchange }}</td>
               </tr>
-              {% endif %}
-              <tr class="summary-row">
-                <td class="summary-label">{{ labels.tax | default: 'Tax' }}*</td>
-                <td class="summary-value">{{ document.tax_amount }}</td>
-              </tr>
-              <tr class="summary-total-row">
-                <td class="summary-label">{{ labels.total }} ({{ document.currency }})</td>
-                <td class="summary-value">{{ document.total }}</td>
+              <tr class="currency-row">
+                <td class="currency-label">{{ labels.total }} ({{ account.currency }})</td>
+                <td class="currency-value">{{ document.total_exchange }}</td>
               </tr>
               {% if document.amount_paid > 0 %}
-              <tr class="summary-row">
-                <td class="summary-label">{{ labels.amount_paid | default: 'Amount paid' }}</td>
-                <td class="summary-value">-{{ document.amount_paid }}</td>
-              </tr>
-              <tr class="balance-due-row">
-                <td class="summary-label">{{ labels.balance_due | default: 'Balance due' }}</td>
-                <td class="summary-value">{{ document.amount_due }}</td>
+              <!-- document.amount_due_exchange: see KNOWN-ISSUES.md -->
+              <tr class="currency-row">
+                <td class="currency-label">{{ labels.balance_due | default: 'Balance due' }} ({{ account.currency }})</td>
+                <td class="currency-value">{{ document.amount_due_exchange }}</td>
               </tr>
               {% endif %}
             </tbody>
           </table>
+          {% if document.amount_paid > 0 %}
+          {% assign payment = document.payments | last %}
+          <div class="currency-deposit-note">Deposit paid at 1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }} on {{ payment.date | date: 'default', contact.country }} ({{ payment.amount }} {{ document.currency }})</div>
+          {% endif %}
         </td>
       </tr>
-    </tbody>
-  </table>
+      {% endif %}
 
-  <!-- currency conversion -->
-  {% if document.exchange %}
-  <div class="section" aria-hidden="true"></div>
-  <!-- no labels.currency_conversion in quaderno: hardcoded, see KNOWN-ISSUES.md -->
-  <div class="currency-section-label">Currency conversion</div>
-  <table class="currency-table" role="presentation">
-    <tbody>
-      <tr class="currency-row">
-        <!-- exchange rate label: see KNOWN-ISSUES.md -->
-        <td class="currency-label">Exchange rate</td>
-        <td class="currency-value">1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }}</td>
-      </tr>
-      <tr class="currency-row">
-        <td class="currency-label">{{ labels.tax }}* ({{ account.currency }})</td>
-        <td class="currency-value">{{ document.tax_amount_exchange }}</td>
-      </tr>
-      <tr class="currency-row">
-        <td class="currency-label">{{ labels.total }} ({{ account.currency }})</td>
-        <td class="currency-value">{{ document.total_exchange }}</td>
-      </tr>
-      {% if document.amount_paid > 0 %}
-      <!-- document.amount_due_exchange: see KNOWN-ISSUES.md -->
-      <tr class="currency-row">
-        <td class="currency-label">{{ labels.balance_due | default: 'Balance due' }} ({{ account.currency }})</td>
-        <td class="currency-value">{{ document.amount_due_exchange }}</td>
+      <!-- other info: payment details + notes (conditional) -->
+      {% if show_payment or show_notes %}
+      <tr>
+        <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
+          <table class="other-info-table" role="presentation">
+            <tbody>
+              <tr>
+                {% if show_payment and show_notes %}
+                  <td class="other-info-cell other-info-half other-info-half-left">
+                    <span class="other-info-label">{{ labels.payment_details }}</span>
+                    <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+                  </td>
+                  <td class="other-info-cell other-info-half">
+                    <span class="other-info-label">{{ labels.notes }}</span>
+                    <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+                  </td>
+                {% elsif show_payment %}
+                  <td class="other-info-cell" colspan="2">
+                    <span class="other-info-label">{{ labels.payment_details }}</span>
+                    <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+                  </td>
+                {% elsif show_notes %}
+                  <td class="other-info-cell" colspan="2">
+                    <span class="other-info-label">{{ labels.notes }}</span>
+                    <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+                  </td>
+                {% endif %}
+              </tr>
+            </tbody>
+          </table>
+        </td>
       </tr>
       {% endif %}
-    </tbody>
-  </table>
-  {% if document.amount_paid > 0 %}
-  {% assign payment = document.payments | last %}
-  <div class="currency-deposit-note">Deposit paid at 1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }} on {{ payment.date | date: 'default', contact.country }} ({{ payment.amount }} {{ document.currency }})</div>
-  {% endif %}
-  {% endif %}
 
-  <!-- other info -->
-  {% if document.payment_details != blank %}{% assign show_payment = true %}{% endif %}
-  {% if document.notes != blank %}{% assign show_notes = true %}{% endif %}
-
-  {% if show_payment or show_notes %}
-  <div class="section" aria-hidden="true"></div>
-  <table class="other-info-table" role="presentation">
-    <tbody>
+      <!-- legal (conditional) -->
+      {% if document.legal != blank %}
       <tr>
-        {% if show_payment and show_notes %}
-          <td class="other-info-cell other-info-half other-info-half-left">
-            <span class="other-info-label">{{ labels.payment_details }}</span>
-            <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
-          </td>
-          <td class="other-info-cell other-info-half">
-            <span class="other-info-label">{{ labels.notes }}</span>
-            <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
-          </td>
-        {% elsif show_payment %}
-          <td class="other-info-cell" colspan="2">
-            <span class="other-info-label">{{ labels.payment_details }}</span>
-            <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
-          </td>
-        {% elsif show_notes %}
-          <td class="other-info-cell" colspan="2">
-            <span class="other-info-label">{{ labels.notes }}</span>
-            <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
-          </td>
-        {% endif %}
+        <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
+          <div class="legal-text">{{ document.legal | textilize }}</div>
+        </td>
       </tr>
+      {% endif %}
+
     </tbody>
   </table>
-  {% endif %}
-
-  {% if document.legal != blank %}
-  <div class="section" aria-hidden="true"></div>
-  <div class="legal-text">{{ document.legal | textilize }}</div>
-  {% endif %}
-
-  <!-- Footer handled by gestalt-footer.html via --footer-html -->
 
 </body>
 </html>
