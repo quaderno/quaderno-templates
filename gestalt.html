@@ -220,24 +220,14 @@
         <td class="header-title-cell">
           <div class="title-line">
             <h1 class="doc-title">{{ title }}</h1>
-            {% assign state_label = document.state | capitalize %}
-            {% if document.state == "draft" %}
-              <span class="badge badge-draft">{{ state_label }}</span>
-            {% elsif document.state == "outstanding" %}
-              <span class="badge badge-outstanding">{{ state_label }}</span>
-            {% elsif document.state == "paid" %}
-              <span class="badge badge-paid">{{ state_label }}</span>
-            {% elsif document.state == "overdue" %}
-              <span class="badge badge-overdue">{{ state_label }}</span>
-            {% endif %}
-            {% if document.state == "paid" %}
-              {% assign payment = document.payments | last %}
-              {% if payment.payment_method_text != blank %}
-                <span class="payment-method">{{ payment.payment_method_text }}</span>
-              {% endif %}
+            {% if document.state == 'paid' %}<span class="badge badge-paid">{{ labels.paid }}</span>
+            {% elsif document.state == 'outstanding' %}<span class="badge badge-outstanding">{{ labels.outstanding }}</span>
+            {% elsif document.state == 'late' %}<span class="badge badge-overdue">{{ labels.late }}</span>
+            {% elsif document.state == 'draft' %}<span class="badge badge-draft">{{ labels.draft }}</span>
+            {% else %}<span class="badge badge-{{document.state}}">{{ document.state | capitalize }}</span>
             {% endif %}
           </div>
-          <div class="doc-number">{{ document.number }}</div>
+          <div class="doc-number">{{labels.number}} {{ document.number }}</div>
         </td>
         <td class="header-logo-cell">
           {% if account.logo_url != blank %}
@@ -294,9 +284,7 @@
             <span class="meta-label">{{ labels.related_document }}</span>
             <span class="meta-value">
               {{ document.related_document_type | localize_document_type: labels }}
-              <!-- related doc url unconfirmed: see KNOWN-ISSUES.md -->
-              <a href="#" class="related-doc-link">{{ document.related_document_number }}</a>,
-              {{ document.related_document_date | date: 'default', contact.country }}
+              {{ document.related_document_number }}
             </span>
           {% endif %}
         </td>
@@ -329,9 +317,6 @@
           <address class="party-body">
             <span class="party-name">{{ account.full_name }}</span><br>
             {{ account.formatted_address | newline_to_br }}
-            {% if account.registration_number != blank %}
-              <br><span class="party-field-label">{{ labels.registration_number }}:</span> {{ account.registration_number }}
-            {% endif %}
             {% if account.tax_id != blank %}
               <br><span class="party-field-label">{{ labels.tax_id }}:</span> {{ account.tax_id }}
             {% endif %}
@@ -361,7 +346,7 @@
         </td>
         {% if document.shipping_address != blank %}
         <td class="party-cell party-cell-3col party-cell-last">
-          <span class="party-section-label">{{ labels.shipping_address | default: 'Shipping address' }}</span>
+          <span class="party-section-label">{{ labels.shipping_address }}</span>
           <address class="party-body">
             {{ document.shipping_address | newline_to_br }}
           </address>
@@ -379,8 +364,8 @@
   {% for item in document.items %}
     {% if item.discount_rate > 0 %}{% assign has_discounts = true %}{% endif %}
   {% endfor %}
-  {% if document.payment_details != blank %}{% assign show_payment = true %}{% endif %}
-  {% if document.notes != blank %}{% assign show_notes = true %}{% endif %}
+  {% if document.payment_details != blank or document.payment_notice != blank %}{% assign show_payment = true %}{% endif %}
+  {% if document.notes != blank or document.vat_notice != blank %}{% assign show_notes = true %}{% endif %}
 
   <!-- ⑦ content table: tfoot + items + post-items content -->
   <table class="items-table">
@@ -389,33 +374,16 @@
       {% if has_discounts %}
         <col style="width:8%">
         <col style="width:11%">
-        <col style="width:11%">
         <col style="width:8%">
         <col style="width:8%">
         <col style="width:14%">
       {% else %}
         <col style="width:10%">
         <col style="width:13%">
-        <col style="width:13%">
         <col style="width:10%">
         <col style="width:14%">
       {% endif %}
     </colgroup>
-
-    <tfoot>
-      <tr>
-        <td class="footer-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
-          <div class="footer-bar" aria-hidden="true"></div>
-          <table class="footer-inner" role="presentation">
-            <tbody>
-              <tr>
-                <td><strong>{{ labels.invoice }}:</strong> {{ document.number }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tfoot>
 
     <tbody>
 
@@ -424,10 +392,9 @@
         <th class="col-left"  scope="col">{{ labels.description }}</th>
         <th class="col-right" scope="col">{{ labels.quantity }}</th>
         <th class="col-right" scope="col">{{ labels.unit_price }}</th>
-        <th class="col-right" scope="col">{{ labels.subtotal }}</th>
         {% if has_discounts %}<th class="col-right" scope="col">{{ labels.discount }}</th>{% endif %}
         <th class="col-right" scope="col">{{ labels.rate }}</th>
-        <th class="col-right" scope="col">{{ labels.total }}</th>
+        <th class="col-right" scope="col">{{ labels.subtotal }}</th>
       </tr>
 
       <!-- item rows — each item is its own <tr> for wkhtmltopdf pagination -->
@@ -436,7 +403,6 @@
         <td>{{ item.description }}</td>
         <td class="col-right">{{ item.quantity | precision }}</td>
         <td class="col-right">{{ item.unit_price | precision }}</td>
-        <td class="col-right">{{ item.subtotal }}</td>
         {% if has_discounts %}
           <td class="col-right">{% if item.discount_rate > 0 %}{{ item.discount_rate | precision }}%{% else %}—{% endif %}</td>
         {% endif %}
@@ -455,7 +421,7 @@
             {{ item.tax_2_rate | precision }}%
           {% endif %}
         </td>
-        <td class="col-right">{{ item.total_amount }}</td>
+        <td class="col-right">{{ item.subtotal }}</td>
       </tr>
       {% endfor %}
 
@@ -469,26 +435,22 @@
                   <table class="tax-breakdown-table">
                     <thead>
                       <tr>
-                        <th class="col-left"  scope="col">{{ labels.tax | default: 'Tax' }}</th>
-                        <th class="col-right" scope="col">{{ labels.taxable_base | default: 'Taxable amount' }}</th>
-                        <th class="col-right" scope="col">{{ labels.rate }}</th>
-                        <th class="col-right" scope="col">{{ labels.tax_amount | default: 'Total tax per rate' }}</th>
+                        <th class="col-left"  scope="col">{{ labels.rate }}</th>
+                        <th class="col-right" scope="col">{{ labels.taxable_base }}</th>
+                        <th class="col-right" scope="col">{{ labels.tax_amount }}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for document_tax in document.taxes %}
                       <tr class="tax-body-row">
-                        <td>{{ document_tax.label | split: ' (' | first }}</td>
+                        <td>{{ document_tax.label }}</td>
                         <td class="col-right">{{ document_tax.taxable_base }}</td>
-                        <td class="col-right">{{ document_tax.rate }}%</td>
                         <td class="col-right">{{ document_tax.amount }}</td>
                       </tr>
                       {% endfor %}
-                      <!-- document.subtotal as taxable base total: see KNOWN-ISSUES.md -->
                       <tr class="tax-total-row">
-                        <td>{{ labels.tax | default: 'Tax' }}*</td>
+                        <td></td>
                         <td class="col-right">{{ document.subtotal }}</td>
-                        <td class="col-right">—</td>
                         <td class="col-right">{{ document.tax_amount }}</td>
                       </tr>
                     </tbody>
@@ -508,23 +470,21 @@
                       </tr>
                       {% endif %}
                       <tr class="summary-row">
-                        <td class="summary-label">{{ labels.tax | default: 'Tax' }}*</td>
+                        <td class="summary-label">{{ labels.tax }}</td>
                         <td class="summary-value">{{ document.tax_amount }}</td>
                       </tr>
                       <tr class="summary-total-row">
                         <td class="summary-label">{{ labels.total }} ({{ document.currency }})</td>
                         <td class="summary-value">{{ document.total }}</td>
                       </tr>
-                      {% if document.amount_paid > 0 %}
                       <tr class="summary-row">
-                        <td class="summary-label">{{ labels.amount_paid | default: 'Amount paid' }}</td>
-                        <td class="summary-value">-{{ document.amount_paid }}</td>
+                        <td class="summary-label">{{ labels.amount_paid }}</td>
+                        <td class="summary-value">{{ document.amount_paid }}</td>
                       </tr>
                       <tr class="balance-due-row">
-                        <td class="summary-label">{{ labels.balance_due | default: 'Balance due' }}</td>
+                        <td class="summary-label">{{ labels.amount_due }}</td>
                         <td class="summary-value">{{ document.amount_due }}</td>
                       </tr>
-                      {% endif %}
                     </tbody>
                   </table>
                 </td>
@@ -538,13 +498,11 @@
       {% if document.exchange %}
       <tr>
         <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
-          <!-- no labels.currency_conversion in quaderno: hardcoded, see KNOWN-ISSUES.md -->
-          <div class="currency-section-label">Currency conversion</div>
+          <div class="currency-section-label">{{ labels.currency_conversion }}</div>
           <table class="currency-table" role="presentation">
             <tbody>
               <tr class="currency-row">
-                <!-- exchange rate label: see KNOWN-ISSUES.md -->
-                <td class="currency-label">Exchange rate</td>
+                <td class="currency-label">{{ labels.exchange_rate }}</td>
                 <td class="currency-value">1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }}</td>
               </tr>
               <tr class="currency-row">
@@ -556,9 +514,8 @@
                 <td class="currency-value">{{ document.total_exchange }}</td>
               </tr>
               {% if document.amount_paid > 0 %}
-              <!-- document.amount_due_exchange: see KNOWN-ISSUES.md -->
               <tr class="currency-row">
-                <td class="currency-label">{{ labels.balance_due | default: 'Balance due' }} ({{ account.currency }})</td>
+                <td class="currency-label">{{ labels.amount_due }} ({{ account.currency }})</td>
                 <td class="currency-value">{{ document.amount_due_exchange }}</td>
               </tr>
               {% endif %}
@@ -583,25 +540,45 @@
                   <td class="other-info-cell other-info-half other-info-half-left">
                     <span class="other-info-label">{{ labels.payment_details }}</span>
                     <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+                    <div class="other-info-value">{{ document.payment_notice | newline_to_br }}</div>
                   </td>
                   <td class="other-info-cell other-info-half">
                     <span class="other-info-label">{{ labels.notes }}</span>
                     <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+                    <div class="other-info-value">{{ document.vat_notice | newline_to_br }}</div>
                   </td>
                 {% elsif show_payment %}
                   <td class="other-info-cell" colspan="2">
                     <span class="other-info-label">{{ labels.payment_details }}</span>
                     <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
+                    <div class="other-info-value">{{ document.payment_notice | newline_to_br }}</div>
                   </td>
                 {% elsif show_notes %}
                   <td class="other-info-cell" colspan="2">
                     <span class="other-info-label">{{ labels.notes }}</span>
                     <div class="other-info-value">{{ document.notes | newline_to_br }}</div>
+                    <div class="other-info-value">{{ document.vat_notice | newline_to_br }}</div>
                   </td>
                 {% endif %}
               </tr>
             </tbody>
           </table>
+        </td>
+      </tr>
+      {% endif %}
+
+      <!-- account legal details (conditional) -->
+      {% assign show_account_legal = false %}
+      {% if account.legal_form != blank %}{% assign show_account_legal = true %}{% endif %}
+      {% if account.registration_number != blank %}{% assign show_account_legal = true %}{% endif %}
+      {% if account.trade_register != blank %}{% assign show_account_legal = true %}{% endif %}
+      {% if account.professional_register_number != blank %}{% assign show_account_legal = true %}{% endif %}
+      {% if account.activity_code != blank %}{% assign show_account_legal = true %}{% endif %}
+      {% if account.tax_accounting_method == 'cash' %}{% assign show_account_legal = true %}{% endif %}
+      {% if show_account_legal %}
+      <tr>
+        <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
+          <div class="legal-text">{% assign sep = '' %}{% if account.legal_form != blank %}{{ sep }}{{ labels.legal_form }}: {{ account.legal_form }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.registration_number != blank %}{{ sep }}{{ labels.registration_number }}: {{ account.registration_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.trade_register != blank %}{{ sep }}{{ labels.trade_register }}: {{ account.trade_register }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.professional_register_number != blank %}{{ sep }}{{ labels.professional_register_number }}: {{ account.professional_register_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.activity_code != blank %}{{ sep }}{{ labels.activity_code }}: {{ account.activity_code }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.tax_accounting_method == 'cash' %}{{ sep }}{{ labels.tax_accounting_method }}{% endif %}</div>
         </td>
       </tr>
       {% endif %}
