@@ -1,0 +1,49 @@
+<!-- Footer file for wkhtmltopdf --footer-html.
+     Liquid variables require server-side rendering.
+     Pagination uses wkhtmltopdf JS variables. -->
+<!DOCTYPE html>
+<html lang="{{ contact.language | default: 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 4px 20px 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 9px;
+      font-weight: 400;
+      color: #525252;
+    }
+    .footer-bar {
+      height: 6px;
+      border-radius: 3px;
+      background-color: {{ account.color_scheme }};
+      margin-bottom: 6px;
+    }
+    .footer-inner        { width: 100%; border-collapse: collapse; }
+    .footer-invoice-label { font-weight: 600; color: #171717; }
+    .footer-pagination   { text-align: right; }
+  </style>
+</head>
+<body>
+  <div class="footer-bar" aria-hidden="true"></div>
+  <table class="footer-inner" role="presentation">
+    <tbody>
+      <tr>
+        <td>
+          <span class="footer-invoice-label">{{ labels.invoice }}:</span>
+          {{ document.number }}
+        </td>
+        <td class="footer-pagination">
+          Page <span id="page"></span> of <span id="topage"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <script>
+    document.getElementById('page').textContent = window.page;
+    document.getElementById('topage').textContent = window.topage;
+  </script>
+</body>
+</html>
