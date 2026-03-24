@@ -249,7 +249,7 @@
   <!-- ③ metadata (standalone) — builds ordered array, renders 3 per row -->
   {% assign meta_str = "issue_date" %}
   {% if document.due_date != blank %}{% assign meta_str = meta_str | append: "|due_date" %}{% endif %}
-  {% if document.service_date != blank %}{% assign meta_str = meta_str | append: "|service_date" %}{% endif %}
+  {% assign meta_str = meta_str | append: "|service_date" %}
   {% if document.po_number != blank %}{% assign meta_str = meta_str | append: "|po_number" %}{% endif %}
   {% if document.valid_until != blank %}{% assign meta_str = meta_str | append: "|valid_until" %}{% endif %}
   {% if document.related_document_type != blank %}{% assign meta_str = meta_str | append: "|related_document" %}{% endif %}
@@ -266,14 +266,12 @@
           {% if item == "issue_date" %}
             <span class="meta-label">{{ labels.issue_date }}</span>
             <span class="meta-value">{{ document.issue_date | date: 'default', contact.country }}</span>
+          {% elsif item == "service_date" %}
+            <span class="meta-label">{{ labels.service_date }}</span>
+            <span class="meta-value">{{ document.issue_date | date: 'default', contact.country }}</span>
           {% elsif item == "due_date" %}
             <span class="meta-label">{{ labels.due_date }}</span>
             <span class="meta-value">{{ document.due_date | date: 'default', contact.country }}</span>
-          {% elsif item == "service_date" %}
-            <!-- service_date: mandatory in France. Currently mirrors
-                 issue_date value. -->
-            <span class="meta-label">{{ labels.service_date }}</span>
-            <span class="meta-value">{{ document.service_date | date: 'default', contact.country }}</span>
           {% elsif item == "po_number" %}
             <span class="meta-label">{{ labels.po_number }}</span>
             <span class="meta-value">{{ document.po_number }}</span>
