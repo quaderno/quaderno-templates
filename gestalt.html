@@ -63,6 +63,19 @@
     .badge-outstanding { background-color: #FFEDD4; color: #9F2D00; border: 1px solid rgba(159,45,0,.1); }
     .badge-paid        { background-color: #A4F4C0; color: #016630; border: 1px solid rgba(1,102,48,.1); }
     .badge-overdue     { background-color: #FFE2E2; color: #9F0712; border: 1px solid rgba(159,7,18,.1); }
+    .badge-canceled    { background-color: #E5E5E5; color: #404040; border: 1px solid rgba(64,64,64,.2); }
+
+    .sandbox-banner {
+      background-color: #FEF3C7;
+      color: #78350F;
+      border: 1px solid rgba(245,158,11,.3);
+      border-radius: 4px;
+      padding: 8px 12px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
 
     .payment-method {
       display: inline;
@@ -213,6 +226,8 @@
 </head>
 <body>
 
+  {% if sandbox %}<div class="sandbox-banner">{{ labels.sandbox_notice }}</div>{% endif %}
+
   <!-- ① header (standalone) -->
   <table class="header-table" role="presentation">
     <tbody>
@@ -220,7 +235,8 @@
         <td class="header-title-cell">
           <div class="title-line">
             <h1 class="doc-title">{{ title }}</h1>
-            {% if document.state == 'paid' %}<span class="badge badge-paid">{{ labels.paid }}</span>
+            {% if document.cancelled_with_credit_note %}<span class="badge badge-canceled">{{ labels.canceled }}</span>
+            {% elsif document.state == 'paid' %}<span class="badge badge-paid">{{ labels.paid }}</span>
             {% elsif document.state == 'outstanding' %}<span class="badge badge-outstanding">{{ labels.outstanding }}</span>
             {% elsif document.state == 'late' %}<span class="badge badge-overdue">{{ labels.late }}</span>
             {% elsif document.state == 'draft' %}<span class="badge badge-draft">{{ labels.draft }}</span>
