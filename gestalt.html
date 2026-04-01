@@ -64,6 +64,8 @@
     .badge-paid        { background-color: #A4F4C0; color: #016630; border: 1px solid rgba(1,102,48,.1); }
     .badge-overdue     { background-color: #FFE2E2; color: #9F0712; border: 1px solid rgba(159,7,18,.1); }
     .badge-canceled    { background-color: #E5E5E5; color: #404040; border: 1px solid rgba(64,64,64,.2); }
+    .badge-original    { background-color: #EFF6FF; color: #1D4ED8; border: 1px solid rgba(29,78,216,.15); }
+    .badge-duplicate   { background-color: #FFF7ED; color: #9A3412; border: 1px solid rgba(154,52,18,.15); }
 
     .sandbox-banner {
       background-color: #FEF3C7;
@@ -244,6 +246,15 @@
             {% endif %}
           </div>
           <div class="doc-number">{{labels.number}} {{ document.number }}</div>
+          {% if reprint.applicable %}
+          <div class="doc-number" style="margin-top:2px;">
+            {% if reprint.reprint_number == 1 %}
+              <span class="badge badge-original">{{ reprint.print_status }}</span>
+            {% else %}
+              <span class="badge badge-duplicate">{{ reprint.print_status }} #{{ reprint.reprint_number }}</span>
+            {% endif %}
+          </div>
+          {% endif %}
         </td>
         <td class="header-logo-cell">
           {% if account.logo_url != blank %}
@@ -588,11 +599,11 @@
       {% if account.trade_register != blank %}{% assign show_account_legal = true %}{% endif %}
       {% if account.professional_register_number != blank %}{% assign show_account_legal = true %}{% endif %}
       {% if account.activity_code != blank %}{% assign show_account_legal = true %}{% endif %}
-      {% if account.tax_accounting_method == 'cash' %}{% assign show_account_legal = true %}{% endif %}
+      {% if account.tax_accounting_method != blank %}{% assign show_account_legal = true %}{% endif %}
       {% if show_account_legal %}
       <tr>
         <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
-          <div class="legal-text">{% assign sep = '' %}{% if account.legal_form != blank %}{{ sep }}{{ labels.legal_form }}: {{ account.legal_form }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.registration_number != blank %}{{ sep }}{{ labels.registration_number }}: {{ account.registration_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.trade_register != blank %}{{ sep }}{{ labels.trade_register }}: {{ account.trade_register }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.professional_register_number != blank %}{{ sep }}{{ labels.professional_register_number }}: {{ account.professional_register_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.activity_code != blank %}{{ sep }}{{ labels.activity_code }}: {{ account.activity_code }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.tax_accounting_method == 'cash' %}{{ sep }}{{ labels.tax_accounting_method }}{% endif %}</div>
+          <div class="legal-text">{% assign sep = '' %}{% if account.legal_form != blank %}{{ sep }}{{ labels.legal_form }}: {{ account.legal_form }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.registration_number != blank %}{{ sep }}{{ labels.registration_number }}: {{ account.registration_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.trade_register != blank %}{{ sep }}{{ labels.trade_register }}: {{ account.trade_register }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.professional_register_number != blank %}{{ sep }}{{ labels.professional_register_number }}: {{ account.professional_register_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.activity_code != blank %}{{ sep }}{{ labels.activity_code }}: {{ account.activity_code }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.tax_accounting_method != blank %}{{ sep }}{{ labels.tax_accounting_method }}{% endif %}</div>
         </td>
       </tr>
       {% endif %}
