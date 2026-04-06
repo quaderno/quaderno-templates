@@ -462,16 +462,21 @@
                     <thead>
                       <tr>
                         <th class="col-left"  scope="col">{{ labels.rate }}</th>
-                        <th class="col-right" scope="col">{{ labels.taxable_base }}</th>
-                        <th class="col-right" scope="col">{{ labels.tax_amount }}</th>
+                        <th class="col-right" scope="col">{{ labels.taxable_base }} ({{ document.currency }})</th>
+                        <th class="col-right" scope="col">{{ labels.tax_amount }} ({{ document.currency }})</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for document_tax in document.taxes %}
                       <tr class="tax-body-row">
-                        <td>{{ document_tax.label }}</td>
+                        <td>{{ document_tax.country }} {{ document_tax.label }}</td>
                         <td class="col-right">{{ document_tax.taxable_base }}</td>
-                        <td class="col-right">{{ document_tax.amount }}</td>
+                        <td class="col-right">
+                          {{ document_tax.amount }}
+                          {% if document_tax.currency != document.currency %}
+                            <br><span style="color:#737373">{{ document_tax.local_amount }} {{ document_tax.currency }}</span>
+                          {% endif %}
+                        </td>
                       </tr>
                       {% endfor %}
                       <tr class="tax-total-row">
@@ -532,25 +537,15 @@
                 <td class="currency-value">1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }}</td>
               </tr>
               <tr class="currency-row">
-                <td class="currency-label">{{ labels.tax }}* ({{ account.currency }})</td>
+                <td class="currency-label">{{ labels.tax }} ({{ account.currency }})</td>
                 <td class="currency-value">{{ document.tax_amount_exchange }}</td>
               </tr>
               <tr class="currency-row">
                 <td class="currency-label">{{ labels.total }} ({{ account.currency }})</td>
                 <td class="currency-value">{{ document.total_exchange }}</td>
               </tr>
-              {% if document.amount_paid > 0 %}
-              <tr class="currency-row">
-                <td class="currency-label">{{ labels.amount_due }} ({{ account.currency }})</td>
-                <td class="currency-value">{{ document.amount_due_exchange }}</td>
-              </tr>
-              {% endif %}
             </tbody>
           </table>
-          {% if document.amount_paid > 0 %}
-          {% assign payment = document.payments | last %}
-          <div class="currency-deposit-note">Deposit paid at 1 {{ document.currency }} = {{ document.exchange_rate }} {{ account.currency }} on {{ payment.date | date: 'default', contact.country }} ({{ payment.amount }} {{ document.currency }})</div>
-          {% endif %}
         </td>
       </tr>
       {% endif %}
