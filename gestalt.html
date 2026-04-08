@@ -417,10 +417,10 @@
       <tr class="items-header">
         <th class="col-left"  scope="col">{{ labels.description }}</th>
         <th class="col-right" scope="col">{{ labels.quantity }}</th>
-        <th class="col-right" scope="col">{{ labels.unit_price }}</th>
+        <th class="col-right" scope="col">{{ labels[document.unit_price_label_key] }}</th>
         {% if has_discounts %}<th class="col-right" scope="col">{{ labels.discount }}</th>{% endif %}
         <th class="col-right" scope="col">{{ labels.rate }}</th>
-        <th class="col-right" scope="col">{{ labels.subtotal }}</th>
+        <th class="col-right" scope="col">{{ labels[document.subtotal_label_key] }}</th>
       </tr>
 
       <!-- item rows — each item is its own <tr> for wkhtmltopdf pagination -->
