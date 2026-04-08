@@ -249,7 +249,7 @@
             {{labels.number}} {{ document.number }}
             {% if reprint.applicable %} 
               &nbsp;·&nbsp; 
-              {% if reprint.reprint_number == 1 %}
+              {% if reprint.reprint_number == blank %}
                 <span class="reprint-qualifier reprint-qualifier--original">{{ reprint.print_status }}</span>
               {% else %}
                 <span class="reprint-qualifier">{{ reprint.print_status }} #{{ reprint.reprint_number }}</span>
@@ -392,6 +392,7 @@
   {% endfor %}
   {% if document.payment_details != blank or document.payment_notice != blank %}{% assign show_payment = true %}{% endif %}
   {% if document.notes != blank or document.vat_notice != blank %}{% assign show_notes = true %}{% endif %}
+  {% assign invoice_typology_key = "invoice_typology_" | append: document.invoice_typology %}
 
   <!-- ⑦ content table: tfoot + items + post-items content -->
   <table class="items-table">
@@ -596,10 +597,11 @@
       {% if account.professional_register_number != blank %}{% assign show_account_legal = true %}{% endif %}
       {% if account.activity_code != blank %}{% assign show_account_legal = true %}{% endif %}
       {% if account.tax_accounting_method != blank %}{% assign show_account_legal = true %}{% endif %}
+      {% if document.invoice_typology != blank %}{% assign show_account_legal = true %}{% endif %}
       {% if show_account_legal %}
       <tr>
         <td class="section-cell" colspan="{% if has_discounts %}7{% else %}6{% endif %}">
-          <div class="legal-text">{% assign sep = '' %}{% if account.legal_form != blank %}{{ sep }}{{ labels.legal_form }}: {{ account.legal_form }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.registration_number != blank %}{{ sep }}{{ labels.registration_number }}: {{ account.registration_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.trade_register != blank %}{{ sep }}{{ labels.trade_register }}: {{ account.trade_register }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.professional_register_number != blank %}{{ sep }}{{ labels.professional_register_number }}: {{ account.professional_register_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.activity_code != blank %}{{ sep }}{{ labels.activity_code }}: {{ account.activity_code }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.tax_accounting_method != blank %}{{ sep }}{{ labels.tax_accounting_method }}{% endif %}</div>
+          <div class="legal-text">{% assign sep = '' %}{% if account.legal_form != blank %}{{ sep }}{{ labels.legal_form }}: {{ account.legal_form }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.registration_number != blank %}{{ sep }}{{ labels.registration_number }}: {{ account.registration_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.trade_register != blank %}{{ sep }}{{ labels.trade_register }}: {{ account.trade_register }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.professional_register_number != blank %}{{ sep }}{{ labels.professional_register_number }}: {{ account.professional_register_number }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.activity_code != blank %}{{ sep }}{{ labels.activity_code }}: {{ account.activity_code }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if account.tax_accounting_method != blank %}{{ sep }}{{ labels.tax_accounting_method }}{% assign sep = ' &nbsp;·&nbsp; ' %}{% endif %}{% if document.invoice_typology != blank %}{{ sep }}{{ labels.invoice_typology }}: {{ labels[invoice_typology_key] }}{% endif %}</div>
           <div class="legal-text">{{ labels.printed_at }} {{ reprint.reprint_timestamp }}</div>
         </td>
       </tr>
