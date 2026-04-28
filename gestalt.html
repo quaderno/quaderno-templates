@@ -48,7 +48,7 @@
       line-height: 1.2;
     }
     .doc-number { font-size: 13px; margin-top: 4px; }
-    .logo-img   { max-width: 150px; max-height: 55px; border-radius: 4px; }
+    .logo-img   { max-height: 55px; border-radius: 4px; }
 
     .badge {
       display: inline-block;
@@ -259,7 +259,7 @@
         </td>
         <td class="header-logo-cell">
           {% if account.logo_url != blank %}
-            <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}" width="150" height="55" decoding="async">
+            <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}" height="55" decoding="async">
           {% endif %}
         </td>
       </tr>
