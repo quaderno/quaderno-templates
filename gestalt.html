@@ -390,7 +390,7 @@
   {% for item in document.items %}
     {% if item.discount_rate > 0 %}{% assign has_discounts = true %}{% endif %}
   {% endfor %}
-  {% if document.payment_details != blank or document.payment_notice != blank %}{% assign show_payment = true %}{% endif %}
+  {% if document.payment_details != blank or document.payment_notice != blank or document.state == "paid" %}{% assign show_payment = true %}{% endif %}
   {% if document.notes != blank or document.vat_notice != blank %}{% assign show_notes = true %}{% endif %}
   {% assign invoice_typology_key = "invoice_typology_" | append: document.invoice_typology %}
 
@@ -563,6 +563,12 @@
                     <span class="other-info-label">{{ labels.payment_details }}</span>
                     <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
                     <div class="other-info-value">{{ document.payment_notice | newline_to_br }}</div>
+                    {% unless document.payment_details != blank or document.payment_notice != blank %}
+                      {% if document.state == "paid" %}
+                        {% assign payment = document.payments | last %}
+                        {{ labels.paid }}: {{ payment.payment_method_text }}
+                      {% endif %}
+                    {% endunless %}
                   </td>
                   <td class="other-info-cell other-info-half">
                     <span class="other-info-label">{{ labels.notes }}</span>
@@ -574,6 +580,12 @@
                     <span class="other-info-label">{{ labels.payment_details }}</span>
                     <div class="other-info-value">{{ document.payment_details | newline_to_br }}</div>
                     <div class="other-info-value">{{ document.payment_notice | newline_to_br }}</div>
+                    {% unless document.payment_details != blank or document.payment_notice != blank %}
+                      {% if document.state == "paid" %}
+                        {% assign payment = document.payments | last %}
+                        {{ labels.paid }} — {{ payment.payment_method_text }}
+                      {% endif %}
+                    {% endunless %}
                   </td>
                 {% elsif show_notes %}
                   <td class="other-info-cell" colspan="2">
