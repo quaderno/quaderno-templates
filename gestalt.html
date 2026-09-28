@@ -48,7 +48,17 @@
       line-height: 1.2;
     }
     .doc-number { font-size: 13px; margin-top: 4px; }
-    .logo-img   { max-height: 55px; border-radius: 4px; }
+    /* logo frame: fixed 190x65 box; the logo scales up or down to fit, keeping its proportions */
+    .logo-frame {
+      display: block;
+      width: 190px;
+      height: 65px;
+      margin-left: auto;
+      background-repeat: no-repeat;
+      background-position: right center;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
 
     .badge {
       display: inline-block;
@@ -74,7 +84,7 @@
       border-radius: 4px;
       padding: 8px 12px;
       text-align: center;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       margin-bottom: 16px;
     }
@@ -114,7 +124,8 @@
     .party-section-label,
     .other-info-label { display: block; font-weight: 600; color: #171717; }
     .meta-label,
-    .party-section-label { font-size: 11px; }
+    .party-section-label,
+    .other-info-label { font-size: 11px; }
     .party-section-label,
     .other-info-label { margin-bottom: 4px; }
 
@@ -124,11 +135,12 @@
     /* shared table header: items + tax breakdown */
     .items-header th,
     .tax-breakdown-table thead th {
-      font-size: 8px;
+      font-size: 9px;
       font-weight: 600;
       color: #171717;
       padding: 5px 6px;
       border-bottom: 1px solid #171717;
+      word-wrap: break-word;
     }
 
     /* shared column alignment */
@@ -144,11 +156,21 @@
     .item-row td,
     .tax-body-row td,
     .currency-row td {
-      font-size: 9px;
+      font-size: 10px;
       padding: 5px 6px;
       border-bottom: 1px solid #E5E5E5;
     }
     .item-row td        { vertical-align: top; }
+
+    /* data length: text wraps (incl. long unbroken strings), numbers never wrap */
+    .item-row td:first-child,
+    .tax-body-row td:first-child {
+      word-wrap: break-word;
+      word-break: break-word; /* QtWebKit: needed for auto-layout table cells */
+    }
+    .item-row td.col-right,
+    .tax-body-row td.col-right,
+    .tax-total-row td.col-right { white-space: nowrap; }
     .item-row:last-child td { border-bottom: none; }
 
     /* financial zone */
@@ -158,7 +180,7 @@
 
     .tax-breakdown-table { width: 100%; }
     .tax-total-row td {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 600;
       color: #171717;
       padding: 5px 6px;
@@ -168,13 +190,13 @@
     .summary-label { padding-right: 8px; }
     .summary-value { text-align: right; white-space: nowrap; }
     .summary-row td {
-      font-size: 9px;
+      font-size: 10px;
       padding: 4px 6px;
       border-bottom: 1px solid #E5E5E5;
     }
     .summary-total-row td,
     .balance-due-row td {
-      font-size: 9px;
+      font-size: 13px;
       font-weight: 600;
       color: #171717;
       padding: 4px 6px;
@@ -184,7 +206,7 @@
 
     /* currency conversion */
     .currency-section-label {
-      font-size: 8px;
+      font-size: 9px;
       font-weight: 600;
       color: #171717;
       padding-bottom: 5px;
@@ -199,11 +221,11 @@
 
     /* other info */
     .other-info-table     { width: 100%; }
-    .other-info-cell      { vertical-align: top; }
+    .other-info-cell      { vertical-align: top; font-size: 10px; }
     .other-info-half      { width: 50%; }
     .other-info-half-left { padding-right: 15px; }
-    .other-info-value     { font-size: 9px; }
-    .legal-text           { font-size: 7px; color: #737373; }
+    .other-info-value     { font-size: 10px; }
+    .legal-text           { font-size: 8px; line-height: 1.5; color: #737373; }
 
     /* verification code (server-injected) */
     .verification-code { margin: 10px 0; text-align: right; font-size: 9px; }
@@ -259,7 +281,7 @@
         </td>
         <td class="header-logo-cell">
           {% if account.logo_url != blank %}
-            <img src="{{ account.logo_url }}" class="logo-img" alt="{{ account.full_name }}" height="55" decoding="async">
+            <div class="logo-frame" style="background-image:url('{{ account.logo_url }}')" role="img" aria-label="{{ account.full_name }}"></div>
           {% endif %}
         </td>
       </tr>
