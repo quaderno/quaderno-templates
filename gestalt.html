@@ -371,6 +371,9 @@
             {% if account.email != blank %}
               <br>{{ account.email }}
             {% endif %}
+            {% if account.phone_1 != blank %}
+              <br>{{ account.phone_1 }}
+            {% endif %}
           </address>
         </td>
         <td class="party-cell {{ party_col_class }}{% if document.shipping_address == blank %} party-cell-last{% endif %}">
@@ -389,6 +392,9 @@
             {% endif %}
             {% if contact.email != blank %}
               <br>{{ contact.email }}
+            {% endif %}
+            {% if contact.phone_1 != blank %}
+              <br>{{ contact.phone_1 }}
             {% endif %}
           </address>
         </td>
